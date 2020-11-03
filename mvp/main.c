@@ -33,13 +33,13 @@ char getch()
 
 char Map[9][20] = {
     {"vvwwwwwwwwwwwwwwwwvv"},
-    {"vw       w        wv"},
-    {"w        w         w"},
+    {"vw      w         wv"},
+    {"w       w          w"},
     {"w                  w"},
-    {"w        w         w"},
-    {"w        w         w"},
-    {"w        w         w"},
-    {"vw       w        wv"},
+    {"w       wwwwww wwwww"},
+    {"w       w          w"},
+    {"w       w          w"},
+    {"vw      w         wv"},
     {"vvwwwwwwwwwwwwwwwwvv"},
 };
 
