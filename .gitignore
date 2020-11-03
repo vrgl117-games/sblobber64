@@ -1,0 +1,6 @@
+sblobber64.*
+*.o
+*.sprite
+.DS_Store
+*~
+filesystem/

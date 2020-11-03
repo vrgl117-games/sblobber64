@@ -1,4 +1,6 @@
-# N64brew-game-jam-1
+# sblobber64
+
+Is it a slime? Is it a blob? who knows, but for sure size is important!
 
 ## Note
 
@@ -18,12 +20,12 @@ instead of the proprietary SDK used by official licensed Nintendo software.
 All development can be done using Docker. It's the easiest way to build the ROM on Windows and MacOS.
 
  * Install [Docker](https://docker.com)
- * Run `make` to produce the `*.z64` ROM file.
+ * Run `make` to produce the `sblobber64.z64` ROM file.
 
  ### On linux
 
 * Install [libdragon development toolchain](https://github.com/DragonMinded/libdragon)
-* Run `make *.z64` to produce the `*.z64` ROM file.
+* Run `make sblobber.z64` to produce the `sblobber.z64` ROM file.
 
 ## Testing
 
