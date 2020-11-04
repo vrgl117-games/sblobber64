@@ -1,5 +1,7 @@
 #include <stdlib.h>
 
+#include "debug.h"
+#include "fps.h"
 #include "rdp.h"
 #include "screens.h"
 
@@ -12,8 +14,11 @@ int main()
     dfs_init(DFS_DEFAULT_LOCATION);
     rdp_init();
     timer_init();
+    debug_clear();
 
     srand(timer_ticks() & 0x7FFFFFFF);
+
+    new_timer(TIMER_TICKS(1000000), TF_CONTINUOUS, fps_timer);
 
     new_timer(TIMER_TICKS(50000), TF_CONTINUOUS, screen_timer_title);
 
@@ -38,6 +43,13 @@ int main()
         case game: // actual game.
             break;
         }
+
+        // increment fps counter
+        fps_frame();
+
+        // display fps
+        fps_draw(disp);
+
         // update display
         display_show(disp);
     }
