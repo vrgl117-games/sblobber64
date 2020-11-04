@@ -35,10 +35,13 @@ int main()
         {
         case intro: // n64 logo and vrgl117 logo.
             if (screen_intro(disp))
+            {
                 screen = title;
+                screen_init();
+            }
             break;
         case title: // press start.
-            screen = game;
+            screen_title(disp);
             break;
         case game: // actual game.
             break;

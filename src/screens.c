@@ -5,6 +5,13 @@
 #include "screens.h"
 
 static volatile int tick = 0;
+static map_t *logo;
+
+// load a few sprites in memory
+void screen_init()
+{
+    logo = dfs_load_map("/gfx/maps/logo-%d_%d.sprite", NULL);
+}
 
 // display the n64 logo and then the vrgl117 games logo.
 // return true when the animation is done.
@@ -54,4 +61,16 @@ bool screen_intro(display_context_t disp)
 void screen_timer_title()
 {
     tick++;
+}
+
+// display the title screen.
+void screen_title(display_context_t disp)
+{
+    rdp_attach(disp);
+
+    rdp_draw_filled_fullscreen(0);
+
+    rdp_draw_sprite_with_texture_map(logo, 192, 16, 0);
+
+    rdp_detach_display();
 }

@@ -32,6 +32,10 @@ filesystem/gfx/sprites/%.sprite: resources/gfx/sprites/%.png
 	@mkdir -p `echo $@ | xargs dirname`
 	$(MKSPRITE) 16 1 1 $< $@
 
+filesystem/gfx/maps/%.sprite: resources/gfx/maps/%.png
+	@mkdir -p `echo $@ | xargs dirname`
+	$(MKSPRITE) 16 1 1 $< $@
+
 # sfx #
 MODS := $(wildcard resources/sfx/*.mod)
 BGMS := $(subst resources/,filesystem/,$(MODS))

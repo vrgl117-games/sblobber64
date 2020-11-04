@@ -21,3 +21,30 @@ void rdp_draw_filled_rectangle_size(int x, int y, int width, int height, uint32_
     rdp_set_primitive_color(color);
     rdp_draw_filled_rectangle(x, y, x + width, y + height);
 }
+
+void rdp_draw_sprite_with_texture(sprite_t *sp, int x, int y, mirror_t mirror)
+{
+    rdp_enable_texture_copy();
+    rdp_sync(SYNC_PIPE);
+    rdp_load_texture(0, 0, mirror, sp);
+    rdp_draw_sprite(0, x, y, mirror);
+}
+
+void rdp_draw_sprite_with_texture_map(map_t *map, int x, int y, mirror_t mirror)
+{
+    int xx = 0;
+    int yy = 0;
+
+    for (int i = 0; i < map->slices; i++)
+    {
+        int ii = (mirror == MIRROR_XY ? map->slices - 1 - i : i);
+        rdp_draw_sprite_with_texture(map->sprites[ii], x + xx, y + yy, mirror);
+        if (i % map->mod == map->mod - 1)
+        {
+            yy += map->sprites[ii]->height;
+            xx = 0;
+        }
+        else
+            xx += map->sprites[ii]->width;
+    }
+}

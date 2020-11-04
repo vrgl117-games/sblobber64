@@ -10,7 +10,9 @@ typedef enum screens
     game
 } screen_t;
 
+void screen_init();
 bool screen_intro(display_context_t disp);
+void screen_title(display_context_t disp);
 void screen_timer_title();
 
 #endif //__SCREENS_H__
