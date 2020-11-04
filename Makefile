@@ -26,9 +26,9 @@ docker: setup
 rebuild: clean build	##  Erase temp files and create rom.
 
 # gfx #
-PNGS := $(wildcard resources/gfx/*.png)
+PNGS := $(wildcard resources/gfx/*/*.png)
 SPRITES := $(subst .png,.sprite,$(subst resources/,filesystem/,$(PNGS)))
-filesystem/gfx/%.sprite: resources/gfx/%.png
+filesystem/gfx/sprites/%.sprite: resources/gfx/sprites/%.png
 	@mkdir -p `echo $@ | xargs dirname`
 	$(MKSPRITE) 16 1 1 $< $@
 
