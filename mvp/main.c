@@ -49,9 +49,10 @@ typedef struct Player
     uint8_t y;
     uint8_t h_of;
     uint8_t w_of;
+
 } Player_t;
 
-Player_t player = {3, 6, 0, 0};
+Player_t player = {1, 2, 0, 0};
 
 static inline bool isPlayer(uint8_t x, uint8_t y)
 {
@@ -84,7 +85,7 @@ char readInput()
     return input;
 }
 
-void movePlayer(char input)
+void moveAndResizePlayer(char input)
 {
     switch (input)
     {
@@ -92,60 +93,70 @@ void movePlayer(char input)
         if (player.h_of == 0)
         {
             player.h_of = 1;
-            if (Map[player.y + 1][player.x] == 'w')
-                player.y--;
         }
-        else if (Map[player.y - 2][player.x] != 'w')
-        {
-            player.y--;
-        }
+        player.y -= 1;
         break;
     case 's':
         if (player.h_of == 1)
         {
             player.h_of = 0;
         }
-        else if (Map[player.y + 1][player.x] != 'w')
-        {
-            player.y++;
-        }
+        player.y += 1;
         break;
     case 'a':
         if (player.w_of == 1)
         {
             player.w_of = 0;
         }
-        else if (Map[player.y][player.x - 1] != 'w')
-        {
-            player.x--;
-        }
+        player.x -= 1;
         break;
     case 'd':
         if (player.w_of == 0)
         {
             player.w_of = 1;
-            if (Map[player.y][player.x - 1] == 'w')
-                player.x++;
         }
-        else if (Map[player.y][player.x + 2] != 'w')
-        {
-            player.x++;
-        }
+        player.x += 1;
         break;
     }
+}
+
+bool detectCollision()
+{
+    for (int h = player.y - player.h_of; h <= player.y + player.h_of; h++)
+    {
+        for (int w = player.x - player.w_of; w <= player.x + player.w_of; w++)
+        {
+            if (Map[h][w] == 'w')
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 int main()
 {
     while (1)
     {
+        Player_t savePlayer = player;
         drawMap();
         char input = readInput();
         if (input == 'q')
         {
             break;
         }
-        movePlayer(input);
+        moveAndResizePlayer(input);
+        if (detectCollision())
+        {
+            player.x = savePlayer.x;
+            player.y = savePlayer.y;
+            if (detectCollision())
+            {
+                player.h_of = savePlayer.h_of;
+                player.w_of = savePlayer.w_of;
+            }
+        }
         system("clear");
     };
     return 0;
