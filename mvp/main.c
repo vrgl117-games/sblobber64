@@ -34,11 +34,11 @@ char getch()
 char Map[9][20] = {
     {"vvwwwwwwwwwwwwwwwwvv"},
     {"vw      w         wv"},
-    {"w       w          w"},
+    {"w   s   w          w"},
     {"w                  w"},
     {"w       wwwwww wwwww"},
     {"w       w          w"},
-    {"w       w          w"},
+    {"w       w        e w"},
     {"vw      w         wv"},
     {"vvwwwwwwwwwwwwwwwwvv"},
 };
@@ -52,11 +52,26 @@ typedef struct Player
 
 } Player_t;
 
-Player_t player = {1, 2, 0, 0};
+Player_t player = {0, 0, 0, 0};
 
 static inline bool isPlayer(uint8_t x, uint8_t y)
 {
     return ((y == player.y || y == player.y - player.h_of || y == player.y + player.h_of) && (x == player.x || x == player.x - player.w_of || x == player.x + player.w_of));
+}
+
+void initPlayer()
+{
+    for (uint8_t y = 0; y < 9; y++)
+    {
+        for (uint8_t x = 0; x < 20; x++)
+        {
+            if (Map[y][x] == 's')
+            {
+                player.x = x;
+                player.y = y;
+            }
+        }
+    }
 }
 
 void drawMap()
@@ -120,13 +135,13 @@ void moveAndResizePlayer(char input)
     }
 }
 
-bool detectCollision()
+bool detectTile(char tile)
 {
     for (int h = player.y - player.h_of; h <= player.y + player.h_of; h++)
     {
         for (int w = player.x - player.w_of; w <= player.x + player.w_of; w++)
         {
-            if (Map[h][w] == 'w')
+            if (Map[h][w] == tile)
             {
                 return true;
             }
@@ -137,26 +152,32 @@ bool detectCollision()
 
 int main()
 {
+    initPlayer();
     while (1)
     {
-        Player_t savePlayer = player;
         drawMap();
+        if (detectTile('e'))
+        {
+            return 0;
+        }
         char input = readInput();
         if (input == 'q')
         {
             break;
         }
+        Player_t savePlayer = player;
         moveAndResizePlayer(input);
-        if (detectCollision())
+        if (detectTile('w'))
         {
             player.x = savePlayer.x;
             player.y = savePlayer.y;
-            if (detectCollision())
+            if (detectTile('w'))
             {
                 player.h_of = savePlayer.h_of;
                 player.w_of = savePlayer.w_of;
             }
         }
+
         system("clear");
     };
     return 0;
