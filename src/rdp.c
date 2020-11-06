@@ -30,21 +30,21 @@ void rdp_draw_sprite_with_texture(sprite_t *sp, int x, int y, mirror_t mirror)
     rdp_draw_sprite(0, x, y, mirror);
 }
 
-void rdp_draw_sprite_with_texture_map(map_t *map, int x, int y, mirror_t mirror)
+void rdp_draw_sprites_with_texture(sprites_t *sprites, int x, int y, mirror_t mirror)
 {
     int xx = 0;
     int yy = 0;
 
-    for (int i = 0; i < map->slices; i++)
+    for (int i = 0; i < sprites->slices; i++)
     {
-        int ii = (mirror == MIRROR_XY ? map->slices - 1 - i : i);
-        rdp_draw_sprite_with_texture(map->sprites[ii], x + xx, y + yy, mirror);
-        if (i % map->mod == map->mod - 1)
+        int ii = (mirror == MIRROR_XY ? sprites->slices - 1 - i : i);
+        rdp_draw_sprite_with_texture(sprites->sprites[ii], x + xx, y + yy, mirror);
+        if (i % sprites->mod == sprites->mod - 1)
         {
-            yy += map->sprites[ii]->height;
+            yy += sprites->sprites[ii]->height;
             xx = 0;
         }
         else
-            xx += map->sprites[ii]->width;
+            xx += sprites->sprites[ii]->width;
     }
 }

@@ -5,12 +5,12 @@
 #include "screens.h"
 
 static volatile int tick = 0;
-static map_t *logo;
+static sprites_t *logo;
 
 // load a few sprites in memory
 void screen_init()
 {
-    logo = dfs_load_map("/gfx/maps/logo-%d_%d.sprite", NULL);
+    logo = dfs_load_sprites("/gfx/sprites_sets/logo-%d_%d.sprite", NULL);
 }
 
 // display the n64 logo and then the vrgl117 games logo.
@@ -29,13 +29,13 @@ bool screen_intro(display_context_t disp)
     switch (anim)
     {
     case 1 ... 9:
-        intro = dfs_load_spritef("/gfx/sprites/n64_%d.sprite", anim);
+        intro = dfs_load_spritef("/gfx/sprites/n64brew_jam_logo_%d.sprite", anim);
         break;
     case 10 ... 30:
-        intro = dfs_load_sprite("/gfx/sprites/n64.sprite");
+        intro = dfs_load_sprite("/gfx/sprites/n64brew_jam_logo.sprite");
         break;
     case 31 ... 39:
-        intro = dfs_load_spritef("/gfx/sprites/n64_%d.sprite", 40 - anim);
+        intro = dfs_load_spritef("/gfx/sprites/n64brew_jam_logo_%d.sprite", 40 - anim);
         break;
     case 41 ... 49:
         intro = dfs_load_spritef("/gfx/sprites/intro_%d.sprite", anim - 40);
@@ -58,6 +58,15 @@ bool screen_intro(display_context_t disp)
     return (anim >= 82);
 }
 
+void screen_game(display_context_t disp, input_t *input)
+{
+    rdp_attach(disp);
+
+    rdp_draw_filled_fullscreen(0);
+
+    rdp_detach_display();
+}
+
 void screen_timer_title()
 {
     tick++;
@@ -70,7 +79,7 @@ void screen_title(display_context_t disp)
 
     rdp_draw_filled_fullscreen(0);
 
-    rdp_draw_sprite_with_texture_map(logo, 192, 16, 0);
+    rdp_draw_sprites_with_texture(logo, 192, 16, 0);
 
     rdp_detach_display();
 }

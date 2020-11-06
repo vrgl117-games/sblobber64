@@ -3,7 +3,7 @@
 
 #include <libdragon.h>
 
-typedef struct map
+typedef struct sprites
 {
     sprite_t *sprites[12];
     int slices;
@@ -12,11 +12,11 @@ typedef struct map
     int width;
 
     int mod;
-} map_t;
+} sprites_t;
 
-void dfs_free_map(map_t *map);
+void dfs_free_sprites(sprites_t *sprites);
 sprite_t *dfs_load_sprite(const char *const path);
 sprite_t *dfs_load_spritef(const char *const format, ...);
-map_t *dfs_load_map(const char *const path, char *lang);
+sprites_t *dfs_load_sprites(const char *const path, char *lang);
 
 #endif //__FILESYSTEM_H__

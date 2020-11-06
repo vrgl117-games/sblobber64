@@ -13,6 +13,8 @@ int main()
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
     dfs_init(DFS_DEFAULT_LOCATION);
     rdp_init();
+    rdp_set_default_clipping();
+    controller_init();
     timer_init();
     debug_clear();
 
@@ -27,6 +29,9 @@ int main()
     while (true)
     {
         // get controllers
+        controller_scan();
+        input_t input = get_keys_down().c[0];
+
         // update game state
         while (!(disp = display_lock()))
             ;
@@ -42,8 +47,13 @@ int main()
             break;
         case title: // press start.
             screen_title(disp);
+            if (input.start)
+            {
+                screen = game;
+            }
             break;
         case game: // actual game.
+            screen_game(disp, &input);
             break;
         }
 

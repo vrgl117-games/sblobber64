@@ -32,7 +32,7 @@ filesystem/gfx/sprites/%.sprite: resources/gfx/sprites/%.png
 	@mkdir -p `echo $@ | xargs dirname`
 	$(MKSPRITE) 16 1 1 $< $@
 
-filesystem/gfx/maps/%.sprite: resources/gfx/maps/%.png
+filesystem/gfx/sprites_sets/%.sprite: resources/gfx/sprites_sets/%.png
 	@mkdir -p `echo $@ | xargs dirname`
 	$(MKSPRITE) 16 1 1 $< $@
 

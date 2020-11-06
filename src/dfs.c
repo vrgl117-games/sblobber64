@@ -5,14 +5,14 @@
 
 #include "dfs.h"
 
-void dfs_free_map(map_t *map)
+void dfs_free_sprites(sprites_t *sprites)
 {
-    if (map == NULL)
+    if (sprites == NULL)
         return;
 
-    for (int i = 0; map->sprites[i] != 0; i++)
-        free(map->sprites[i]);
-    free(map);
+    for (int i = 0; sprites->sprites[i] != 0; i++)
+        free(sprites->sprites[i]);
+    free(sprites);
 }
 
 sprite_t *dfs_load_sprite(const char *const path)
@@ -49,11 +49,11 @@ sprite_t *dfs_load_spritef(const char *const format, ...)
     return dfs_load_sprite(buffer);
 }
 
-map_t *dfs_load_map(const char *const path, char *lang)
+sprites_t *dfs_load_sprites(const char *const path, char *lang)
 {
     char buffer[256];
 
-    map_t *data = calloc(1, sizeof(map_t));
+    sprites_t *data = calloc(1, sizeof(sprites_t));
 
     int x = 0;
     int y = 0;
