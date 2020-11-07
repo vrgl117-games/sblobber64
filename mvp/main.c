@@ -31,16 +31,41 @@ char getch()
     return ch;
 }
 
-char Map[9][20] = {
-    {"vvwwwwwwwwwwwwwwwwvv"},
-    {"vw      w         wv"},
-    {"w   s   w          w"},
-    {"w                  w"},
-    {"w       wwwwww wwwww"},
-    {"w       w          w"},
-    {"w       w        e w"},
-    {"vw      w         wv"},
-    {"vvwwwwwwwwwwwwwwwwvv"},
+// screen: 320x240
+// tile: 8x8
+// map: 40x30
+char Map[30][40] = {
+    {"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"},
+    {"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"},
+    {"vvwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvw"},
+    {"vvw                                  wvv"},
+    {"vvw   s                              wvv"},
+    {"vvw                                  wvv"},
+    {"vvwwwwwwwwwwwwwwwwwwwwwwww wwwwwwwwwwwvv"},
+    {"vvw                  w               wvv"},
+    {"vvw                  w               wvv"},
+    {"vvw                  w               wvv"},
+    {"vvw                  w               wvv"},
+    {"vvw                  w               wvv"},
+    {"vvw                  w               wvv"},
+    {"vvw                                  wvv"},
+    {"vvwwwwwww wwwwwwwwwwwwwwwwwwwwwwwwwwwwvv"},
+    {"vvw                                  wvv"},
+    {"vvw                                  wvv"},
+    {"vvw                                  wvv"},
+    {"vvw                                  wvv"},
+    {"vvw                                  wvv"},
+    {"vvw                                  wvv"},
+    {"vvw                                  wvv"},
+    {"vvw                                  wvv"},
+    {"vvw                                  wvv"},
+    {"vvw                          e       wvv"},
+    {"vvw                                  wvv"},
+    {"vvw                                  wvv"},
+    {"vvwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwvv"},
+    {"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"},
+    {"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"},
+
 };
 
 typedef struct Player
@@ -61,9 +86,9 @@ static inline bool isPlayer(uint8_t x, uint8_t y)
 
 void initPlayer()
 {
-    for (uint8_t y = 0; y < 9; y++)
+    for (uint8_t y = 0; y < 30; y++)
     {
-        for (uint8_t x = 0; x < 20; x++)
+        for (uint8_t x = 0; x < 40; x++)
         {
             if (Map[y][x] == 's')
             {
@@ -76,9 +101,9 @@ void initPlayer()
 
 void drawMap()
 {
-    for (uint8_t y = 0; y < 9; y++)
+    for (uint8_t y = 0; y < 30; y++)
     {
-        for (uint8_t x = 0; x < 20; x++)
+        for (uint8_t x = 0; x < 40; x++)
         {
             if (isPlayer(x, y))
             {
