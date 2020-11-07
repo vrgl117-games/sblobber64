@@ -1,17 +1,14 @@
 #include <stdlib.h>
 
+#include "colors.h"
 #include "dfs.h"
 #include "rdp.h"
 #include "screens.h"
 
+extern uint32_t __width;
+extern uint32_t __height;
+extern uint32_t colors[];
 static volatile int tick = 0;
-static sprites_t *logo;
-
-// load a few sprites in memory
-void screen_init()
-{
-    logo = dfs_load_sprites("/gfx/sprites_sets/logo-%d_%d.sprite", NULL);
-}
 
 // display the n64 logo and then the vrgl117 games logo.
 // return true when the animation is done.
@@ -50,7 +47,7 @@ bool screen_intro(display_context_t disp)
 
     if (intro != NULL)
     {
-        graphics_draw_sprite(disp, 320 - intro->width / 2, 150, intro);
+        graphics_draw_sprite(disp, __width / 2 - intro->width / 2, __height / 2 - intro->height / 2, intro);
         free(intro);
     }
 
@@ -62,7 +59,7 @@ void screen_game(display_context_t disp, input_t *input)
 {
     rdp_attach(disp);
 
-    rdp_draw_filled_fullscreen(0);
+    rdp_draw_filled_fullscreen(colors[COLOR_BG]);
 
     rdp_detach_display();
 }
@@ -77,9 +74,19 @@ void screen_title(display_context_t disp)
 {
     rdp_attach(disp);
 
-    rdp_draw_filled_fullscreen(0);
-
-    rdp_draw_sprites_with_texture(logo, 192, 16, 0);
+    rdp_draw_filled_fullscreen(colors[COLOR_BG]);
 
     rdp_detach_display();
+
+    sprite_t *logo = dfs_load_sprite("/gfx/sprites/logo.sprite");
+    graphics_draw_sprite(disp, __width / 2 - logo->width / 2, 10, logo);
+    free(logo);
+
+    // draw only press start half of the time (blink).
+    if (tick % 32 < 16)
+    {
+        sprite_t *press_start = dfs_load_sprite("/gfx/sprites/press_start.sprite");
+        graphics_draw_sprite(disp, __width / 2 - press_start->width / 2, 140, press_start);
+        free(press_start);
+    }
 }

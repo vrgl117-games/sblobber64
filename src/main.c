@@ -1,22 +1,24 @@
 #include <stdlib.h>
 
+#include "colors.h"
 #include "debug.h"
 #include "fps.h"
 #include "rdp.h"
 #include "screens.h"
 
-screen_t screen = intro;
+screen_t screen = title; //TODO: set back to intro
 
 int main()
 {
     init_interrupts();
-    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
+    display_init(RESOLUTION_320x240 /*RESOLUTION_640x480*/, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
     dfs_init(DFS_DEFAULT_LOCATION);
     rdp_init();
     rdp_set_default_clipping();
     controller_init();
     timer_init();
     debug_clear();
+    colors_init();
 
     srand(timer_ticks() & 0x7FFFFFFF);
 
@@ -38,11 +40,11 @@ int main()
 
         switch (screen)
         {
-        case intro: // n64 logo and vrgl117 logo.
+        case intro: // n64, n64brew jam and vrgl117 logo.
             if (screen_intro(disp))
             {
+                display_init(RESOLUTION_320x240, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
                 screen = title;
-                screen_init();
             }
             break;
         case title: // press start.
@@ -67,9 +69,5 @@ int main()
         display_show(disp);
     }
 
-    // cleanup, never called
-    timer_close();
-    rdp_close();
-    display_close();
     return 0;
 }

@@ -12,10 +12,10 @@ typedef enum screens
 
 typedef struct SI_condat input_t;
 
-void screen_init();
 bool screen_intro(display_context_t disp);
 void screen_game(display_context_t disp, input_t *input);
 void screen_title(display_context_t disp);
+
 void screen_timer_title();
 
 #endif //__SCREENS_H__

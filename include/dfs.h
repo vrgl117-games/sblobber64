@@ -5,7 +5,7 @@
 
 typedef struct sprites
 {
-    sprite_t *sprites[12];
+    sprite_t *sprites[32];
     int slices;
 
     int height;
