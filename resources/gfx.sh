@@ -4,8 +4,8 @@ fontb='resources/fonts/Kenney Blocks.ttf'
 
 #UI
 #-extent XXxYY
-convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 32 label:"sblobber64" -extent 242x50 -gravity center resources/gfx/sprites/logo.png
-convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 14 label:"Press Start" -extent 116x24 -gravity center resources/gfx/sprites/press_start.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"sblobber64" -extent 512x104 -gravity center resources/gfx/sprites/logo.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Press Start" -extent 218x44 -gravity center resources/gfx/sprites/press_start.png
 
 # studio logo
 convert -strip -brightness-contrast -10 resources/gfx/sprites/intro.png resources/gfx/sprites/intro_9.png

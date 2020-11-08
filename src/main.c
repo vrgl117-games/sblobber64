@@ -11,7 +11,7 @@ screen_t screen = title; //TODO: set back to intro
 int main()
 {
     init_interrupts();
-    display_init(RESOLUTION_320x240 /*RESOLUTION_640x480*/, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
+    display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
     dfs_init(DFS_DEFAULT_LOCATION);
     rdp_init();
     rdp_set_default_clipping();
@@ -43,7 +43,6 @@ int main()
         case intro: // n64, n64brew jam and vrgl117 logo.
             if (screen_intro(disp))
             {
-                display_init(RESOLUTION_320x240, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
                 screen = title;
             }
             break;

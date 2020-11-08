@@ -1,7 +1,8 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <termios.h>
-#include <stdbool.h>
 
 struct termios old, current;
 
@@ -31,40 +32,25 @@ char getch()
     return ch;
 }
 
-// screen: 320x240
-// tile: 8x8
-// map: 40x30
-char Map[30][40] = {
-    {"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"},
-    {"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"},
-    {"vvwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwvvw"},
-    {"vvw                                  wvv"},
-    {"vvw   s                              wvv"},
-    {"vvw                                  wvv"},
-    {"vvwwwwwwwwwwwwwwwwwwwwwwww wwwwwwwwwwwvv"},
-    {"vvw                  w               wvv"},
-    {"vvw                  w               wvv"},
-    {"vvw                  w               wvv"},
-    {"vvw                  w               wvv"},
-    {"vvw                  w               wvv"},
-    {"vvw                  w               wvv"},
-    {"vvw                                  wvv"},
-    {"vvwwwwwww wwwwwwwwwwwwwwwwwwwwwwwwwwwwvv"},
-    {"vvw                                  wvv"},
-    {"vvw                                  wvv"},
-    {"vvw                                  wvv"},
-    {"vvw                                  wvv"},
-    {"vvw                                  wvv"},
-    {"vvw                                  wvv"},
-    {"vvw                                  wvv"},
-    {"vvw                                  wvv"},
-    {"vvw                                  wvv"},
-    {"vvw                          e       wvv"},
-    {"vvw                                  wvv"},
-    {"vvw                                  wvv"},
-    {"vvwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwvv"},
-    {"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"},
-    {"vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv"},
+// screen: 640x480
+// tile: 32x32
+// map: 20x15
+char Map[15][20] = {
+    {"...................."},
+    {"..{--------------}.."},
+    {"..|s             |.."},
+    {"..|              |.."},
+    {"..|              |.."},
+    {"..>------y- -----<.."},
+    {"..|     e|       |.."},
+    {"..>-     >---} --|.."},
+    {"..|      |   |   |.."},
+    {"..|    {-]   |   |.."},
+    {"..|    |     |   |.."},
+    {"..| ---] |   |   |.."},
+    {"..|      |       |.."},
+    {"..[------^-------].."},
+    {"...................."},
 
 };
 
@@ -86,9 +72,9 @@ static inline bool isPlayer(uint8_t x, uint8_t y)
 
 void initPlayer()
 {
-    for (uint8_t y = 0; y < 30; y++)
+    for (uint8_t y = 0; y < 15; y++)
     {
-        for (uint8_t x = 0; x < 40; x++)
+        for (uint8_t x = 0; x < 20; x++)
         {
             if (Map[y][x] == 's')
             {
@@ -101,9 +87,9 @@ void initPlayer()
 
 void drawMap()
 {
-    for (uint8_t y = 0; y < 30; y++)
+    for (uint8_t y = 0; y < 15; y++)
     {
-        for (uint8_t x = 0; x < 40; x++)
+        for (uint8_t x = 0; x < 20; x++)
         {
             if (isPlayer(x, y))
             {
@@ -160,13 +146,13 @@ void moveAndResizePlayer(char input)
     }
 }
 
-bool detectTile(char tile)
+bool detectTile(char *tiles)
 {
     for (int h = player.y - player.h_of; h <= player.y + player.h_of; h++)
     {
         for (int w = player.x - player.w_of; w <= player.x + player.w_of; w++)
         {
-            if (Map[h][w] == tile)
+            if (strchr(tiles, Map[h][w]))
             {
                 return true;
             }
@@ -181,7 +167,7 @@ int main()
     while (1)
     {
         drawMap();
-        if (detectTile('e'))
+        if (detectTile("e"))
         {
             return 0;
         }
@@ -192,11 +178,11 @@ int main()
         }
         Player_t savePlayer = player;
         moveAndResizePlayer(input);
-        if (detectTile('w'))
+        if (detectTile("-|[]{}y<>^"))
         {
             player.x = savePlayer.x;
             player.y = savePlayer.y;
-            if (detectTile('w'))
+            if (detectTile("-|[]{}y<>^"))
             {
                 player.h_of = savePlayer.h_of;
                 player.w_of = savePlayer.w_of;
