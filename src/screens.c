@@ -28,22 +28,22 @@ bool screen_intro(display_context_t disp)
     switch (anim)
     {
     case 1 ... 9:
-        intro = dfs_load_spritef("/gfx/sprites/n64brew_jam_logo_%d.sprite", anim);
+        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", anim);
         break;
     case 10 ... 30:
-        intro = dfs_load_sprite("/gfx/sprites/n64brew_jam_logo.sprite");
+        intro = dfs_load_sprite("/gfx/sprites/intro/n64brew_jam_logo.sprite");
         break;
     case 31 ... 39:
-        intro = dfs_load_spritef("/gfx/sprites/n64brew_jam_logo_%d.sprite", 40 - anim);
+        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", 40 - anim);
         break;
     case 41 ... 49:
-        intro = dfs_load_spritef("/gfx/sprites/intro_%d.sprite", anim - 40);
+        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", anim - 40);
         break;
     case 50 ... 70:
-        intro = dfs_load_sprite("/gfx/sprites/intro.sprite");
+        intro = dfs_load_sprite("/gfx/sprites/intro/vrgl117_logo.sprite");
         break;
     case 71 ... 79:
-        intro = dfs_load_spritef("/gfx/sprites/intro_%d.sprite", 80 - anim);
+        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", 80 - anim);
         break;
     }
 
@@ -84,14 +84,14 @@ void screen_title(display_context_t disp)
 
     rdp_detach_display();
 
-    sprite_t *logo = dfs_load_sprite("/gfx/sprites/logo.sprite");
+    sprite_t *logo = dfs_load_sprite("/gfx/sprites/ui/logo.sprite");
     graphics_draw_sprite(disp, __width / 2 - logo->width / 2, 10, logo);
     free(logo);
 
     // draw only press start half of the time (blink).
     if (tick % 14 < 7)
     {
-        sprite_t *press_start = dfs_load_sprite("/gfx/sprites/press_start.sprite");
+        sprite_t *press_start = dfs_load_sprite("/gfx/sprites/ui/press_start.sprite");
         graphics_draw_sprite(disp, __width / 2 - press_start->width / 2, 340, press_start);
         free(press_start);
     }

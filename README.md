@@ -1,6 +1,6 @@
 # sblobber64
 
-Is it a slime? Is it a blob? who knows, but for sure size is important!
+Is it a slime? Is it a blob? who knows?!
 
 ## Note
 
