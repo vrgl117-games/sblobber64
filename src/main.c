@@ -3,6 +3,8 @@
 #include "colors.h"
 #include "debug.h"
 #include "fps.h"
+#include "map.h"
+#include "player.h"
 #include "rdp.h"
 #include "screens.h"
 
@@ -19,6 +21,9 @@ int main()
     timer_init();
     debug_clear();
     colors_init();
+
+    map_init();
+    player_init();
 
     srand(timer_ticks() & 0x7FFFFFFF);
 
