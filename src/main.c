@@ -8,7 +8,7 @@
 #include "rdp.h"
 #include "screens.h"
 
-screen_t screen = title; //TODO: set back to intro
+screen_t screen = game; //TODO: set back to intro
 
 int main()
 {
@@ -39,7 +39,7 @@ int main()
         controller_scan();
         input_t input = get_keys_down().c[0];
 
-        // update game state
+        // wait for display
         while (!(disp = display_lock()))
             ;
 
@@ -47,19 +47,32 @@ int main()
         {
         case intro: // n64, n64brew jam and vrgl117 logo.
             if (screen_intro(disp))
-            {
                 screen = title;
-            }
             break;
         case title: // press start.
             screen_title(disp);
             if (input.start)
-            {
                 screen = game;
-            }
             break;
         case game: // actual game.
+            if (input.start)
+                screen = pause;
             screen_game(disp, &input);
+            break;
+        case pause: // pause menu.
+            switch (screen_pause(disp, &input))
+            {
+            case restart:
+                player_reset();
+            case resume:
+                screen = game;
+                break;
+            case quit:
+                screen = title;
+                break;
+            default:
+                break;
+            }
             break;
         }
 

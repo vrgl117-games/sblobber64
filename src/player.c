@@ -36,17 +36,7 @@ void player_init()
     body[14] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_7.sprite");
     body[15] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_8.sprite");
 
-    for (uint8_t y = 0; y < MAP_HEIGHT; y++)
-    {
-        for (uint8_t x = 0; x < MAP_WIDTH; x++)
-        {
-            if (map[y][x] == 's')
-            {
-                player.x = x;
-                player.y = y;
-            }
-        }
-    }
+    player_reset();
 }
 
 void player_draw()
@@ -143,6 +133,23 @@ void player_move(input_t *input)
             {
                 player.h_of = save_player.h_of;
                 player.w_of = save_player.w_of;
+            }
+        }
+    }
+}
+
+void player_reset()
+{
+    player.h_of = 0;
+    player.w_of = 0;
+    for (uint8_t y = 0; y < MAP_HEIGHT; y++)
+    {
+        for (uint8_t x = 0; x < MAP_WIDTH; x++)
+        {
+            if (map[y][x] == 's')
+            {
+                player.x = x;
+                player.y = y;
             }
         }
     }

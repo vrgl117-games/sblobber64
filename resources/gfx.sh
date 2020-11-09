@@ -6,6 +6,14 @@ fontb='resources/fonts/Kenney Blocks.ttf'
 #-extent XXxYY
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"sblobber64" -extent 512x104 -gravity center resources/gfx/sprites/ui/logo.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Press Start" -extent 218x44 -gravity center resources/gfx/sprites/ui/press_start.png
+convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Pause" -extent 256x104 -gravity center resources/gfx/sprites/ui/pause.png
+convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 -gravity center resources/gfx/sprites/ui/resume.png
+convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 -gravity center resources/gfx/sprites/ui/restart.png
+convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 -gravity center resources/gfx/sprites/ui/quit.png
+convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 -gravity center resources/gfx/sprites/ui/resume_selected.png
+convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 -gravity center resources/gfx/sprites/ui/restart_selected.png
+convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 -gravity center resources/gfx/sprites/ui/quit_selected.png
+
 
 # studio logo
 convert -strip -brightness-contrast -10 resources/gfx/sprites/intro/vrgl117_logo.png resources/gfx/sprites/intro/vrgl117_logo_9.png

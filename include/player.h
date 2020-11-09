@@ -15,5 +15,6 @@ typedef struct player
 void player_draw();
 void player_init();
 void player_move(input_t *input);
+void player_reset();
 
 #endif // __PLAYER_H__

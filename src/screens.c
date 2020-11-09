@@ -70,6 +70,46 @@ void screen_game(display_context_t disp, input_t *input)
     rdp_detach_display();
 }
 
+pause_selection_t screen_pause(display_context_t disp, input_t *input)
+{
+    static int selected = 0;
+
+    if (input->up)
+    {
+        selected = (selected == 0 ? 2 : selected - 1);
+    }
+    if (input->down)
+    {
+        selected = (selected == 2 ? 0 : selected + 1);
+    }
+
+    rdp_attach(disp);
+
+    rdp_draw_filled_fullscreen(colors[COLOR_BLACK]);
+
+    rdp_attach(disp);
+
+    sprite_t *pause_sp = dfs_load_sprite("/gfx/sprites/ui/pause.sprite");
+    graphics_draw_sprite(disp, __width / 2 - pause_sp->width / 2, 10, pause_sp);
+    free(pause_sp);
+
+    sprite_t *resume_sp = dfs_load_sprite((selected == 0 ? "/gfx/sprites/ui/resume_selected.sprite" : "/gfx/sprites/ui/resume.sprite"));
+    graphics_draw_sprite(disp, __width / 2 - resume_sp->width / 2, 200, resume_sp);
+    free(resume_sp);
+    sprite_t *restart_sp = dfs_load_sprite((selected == 1 ? "/gfx/sprites/ui/restart_selected.sprite" : "/gfx/sprites/ui/restart.sprite"));
+    graphics_draw_sprite(disp, __width / 2 - restart_sp->width / 2, 250, restart_sp);
+    free(restart_sp);
+    sprite_t *quit_sp = dfs_load_sprite((selected == 2 ? "/gfx/sprites/ui/quit_selected.sprite" : "/gfx/sprites/ui/quit.sprite"));
+    graphics_draw_sprite(disp, __width / 2 - quit_sp->width / 2, 300, quit_sp);
+    free(quit_sp);
+
+    if (input->A)
+        return selected;
+    if (input->start)
+        return resume;
+    return -1;
+}
+
 void screen_timer_title()
 {
     tick++;
