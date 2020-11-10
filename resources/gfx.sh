@@ -14,7 +14,6 @@ convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsi
 convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 -gravity center resources/gfx/sprites/ui/restart_selected.png
 convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 -gravity center resources/gfx/sprites/ui/quit_selected.png
 
-
 # studio logo
 convert -strip -brightness-contrast -10 resources/gfx/sprites/intro/vrgl117_logo.png resources/gfx/sprites/intro/vrgl117_logo_9.png
 convert -strip -brightness-contrast -20 resources/gfx/sprites/intro/vrgl117_logo.png resources/gfx/sprites/intro/vrgl117_logo_8.png

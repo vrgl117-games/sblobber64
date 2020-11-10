@@ -18,9 +18,17 @@ all: build
 build: ##    Create rom.
 	@docker --version &> /dev/null
 	@if [ $$? -ne 0 ]; then echo "Building rom..." && make $(PROG_NAME).z64; fi
-	@if [ $$? -eq 0 ]; then echo "Building rom inside docker environment..." && make docker; fi
+	@if [ $$? -eq 0 ]; then echo "Building rom inside docker environment..." && make docker-rom; fi
 
-docker: setup
+gengfx:##   Generate UI gfx.
+	@docker --version &> /dev/null
+	@if [ $$? -ne 0 ]; then echo "Generating gfx..." && ./resources/gfx.sh; fi
+	@if [ $$? -eq 0 ]; then echo "Generating gfx inside docker environment..." && make docker-gengfx; fi
+
+docker-gengfx: setup
+	@docker run -v ${CURDIR}:/game build ./resources/gfx.sh
+
+docker-rom: setup
 	@docker run -v ${CURDIR}:/game build make $(PROG_NAME).z64
 
 rebuild: clean build	##  Erase temp files and create rom.
