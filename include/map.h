@@ -7,5 +7,7 @@
 
 void map_draw();
 void map_init();
+void map_next();
+void map_reset();
 
 #endif // __MAP_H__

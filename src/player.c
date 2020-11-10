@@ -6,7 +6,8 @@
 #include "map.h"
 #include "rdp.h"
 
-extern char map[MAP_HEIGHT][MAP_WIDTH];
+extern int map_idx;
+extern char map[2][MAP_HEIGHT][MAP_WIDTH];
 
 player_t player = {0, 0, 0, 0};
 static sprite_t *body[16] = {0};
@@ -76,7 +77,7 @@ static inline bool detect_tile(char *tiles)
     {
         for (int w = player.x - player.w_of; w <= player.x + player.w_of; w++)
         {
-            if (strchr(tiles, map[h][w]))
+            if (strchr(tiles, map[map_idx][h][w]))
             {
                 return true;
             }
@@ -136,6 +137,9 @@ bool player_move(input_t *input)
         }
     }
 
+    if (detect_tile("B"))
+        map_next();
+
     return detect_tile("e");
 }
 
@@ -147,7 +151,7 @@ void player_reset()
     {
         for (uint8_t x = 0; x < MAP_WIDTH; x++)
         {
-            if (map[y][x] == 's')
+            if (map[map_idx][y][x] == 's')
             {
                 player.x = x;
                 player.y = y;

@@ -52,7 +52,11 @@ int main()
         case title: // press start.
             screen_title(disp);
             if (input.start)
+            {
+                map_reset();
+                player_reset();
                 screen = game;
+            }
             break;
         case game: // actual game.
             if (input.start)
@@ -64,6 +68,7 @@ int main()
             switch (screen_pause(disp, &input))
             {
             case restart:
+                map_reset();
                 player_reset();
             case resume:
                 screen = game;
