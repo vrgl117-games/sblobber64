@@ -1,6 +1,5 @@
 #include "player.h"
 
-#include <stdbool.h>
 #include <string.h>
 
 #include "dfs.h"
@@ -86,7 +85,7 @@ static inline bool detect_tile(char *tiles)
     return false;
 }
 
-void player_move(input_t *input)
+bool player_move(input_t *input)
 {
     player_t save_player = player;
 
@@ -136,6 +135,8 @@ void player_move(input_t *input)
             }
         }
     }
+
+    return detect_tile("e");
 }
 
 void player_reset()

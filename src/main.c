@@ -57,7 +57,8 @@ int main()
         case game: // actual game.
             if (input.start)
                 screen = pause;
-            screen_game(disp, &input);
+            if (screen_game(disp, &input))
+                screen = win;
             break;
         case pause: // pause menu.
             switch (screen_pause(disp, &input))
@@ -73,6 +74,10 @@ int main()
             default:
                 break;
             }
+            break;
+        case win:
+            if (screen_win(disp, &input))
+                screen = title;
             break;
         }
 

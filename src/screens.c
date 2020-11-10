@@ -57,9 +57,10 @@ bool screen_intro(display_context_t disp)
     return (anim >= 82);
 }
 
-void screen_game(display_context_t disp, input_t *input)
+bool screen_game(display_context_t disp, input_t *input)
 {
-    player_move(input);
+    bool win = player_move(input);
+
     rdp_attach(disp);
 
     rdp_draw_filled_fullscreen(colors[COLOR_BG]);
@@ -68,6 +69,8 @@ void screen_game(display_context_t disp, input_t *input)
     player_draw();
 
     rdp_detach_display();
+
+    return win;
 }
 
 pause_selection_t screen_pause(display_context_t disp, input_t *input)
@@ -135,4 +138,23 @@ void screen_title(display_context_t disp)
         graphics_draw_sprite(disp, __width / 2 - press_start->width / 2, 340, press_start);
         free(press_start);
     }
+}
+
+bool screen_win(display_context_t disp, input_t *input)
+{
+    rdp_attach(disp);
+
+    rdp_draw_filled_fullscreen(colors[COLOR_BLACK]);
+
+    rdp_attach(disp);
+
+    sprite_t *you_win_sp = dfs_load_sprite("/gfx/sprites/ui/you_win.sprite");
+    graphics_draw_sprite(disp, __width / 2 - you_win_sp->width / 2, 40, you_win_sp);
+    free(you_win_sp);
+
+    sprite_t *restart_sp = dfs_load_sprite("/gfx/sprites/ui/restart_selected.sprite");
+    graphics_draw_sprite(disp, __width / 2 - restart_sp->width / 2, 250, restart_sp);
+    free(restart_sp);
+
+    return (input->A || input->start);
 }
