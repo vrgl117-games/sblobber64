@@ -8,7 +8,7 @@
 #include "sounds.h"
 
 extern int map_idx;
-extern char map[3][MAP_HEIGHT][MAP_WIDTH];
+extern char map[4][MAP_HEIGHT][MAP_WIDTH];
 
 player_t player = {0, 0, 0, 0};
 static sprite_t *body[16] = {0};
@@ -74,13 +74,26 @@ void player_draw()
 
 static inline bool detect_tile(char *tiles)
 {
+    int found = 0;
     for (int h = player.y - player.h_of; h <= player.y + player.h_of; h++)
     {
         for (int w = player.x - player.w_of; w <= player.x + player.w_of; w++)
         {
             if (strchr(tiles, map[map_idx][h][w]))
             {
-                return true;
+                found++;
+                if (map[map_idx][h][w] == 'B')
+                {
+                    if (found == 2)
+                        return true;
+                }
+                else if (map[map_idx][h][w] == 'C')
+                {
+                    if (found == 3)
+                        return true;
+                }
+                else
+                    return true;
             }
         }
     }
@@ -138,7 +151,7 @@ bool player_move(input_t *input)
         }
     }
 
-    if (detect_tile("B"))
+    if (detect_tile("ABC"))
     {
         sound_start(0);
         map_next();
