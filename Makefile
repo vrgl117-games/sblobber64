@@ -41,11 +41,11 @@ filesystem/gfx/%.sprite: resources/gfx/%.png
 	$(MKSPRITE) 16 1 1 $< $@
 
 # sfx #
-MODS := $(wildcard resources/sfx/*.mod)
-BGMS := $(subst resources/,filesystem/,$(MODS))
-filesystem/sfx/%.mod: resources/sfx/%.mod
+SOUNDS := $(wildcard resources/sfx/*.ogg)
+RAWS := $(subst .ogg,.raw,$(subst resources/,filesystem/,$(SOUNDS)))
+filesystem/sfx/%.raw: resources/sfx/%.ogg
 	@mkdir -p `echo $@ | xargs dirname`
-	cp $< $@
+	sox $< -b 16 -e signed-integer -B -r 44100 $@ remix -
 
 # code #
 SRCS := $(wildcard src/*.c)
@@ -57,7 +57,7 @@ $(PROG_NAME).bin : $(PROG_NAME).elf
 	$(OBJCOPY) -O binary $< $@
 
 # dfs #
-$(PROG_NAME).dfs: $(SPRITES) $(BGMS)
+$(PROG_NAME).dfs: $(SPRITES) $(RAWS)
 	@mkdir -p ./filesystem/
 	@echo `git rev-parse HEAD` > ./filesystem/hash
 	$(MKDFSPATH) $@ ./filesystem/

@@ -7,6 +7,7 @@
 #include "player.h"
 #include "rdp.h"
 #include "screens.h"
+#include "sounds.h"
 
 screen_t screen = game; //TODO: set back to intro
 
@@ -21,6 +22,7 @@ int main()
     timer_init();
     debug_clear();
     colors_init();
+    sound_init();
 
     map_init();
     player_init();
@@ -94,6 +96,7 @@ int main()
 
         // update display
         display_show(disp);
+        sound_update();
     }
 
     return 0;

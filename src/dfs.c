@@ -92,3 +92,14 @@ sprites_t *dfs_load_sprites(const char *const path, char *lang)
     data->slices = i;
     return data;
 }
+
+int dfs_openf(const char *const format, ...)
+{
+    char buffer[256];
+    va_list args;
+    va_start(args, format);
+    vsprintf(buffer, format, args);
+    va_end(args);
+
+    return dfs_open(buffer);
+}

@@ -5,9 +5,10 @@
 #include "dfs.h"
 #include "map.h"
 #include "rdp.h"
+#include "sounds.h"
 
 extern int map_idx;
-extern char map[2][MAP_HEIGHT][MAP_WIDTH];
+extern char map[3][MAP_HEIGHT][MAP_WIDTH];
 
 player_t player = {0, 0, 0, 0};
 static sprite_t *body[16] = {0};
@@ -138,7 +139,10 @@ bool player_move(input_t *input)
     }
 
     if (detect_tile("B"))
+    {
+        sound_start(0);
         map_next();
+    }
 
     return detect_tile("e");
 }
