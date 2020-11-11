@@ -1,6 +1,7 @@
 #ifndef __MAP_H__
 #define __MAP_H__
 
+#define MAP_LAYERS 4
 #define MAP_WIDTH 20
 #define MAP_HEIGHT 15
 #define MAP_CELL_SIZE 32

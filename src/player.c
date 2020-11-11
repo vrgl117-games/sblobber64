@@ -8,7 +8,7 @@
 #include "sounds.h"
 
 extern int map_idx;
-extern char map[4][MAP_HEIGHT][MAP_WIDTH];
+extern char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH];
 
 player_t player = {0, 0, 0, 0};
 static sprite_t *body[16] = {0};
@@ -139,11 +139,11 @@ bool player_move(input_t *input)
 
     if (input->up || input->down || input->left || input->right)
     {
-        if (detect_tile("-|[]{}y<>^"))
+        if (detect_tile("-|[]{}y<>^p"))
         {
             player.x = save_player.x;
             player.y = save_player.y;
-            if (detect_tile("-|[]{}y<>^"))
+            if (detect_tile("-|[]{}y<>^p"))
             {
                 player.h_of = save_player.h_of;
                 player.w_of = save_player.w_of;
