@@ -9,6 +9,7 @@
 
 extern int map_idx;
 extern char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH];
+extern sprite_t *tiles[255];
 
 player_t player = {0, 0, 0, 0};
 static sprite_t *body[16] = {0};
@@ -69,6 +70,16 @@ void player_draw()
         rdp_draw_sprite_with_texture(body[13], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y + 1), 0);
         rdp_draw_sprite_with_texture(body[14], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
         rdp_draw_sprite_with_texture(body[15], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y + 1), 0);
+    }
+
+    // draw any transparant tile over the player
+    for (int y = player.y - player.h_of; y <= player.y + player.h_of; y++)
+    {
+        for (int x = player.x - player.w_of; x <= player.x + player.w_of; x++)
+        {
+            if (map[map_idx][y][x] == 'd')
+                rdp_draw_sprite_with_texture(tiles[(int)map[map_idx][y][x]], MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
+        }
     }
 }
 
@@ -151,11 +162,15 @@ bool player_move(input_t *input)
         }
     }
 
+    // buttons
     if (detect_tile("ABC"))
     {
         sound_start(0);
         map_next();
     }
+    // key & closed door
+    if (detect_tile("kD"))
+        map_next();
 
     return detect_tile("e");
 }

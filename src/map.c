@@ -20,8 +20,8 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|      |  B|   |.."},
         {"..|    {-]   |   |.."},
         {"..|    |    B| p |.."},
-        {"..>----] i   |   |.."},
-        {"..|      |   |  A|.."},
+        {"..>L---^-}   |   |.."},
+        {"..|     k|   |  A|.."},
         {"..[------^---^---].."},
         {"...................."},
     },
@@ -37,8 +37,8 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|      |  B|   |.."},
         {"..|    {-]   |   |.."},
         {"..|    |    B| p |.."},
-        {"..>----] i   |   |.."},
-        {"..|      |   |  A|.."},
+        {"..>L---^-}   |   |.."},
+        {"..|     k|   |  A|.."},
         {"..[------^---^---].."},
         {"...................."},
     },
@@ -54,7 +54,41 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|      |  B|   |.."},
         {"..|    {-]   |   |.."},
         {"..|    |    B| p |.."},
-        {"..>----] i   ,   |.."},
+        {"..>L---^-}   ,   |.."},
+        {"..|     k|      a|.."},
+        {"..[------^-------].."},
+        {"...................."},
+    },
+    {
+        {"...................."},
+        {"..{--------------}.."},
+        {"..|s          c c|.."},
+        {"..|   p    p     |.."},
+        {"..|             c|.."},
+        {"..>------y) (----<.."},
+        {"..|     e|       |.."},
+        {"..>)     >---} (-<.."},
+        {"..|      |  b|   |.."},
+        {"..|    {-]   |   |.."},
+        {"..|    |    b| p |.."},
+        {"..>L---] i   ,   |.."},
+        {"..|     k|      a|.."},
+        {"..[------^-------].."},
+        {"...................."},
+    },
+    {
+        {"...................."},
+        {"..{--------------}.."},
+        {"..|s          c c|.."},
+        {"..|   p    p     |.."},
+        {"..|             c|.."},
+        {"..>------y) (----<.."},
+        {"..|     e|       |.."},
+        {"..>)     >---} (-<.."},
+        {"..|      |  b|   |.."},
+        {"..|    {-]   |   |.."},
+        {"..|    |    b| p |.."},
+        {"..>D---] i   ,   |.."},
         {"..|      |      a|.."},
         {"..[------^-------].."},
         {"...................."},
@@ -71,14 +105,14 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|      |  b|   |.."},
         {"..|    {-]   |   |.."},
         {"..|    |    b| p |.."},
-        {"..| (--] i   ,   |.."},
+        {"..>d---] i   ,   |.."},
         {"..|      |      a|.."},
         {"..[------^-------].."},
         {"...................."},
     },
 };
 
-static sprite_t *tiles[255] = {0};
+sprite_t *tiles[255] = {0};
 
 void map_init()
 {
@@ -98,7 +132,12 @@ void map_init()
     tiles['i'] = dfs_load_sprite("/gfx/sprites/map/tile_w_ver_t.sprite");
     tiles[','] = dfs_load_sprite("/gfx/sprites/map/tile_w_ver_b.sprite");
     tiles['p'] = dfs_load_sprite("/gfx/sprites/map/tile_p.sprite");
-
+    
+    //door
+    tiles['d'] = dfs_load_sprite("/gfx/sprites/map/tile_d_open.sprite");
+    tiles['D'] = dfs_load_sprite("/gfx/sprites/map/tile_d_close.sprite");
+    tiles['L'] = dfs_load_sprite("/gfx/sprites/map/tile_d_lock.sprite");
+    
     //start
     tiles['s'] = dfs_load_sprite("/gfx/sprites/map/tile_s.sprite");
 
@@ -120,6 +159,9 @@ void map_init()
     tiles['&'] = dfs_load_sprite("/gfx/sprites/map/tile_tree_0.sprite");
     tiles['*'] = dfs_load_sprite("/gfx/sprites/map/tile_tree_1.sprite");
     tiles['%'] = dfs_load_sprite("/gfx/sprites/map/tile_tree_2.sprite");
+
+    //misc
+    tiles['k'] = dfs_load_sprite("/gfx/sprites/map/tile_k.sprite");
 
     map_reset();
 }
@@ -151,7 +193,7 @@ void map_reset()
     {
         for (uint8_t x = 0; x < MAP_WIDTH; x++)
         {
-            if (strchr(".%&+*", map[map_idx][y][x]))
+            if (strchr(TILES_VEGETATION, map[map_idx][y][x]))
             {
                 int n = rand() % 50;
                 char out = '.';
