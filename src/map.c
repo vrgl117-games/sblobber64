@@ -16,13 +16,13 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|             C|.."},
         {"..>------y-------<.."},
         {"..|     e|       |.."},
-        {"..>-     >---} --<.."},
+        {"..>)     >---} (-<.."},
         {"..|      |  B|   |.."},
         {"..|    {-]   |   |.."},
         {"..|    |    B| p |.."},
-        {"..>----] |   |   |.."},
+        {"..>----] i   |   |.."},
         {"..|      |   |  A|.."},
-        {"..[------^-------].."},
+        {"..[------^---^---].."},
         {"...................."},
     },
     {
@@ -31,15 +31,15 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|s          c c|.."},
         {"..|   p    p     |.."},
         {"..|             c|.."},
-        {"..>------y- -----<.."},
+        {"..>------y) (----<.."},
         {"..|     e|       |.."},
-        {"..>-     >---} --<.."},
+        {"..>)     >---} (-<.."},
         {"..|      |  B|   |.."},
         {"..|    {-]   |   |.."},
         {"..|    |    B| p |.."},
-        {"..>----] |   |   |.."},
+        {"..>----] i   |   |.."},
         {"..|      |   |  A|.."},
-        {"..[------^-------].."},
+        {"..[------^---^---].."},
         {"...................."},
     },
     {
@@ -48,13 +48,13 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|s          c c|.."},
         {"..|   p    p     |.."},
         {"..|             c|.."},
-        {"..>------y- -----<.."},
+        {"..>------y) (----<.."},
         {"..|     e|       |.."},
-        {"..>-     >---} --<.."},
+        {"..>)     >---} (-<.."},
         {"..|      |  B|   |.."},
         {"..|    {-]   |   |.."},
         {"..|    |    B| p |.."},
-        {"..>----] |   |   |.."},
+        {"..>----] i   ,   |.."},
         {"..|      |      a|.."},
         {"..[------^-------].."},
         {"...................."},
@@ -65,13 +65,13 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|s          c c|.."},
         {"..|   p    p     |.."},
         {"..|             c|.."},
-        {"..>------y- -----<.."},
+        {"..>------y) (----<.."},
         {"..|     e|       |.."},
-        {"..>-     >---} --<.."},
+        {"..>)     >---} (-<.."},
         {"..|      |  b|   |.."},
         {"..|    {-]   |   |.."},
         {"..|    |    b| p |.."},
-        {"..> ---] |   |   |.."},
+        {"..| (--] i   ,   |.."},
         {"..|      |      a|.."},
         {"..[------^-------].."},
         {"...................."},
@@ -91,8 +91,12 @@ void map_init()
     tiles['<'] = dfs_load_sprite("/gfx/sprites/map/tile_w_mr.sprite");
     tiles['y'] = dfs_load_sprite("/gfx/sprites/map/tile_w_tm.sprite");
     tiles['^'] = dfs_load_sprite("/gfx/sprites/map/tile_w_bm.sprite");
-    tiles['-'] = dfs_load_sprite("/gfx/sprites/map/tile_w_hor.sprite");
+    tiles['-'] = dfs_load_sprite("/gfx/sprites/map/tile_w_hor.sprite"); 
+    tiles['('] = dfs_load_sprite("/gfx/sprites/map/tile_w_hor_l.sprite");
+    tiles[')'] = dfs_load_sprite("/gfx/sprites/map/tile_w_hor_r.sprite");
     tiles['|'] = dfs_load_sprite("/gfx/sprites/map/tile_w_ver.sprite");
+    tiles['i'] = dfs_load_sprite("/gfx/sprites/map/tile_w_ver_t.sprite");
+    tiles[','] = dfs_load_sprite("/gfx/sprites/map/tile_w_ver_b.sprite");
     tiles['p'] = dfs_load_sprite("/gfx/sprites/map/tile_p.sprite");
 
     //start

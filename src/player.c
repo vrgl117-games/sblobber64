@@ -139,11 +139,11 @@ bool player_move(input_t *input)
 
     if (input->up || input->down || input->left || input->right)
     {
-        if (detect_tile("-|[]{}y<>^p"))
+        if (detect_tile(TILES_WALL))
         {
             player.x = save_player.x;
             player.y = save_player.y;
-            if (detect_tile("-|[]{}y<>^p"))
+            if (detect_tile(TILES_WALL))
             {
                 player.h_of = save_player.h_of;
                 player.w_of = save_player.w_of;

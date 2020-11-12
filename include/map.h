@@ -6,6 +6,8 @@
 #define MAP_HEIGHT 15
 #define MAP_CELL_SIZE 32
 
+#define TILES_WALL "-|[]{}y<>^p()i,"
+
 void map_draw();
 void map_init();
 void map_next();
