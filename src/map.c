@@ -125,19 +125,19 @@ void map_init()
     tiles['<'] = dfs_load_sprite("/gfx/sprites/map/tile_w_mr.sprite");
     tiles['y'] = dfs_load_sprite("/gfx/sprites/map/tile_w_tm.sprite");
     tiles['^'] = dfs_load_sprite("/gfx/sprites/map/tile_w_bm.sprite");
-    tiles['-'] = dfs_load_sprite("/gfx/sprites/map/tile_w_hor.sprite"); 
+    tiles['-'] = dfs_load_sprite("/gfx/sprites/map/tile_w_hor.sprite");
     tiles['('] = dfs_load_sprite("/gfx/sprites/map/tile_w_hor_l.sprite");
     tiles[')'] = dfs_load_sprite("/gfx/sprites/map/tile_w_hor_r.sprite");
     tiles['|'] = dfs_load_sprite("/gfx/sprites/map/tile_w_ver.sprite");
     tiles['i'] = dfs_load_sprite("/gfx/sprites/map/tile_w_ver_t.sprite");
     tiles[','] = dfs_load_sprite("/gfx/sprites/map/tile_w_ver_b.sprite");
     tiles['p'] = dfs_load_sprite("/gfx/sprites/map/tile_p.sprite");
-    
+
     //door
     tiles['d'] = dfs_load_sprite("/gfx/sprites/map/tile_d_open.sprite");
     tiles['D'] = dfs_load_sprite("/gfx/sprites/map/tile_d_close.sprite");
     tiles['L'] = dfs_load_sprite("/gfx/sprites/map/tile_d_lock.sprite");
-    
+
     //start
     tiles['s'] = dfs_load_sprite("/gfx/sprites/map/tile_s.sprite");
 
@@ -174,9 +174,7 @@ void map_draw()
         {
             sprite_t *tile = tiles[(int)map[map_idx][y][x]];
             if (tile != NULL)
-            {
                 rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
-            }
         }
     }
 }

@@ -62,12 +62,15 @@ int main()
             break;
         case game: // actual game.
             if (input.start)
+            {
                 screen = pause;
-            if (screen_game(disp, &input))
+                screen_pause(disp, &input, true);
+            }
+            else if (screen_game(disp, &input))
                 screen = win;
             break;
         case pause: // pause menu.
-            switch (screen_pause(disp, &input))
+            switch (screen_pause(disp, &input, false))
             {
             case restart:
                 map_reset();

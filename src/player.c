@@ -43,23 +43,23 @@ void player_init()
 
 void player_draw()
 {
-    if (player.h_of == 0 && player.w_of == 0)
+    if (player.h_of == 0 && player.w_of == 0) // single
     {
         rdp_draw_sprite_with_texture(body[0], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
     }
-    else if (player.h_of == 1 && player.w_of == 0)
+    else if (player.h_of == 1 && player.w_of == 0) // horizontal
     {
         rdp_draw_sprite_with_texture(body[1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
         rdp_draw_sprite_with_texture(body[2], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
         rdp_draw_sprite_with_texture(body[3], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
     }
-    else if (player.h_of == 0 && player.w_of == 1)
+    else if (player.h_of == 0 && player.w_of == 1) // vertical
     {
         rdp_draw_sprite_with_texture(body[4], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
         rdp_draw_sprite_with_texture(body[5], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
         rdp_draw_sprite_with_texture(body[6], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
     }
-    else
+    else // square
     {
         rdp_draw_sprite_with_texture(body[7], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y - 1), 0);
         rdp_draw_sprite_with_texture(body[8], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
@@ -113,52 +113,44 @@ static inline bool detect_tile(char *tiles)
 
 bool player_move(input_t *input)
 {
+    if (!input->up && !input->down && !input->left && !input->right)
+        return false;
+
     player_t save_player = player;
 
     if (input->up)
     {
         if (player.h_of == 0)
-        {
             player.h_of = 1;
-        }
         player.y -= 1;
     }
-    if (input->down)
+    else if (input->down)
     {
         if (player.h_of == 1)
-        {
             player.h_of = 0;
-        }
         player.y += 1;
     }
-    if (input->left)
+    else if (input->left)
     {
         if (player.w_of == 1)
-        {
             player.w_of = 0;
-        }
         player.x -= 1;
     }
-    if (input->right)
+    else
     {
         if (player.w_of == 0)
-        {
             player.w_of = 1;
-        }
         player.x += 1;
     }
 
-    if (input->up || input->down || input->left || input->right)
+    if (detect_tile(TILES_WALL))
     {
+        player.x = save_player.x;
+        player.y = save_player.y;
         if (detect_tile(TILES_WALL))
         {
-            player.x = save_player.x;
-            player.y = save_player.y;
-            if (detect_tile(TILES_WALL))
-            {
-                player.h_of = save_player.h_of;
-                player.w_of = save_player.w_of;
-            }
+            player.h_of = save_player.h_of;
+            player.w_of = save_player.w_of;
         }
     }
 
@@ -172,13 +164,17 @@ bool player_move(input_t *input)
     if (detect_tile("kD"))
         map_next();
 
+    // end
     return detect_tile("e");
 }
 
 void player_reset()
 {
+    // reset player size to small
     player.h_of = 0;
     player.w_of = 0;
+
+    // set player start position
     for (uint8_t y = 0; y < MAP_HEIGHT; y++)
     {
         for (uint8_t x = 0; x < MAP_WIDTH; x++)

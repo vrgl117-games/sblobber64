@@ -16,34 +16,32 @@ static volatile int tick = 0;
 // return true when the animation is done.
 bool screen_intro(display_context_t disp)
 {
-    static int anim = 0;
-
     rdp_attach(disp);
 
-    rdp_draw_filled_fullscreen(0);
+    rdp_draw_filled_fullscreen(colors[COLOR_BLACK]);
 
     rdp_detach_display();
     sprite_t *intro = NULL;
 
-    switch (anim)
+    switch (tick)
     {
     case 1 ... 9:
-        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", anim);
+        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", tick);
         break;
     case 10 ... 30:
         intro = dfs_load_sprite("/gfx/sprites/intro/n64brew_jam_logo.sprite");
         break;
     case 31 ... 39:
-        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", 40 - anim);
+        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", 40 - tick);
         break;
     case 41 ... 49:
-        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", anim - 40);
+        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", tick - 40);
         break;
     case 50 ... 70:
         intro = dfs_load_sprite("/gfx/sprites/intro/vrgl117_logo.sprite");
         break;
     case 71 ... 79:
-        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", 80 - anim);
+        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", 80 - tick);
         break;
     }
 
@@ -53,8 +51,7 @@ bool screen_intro(display_context_t disp)
         free(intro);
     }
 
-    anim++;
-    return (anim >= 82);
+    return (tick >= 82);
 }
 
 bool screen_game(display_context_t disp, input_t *input)
@@ -73,18 +70,17 @@ bool screen_game(display_context_t disp, input_t *input)
     return win;
 }
 
-pause_selection_t screen_pause(display_context_t disp, input_t *input)
+pause_selection_t screen_pause(display_context_t disp, input_t *input, bool reset)
 {
     static int selected = 0;
 
+    if (reset)
+        selected = 0;
+
     if (input->up)
-    {
         selected = (selected == 0 ? 2 : selected - 1);
-    }
-    if (input->down)
-    {
+    else if (input->down)
         selected = (selected == 2 ? 0 : selected + 1);
-    }
 
     rdp_attach(disp);
 
