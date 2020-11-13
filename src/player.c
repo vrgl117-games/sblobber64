@@ -12,7 +12,7 @@ extern char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH];
 extern sprite_t *tiles[255];
 
 player_t player = {0, 0, 0, 0};
-static sprite_t *body[16] = {0};
+static sprite_t *body[22] = {0};
 
 static inline bool isPlayer(uint8_t x, uint8_t y)
 {
@@ -21,22 +21,28 @@ static inline bool isPlayer(uint8_t x, uint8_t y)
 
 void player_init()
 {
-    body[0] = dfs_load_sprite("/gfx/sprites/slime/tile_single_0.sprite");
-    body[1] = dfs_load_sprite("/gfx/sprites/slime/tile_ver_0.sprite");
-    body[2] = dfs_load_sprite("/gfx/sprites/slime/tile_ver_1.sprite");
-    body[3] = dfs_load_sprite("/gfx/sprites/slime/tile_ver_2.sprite");
-    body[4] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_0.sprite");
-    body[5] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_1.sprite");
-    body[6] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_2.sprite");
-    body[7] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_0.sprite");
-    body[8] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_1.sprite");
-    body[9] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_2.sprite");
-    body[10] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_3.sprite");
-    body[11] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_4.sprite");
-    body[12] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_5.sprite");
-    body[13] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_6.sprite");
-    body[14] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_7.sprite");
-    body[15] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_8.sprite");
+    body[SLIME_SINGLE] = dfs_load_sprite("/gfx/sprites/slime/tile_single_0.sprite");
+    body[SLIME_VER_0] = dfs_load_sprite("/gfx/sprites/slime/tile_ver_0.sprite");
+    body[SLIME_VER_1] = dfs_load_sprite("/gfx/sprites/slime/tile_ver_1.sprite");
+    body[SLIME_VER_2] = dfs_load_sprite("/gfx/sprites/slime/tile_ver_2.sprite");
+    body[SLIME_HOR_0] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_0.sprite");
+    body[SLIME_HOR_1] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_1.sprite");
+    body[SLIME_HOR_2] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_2.sprite");
+    body[SLIME_SQ_0] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_0.sprite");
+    body[SLIME_SQ_1] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_1.sprite");
+    body[SLIME_SQ_2] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_2.sprite");
+    body[SLIME_SQ_3] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_3.sprite");
+    body[SLIME_SQ_4] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_4.sprite");
+    body[SLIME_SQ_5] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_5.sprite");
+    body[SLIME_SQ_6] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_6.sprite");
+    body[SLIME_SQ_7] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_7.sprite");
+    body[SLIME_SQ_8] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_8.sprite");
+    body[SLIME_HOR_0_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_0_alt.sprite");
+    body[SLIME_HOR_1_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_1_alt.sprite");
+    body[SLIME_SQ_0_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_0_alt.sprite");
+    body[SLIME_SQ_1_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_1_alt.sprite");
+    body[SLIME_SQ_4_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_4_alt.sprite");
+    body[SLIME_SQ_5_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_5_alt.sprite");
 
     player_reset();
 }
@@ -45,31 +51,103 @@ void player_draw()
 {
     if (player.h_of == 0 && player.w_of == 0) // single
     {
-        rdp_draw_sprite_with_texture(body[0], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+        if (player.h_of_anim != 0) // shrinking horizontally
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+        }
+        else if (player.w_of_anim != 0) // shrinking vertically
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+        }
+        else // full
+            rdp_draw_sprite_with_texture(body[SLIME_SINGLE], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
     }
-    else if (player.h_of == 1 && player.w_of == 0) // horizontal
+    else if (player.h_of == 1 && player.w_of == 0) // vertical
     {
-        rdp_draw_sprite_with_texture(body[1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
-        rdp_draw_sprite_with_texture(body[2], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-        rdp_draw_sprite_with_texture(body[3], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+        if (player.w_of_anim != 0) // shrinking horizontally
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y - 1), 0);
+
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y + 1), 0);
+        }
+        else if (player.h_of_anim == 0) // full
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_VER_0], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_2], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+        }
+        else // growing vertivally
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+        }
     }
-    else if (player.h_of == 0 && player.w_of == 1) // vertical
+    else if (player.h_of == 0 && player.w_of == 1) // horizontal
     {
-        rdp_draw_sprite_with_texture(body[4], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
-        rdp_draw_sprite_with_texture(body[5], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-        rdp_draw_sprite_with_texture(body[6], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+        if (player.h_of_anim != 0) // shrinking vertically
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y - 1), 0);
+
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+        }
+        else if (player.w_of_anim == 0) // full
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_0], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_2], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+        }
+        else // growing horizontally
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+        }
     }
     else // square
     {
-        rdp_draw_sprite_with_texture(body[7], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y - 1), 0);
-        rdp_draw_sprite_with_texture(body[8], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
-        rdp_draw_sprite_with_texture(body[9], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y - 1), 0);
-        rdp_draw_sprite_with_texture(body[10], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
-        rdp_draw_sprite_with_texture(body[11], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-        rdp_draw_sprite_with_texture(body[12], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
-        rdp_draw_sprite_with_texture(body[13], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y + 1), 0);
-        rdp_draw_sprite_with_texture(body[14], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
-        rdp_draw_sprite_with_texture(body[15], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y + 1), 0);
+        if (player.h_of_anim != 0) // growing vertically
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y + 1), 0);
+        }
+        else if (player.w_of_anim != 0) // growing horizontally
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
+
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+        }
+        else // full
+        {
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_3], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_4], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_5], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y + 1), 0);
+        }
     }
 
     // draw any transparant tile over the player
@@ -81,6 +159,11 @@ void player_draw()
                 rdp_draw_sprite_with_texture(tiles[(int)map[map_idx][y][x]], MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
         }
     }
+
+    if (player.h_of_anim > 0)
+        player.h_of_anim--;
+    if (player.w_of_anim > 0)
+        player.w_of_anim--;
 }
 
 static inline bool detect_tile(char *tiles)
@@ -121,25 +204,37 @@ bool player_move(input_t *input)
     if (input->up)
     {
         if (player.h_of == 0)
+        {
             player.h_of = 1;
+            player.h_of_anim = NUM_ANIMS;
+        }
         player.y -= 1;
     }
     else if (input->down)
     {
         if (player.h_of == 1)
+        {
             player.h_of = 0;
+            player.h_of_anim = NUM_ANIMS;
+        }
         player.y += 1;
     }
     else if (input->left)
     {
         if (player.w_of == 1)
+        {
             player.w_of = 0;
+            player.w_of_anim = NUM_ANIMS;
+        }
         player.x -= 1;
     }
     else
     {
         if (player.w_of == 0)
+        {
             player.w_of = 1;
+            player.w_of_anim = NUM_ANIMS;
+        }
         player.x += 1;
     }
 
@@ -151,6 +246,8 @@ bool player_move(input_t *input)
         {
             player.h_of = save_player.h_of;
             player.w_of = save_player.w_of;
+            player.h_of_anim = 0;
+            player.w_of_anim = 0;
         }
     }
 

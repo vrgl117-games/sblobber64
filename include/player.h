@@ -4,13 +4,45 @@
 #include <stdint.h>
 #include "screens.h"
 
+#define NUM_ANIMS 2
+
 typedef struct player
 {
     uint8_t x;
     uint8_t y;
     uint8_t h_of;
     uint8_t w_of;
+    uint8_t h_of_anim;
+    uint8_t w_of_anim;
+
 } player_t;
+
+#define SLIME_SINGLE 0
+#define SLIME_VER_0 1
+#define SLIME_VER_0_ANIM SLIME_VER_0
+#define SLIME_VER_1 2
+#define SLIME_VER_2 3
+#define SLIME_VER_1_ANIM SLIME_VER_2
+#define SLIME_HOR_0 4
+#define SLIME_HOR_1 5
+#define SLIME_HOR_2 6
+#define SLIME_SQ_0 7
+#define SLIME_SQ_1 8
+#define SLIME_SQ_2 9
+#define SLIME_SQ_3 10
+#define SLIME_SQ_2_ANIM SLIME_SQ_3
+#define SLIME_SQ_4 11
+#define SLIME_SQ_5 12
+#define SLIME_SQ_3_ANIM SLIME_SQ_5
+#define SLIME_SQ_6 13
+#define SLIME_SQ_7 14
+#define SLIME_SQ_8 15
+#define SLIME_HOR_0_ANIM 16
+#define SLIME_HOR_1_ANIM 17
+#define SLIME_SQ_0_ANIM 18
+#define SLIME_SQ_1_ANIM 19
+#define SLIME_SQ_4_ANIM 20
+#define SLIME_SQ_5_ANIM 21
 
 void player_draw();
 void player_init();
