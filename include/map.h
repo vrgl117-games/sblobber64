@@ -1,9 +1,9 @@
 #ifndef __MAP_H__
 #define __MAP_H__
 
-#define MAP_LAYERS 6
-#define MAP_WIDTH 20
-#define MAP_HEIGHT 15
+#define MAP_LAYERS 1  //6
+#define MAP_WIDTH 24  //20
+#define MAP_HEIGHT 24 //15
 #define MAP_CELL_SIZE 32
 
 #define TILES_WALL "-|[]{}y<>^p()i,L"
