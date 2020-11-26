@@ -97,6 +97,8 @@ int main()
         // display fps
         fps_draw(disp);
 
+        //debug_draw(disp);
+
         // update display
         display_show(disp);
         sound_update();

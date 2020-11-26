@@ -6,6 +6,7 @@
 #include "map.h"
 #include "rdp.h"
 #include "sounds.h"
+#include "debug.h"
 
 extern int map_idx;
 extern char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH];
@@ -49,6 +50,24 @@ void player_init()
 
 void player_draw()
 {
+    uint8_t save_y = player.y;
+    uint8_t save_x = player.x;
+    if (player.y >= (MAP_HEIGHT - SCREEN_HEIGHT / 2))
+    {
+        player.y = SCREEN_HEIGHT - (MAP_HEIGHT - player.y);
+    }
+    else if (player.y >= SCREEN_HEIGHT / 2)
+    {
+        player.y = SCREEN_HEIGHT / 2;
+    }
+    if (player.x >= (MAP_WIDTH - SCREEN_WIDTH / 2))
+    {
+        player.x = SCREEN_WIDTH - (MAP_WIDTH - player.x);
+    }
+    else if (player.x >= SCREEN_WIDTH / 2)
+    {
+        player.x = SCREEN_WIDTH / 2;
+    }
     if (player.h_of == 0 && player.w_of == 0) // single
     {
         if (player.h_of_anim != 0) // shrinking horizontally
@@ -164,6 +183,8 @@ void player_draw()
         player.h_of_anim--;
     if (player.w_of_anim > 0)
         player.w_of_anim--;
+    player.y = save_y;
+    player.x = save_x;
 }
 
 static inline bool detect_tile(char *tiles)

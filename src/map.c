@@ -4,7 +4,10 @@
 #include <string.h>
 
 #include "dfs.h"
+#include "player.h"
 #include "rdp.h"
+
+extern player_t player;
 
 int map_idx = 0;
 
@@ -200,11 +203,29 @@ void map_init()
 
 void map_draw()
 {
-    for (uint8_t y = 0; y < MAP_HEIGHT; y++)
+    int8_t sy = player.y - (SCREEN_HEIGHT / 2);
+    int8_t sx = player.x - (SCREEN_WIDTH / 2);
+    if (sy < 0)
     {
-        for (uint8_t x = 0; x < MAP_WIDTH; x++)
+        sy = 0;
+    }
+    if (sx < 0)
+    {
+        sx = 0;
+    }
+    if (sy + SCREEN_HEIGHT > MAP_HEIGHT)
+    {
+        sy -= (sy + SCREEN_HEIGHT) - MAP_HEIGHT;
+    }
+    if (sx + SCREEN_WIDTH > MAP_WIDTH)
+    {
+        sx -= (sx + SCREEN_WIDTH) - MAP_WIDTH;
+    }
+    for (uint8_t y = 0; y < SCREEN_HEIGHT; y++)
+    {
+        for (uint8_t x = 0; x < SCREEN_WIDTH; x++)
         {
-            sprite_t *tile = tiles[(int)map[map_idx][y][x]];
+            sprite_t *tile = tiles[(int)map[map_idx][sy + y][sx + x]];
             if (tile != NULL)
                 rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
         }
