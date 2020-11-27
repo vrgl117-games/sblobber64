@@ -20,6 +20,21 @@ static inline bool isPlayer(uint8_t x, uint8_t y)
     return ((y == player.y || y == player.y - player.h_of || y == player.y + player.h_of) && (x == player.x || x == player.x - player.w_of || x == player.x + player.w_of));
 }
 
+static inline void player_warp(char on_warp)
+{
+    for (uint8_t y = 0; y < MAP_HEIGHT; y++)
+    {
+        for (uint8_t x = 0; x < MAP_WIDTH; x++)
+        {
+            if (map[map_idx][y][x] == (on_warp == 'w' ? 'v' : 'w'))
+            {
+                player.y = y;
+                player.x = x;
+            }
+        }
+    }
+}
+
 void player_init()
 {
     body[SLIME_SINGLE] = dfs_load_sprite("/gfx/sprites/slime/tile_single_0.sprite");
@@ -187,7 +202,7 @@ void player_draw()
     player.x = save_x;
 }
 
-static inline bool detect_tile(char *tiles)
+static inline char detect_tile(char *tiles)
 {
     int found = 0;
     for (int h = player.y - player.h_of; h <= player.y + player.h_of; h++)
@@ -200,19 +215,19 @@ static inline bool detect_tile(char *tiles)
                 if (map[map_idx][h][w] == 'B')
                 {
                     if (found == 2)
-                        return true;
+                        return map[map_idx][h][w];
                 }
                 else if (map[map_idx][h][w] == 'C')
                 {
                     if (found == 3)
-                        return true;
+                        return map[map_idx][h][w];
                 }
                 else
-                    return true;
+                    return map[map_idx][h][w];
             }
         }
     }
-    return false;
+    return 0;
 }
 
 bool player_move(input_t *input)
@@ -221,6 +236,8 @@ bool player_move(input_t *input)
         return false;
 
     player_t save_player = player;
+
+    char on_warp = detect_tile(TILES_WARP);
 
     if (input->up)
     {
@@ -281,6 +298,14 @@ bool player_move(input_t *input)
     // key & closed door
     if (detect_tile("kD"))
         map_next();
+
+    // warp
+    if (!on_warp)
+    {
+        on_warp = detect_tile(TILES_WARP);
+        if (on_warp)
+            player_warp(on_warp);
+    }
 
     // end
     return detect_tile("e");

@@ -23,7 +23,7 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|    {--------}    |.."},
         {"..|    |........|    |.."},
         {"..|    |........|    |.."},
-        {"..|    |........|    |.."},
+        {"..| v  |........|    |.."},
         {"..|    |........|    |.."},
         {"..|    |........|    |.."},
         {"..|    |........|    |.."},
@@ -32,7 +32,7 @@ char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
         {"..|    [--------]    |.."},
         {"..|                  |.."},
         {"..|                  |.."},
-        {"..|                e |.."},
+        {"..|          w     e |.."},
         {"..|                  |.."},
         {"..[------------------].."},
         {"........................"},
@@ -197,6 +197,8 @@ void map_init()
 
     //misc
     tiles['k'] = dfs_load_sprite("/gfx/sprites/map/tile_k.sprite");
+    tiles['w'] = dfs_load_sprite("/gfx/sprites/map/tile_w.sprite");
+    tiles['v'] = tiles['w'];
 
     map_reset();
 }
