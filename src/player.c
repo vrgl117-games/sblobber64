@@ -8,8 +8,8 @@
 #include "sounds.h"
 #include "debug.h"
 
-extern int map_idx;
-extern char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH];
+extern map_t *map;
+
 extern sprite_t *tiles[255];
 
 player_t player = {0, 0, 0, 0};
@@ -22,11 +22,11 @@ static inline bool isPlayer(uint8_t x, uint8_t y)
 
 static inline void player_warp(char on_warp)
 {
-    for (uint8_t y = 0; y < MAP_HEIGHT; y++)
+    for (uint8_t y = 0; y < map->height; y++)
     {
-        for (uint8_t x = 0; x < MAP_WIDTH; x++)
+        for (uint8_t x = 0; x < map->width; x++)
         {
-            if (map[map_idx][y][x] == (on_warp == 'w' ? 'v' : 'w'))
+            if (map->grid[map->layer_idx][y][x] == (on_warp == 'w' ? 'v' : 'w'))
             {
                 player.y = y;
                 player.x = x;
@@ -67,17 +67,17 @@ void player_draw()
 {
     uint8_t save_y = player.y;
     uint8_t save_x = player.x;
-    if (player.y >= (MAP_HEIGHT - SCREEN_HEIGHT / 2))
+    if (player.y >= (map->height - SCREEN_HEIGHT / 2))
     {
-        player.y = SCREEN_HEIGHT - (MAP_HEIGHT - player.y);
+        player.y = SCREEN_HEIGHT - (map->height - player.y);
     }
     else if (player.y >= SCREEN_HEIGHT / 2)
     {
         player.y = SCREEN_HEIGHT / 2;
     }
-    if (player.x >= (MAP_WIDTH - SCREEN_WIDTH / 2))
+    if (player.x >= (map->width - SCREEN_WIDTH / 2))
     {
-        player.x = SCREEN_WIDTH - (MAP_WIDTH - player.x);
+        player.x = SCREEN_WIDTH - (map->width - player.x);
     }
     else if (player.x >= SCREEN_WIDTH / 2)
     {
@@ -189,8 +189,8 @@ void player_draw()
     {
         for (int x = player.x - player.w_of; x <= player.x + player.w_of; x++)
         {
-            if (map[map_idx][y][x] == 'd')
-                rdp_draw_sprite_with_texture(tiles[(int)map[map_idx][y][x]], MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
+            if (map->grid[map->layer_idx][y][x] == 'd')
+                rdp_draw_sprite_with_texture(tiles[(int)map->grid[map->layer_idx][y][x]], MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
         }
     }
 
@@ -209,21 +209,21 @@ static inline char detect_tile(char *tiles)
     {
         for (int w = player.x - player.w_of; w <= player.x + player.w_of; w++)
         {
-            if (strchr(tiles, map[map_idx][h][w]))
+            if (strchr(tiles, map->grid[map->layer_idx][h][w]))
             {
                 found++;
-                if (map[map_idx][h][w] == 'B')
+                if (map->grid[map->layer_idx][h][w] == 'B')
                 {
                     if (found == 2)
-                        return map[map_idx][h][w];
+                        return map->grid[map->layer_idx][h][w];
                 }
-                else if (map[map_idx][h][w] == 'C')
+                else if (map->grid[map->layer_idx][h][w] == 'C')
                 {
                     if (found == 3)
-                        return map[map_idx][h][w];
+                        return map->grid[map->layer_idx][h][w];
                 }
                 else
-                    return map[map_idx][h][w];
+                    return map->grid[map->layer_idx][h][w];
             }
         }
     }
@@ -318,11 +318,11 @@ void player_reset()
     player.w_of = 0;
 
     // set player start position
-    for (uint8_t y = 0; y < MAP_HEIGHT; y++)
+    for (uint8_t y = 0; y < map->height; y++)
     {
-        for (uint8_t x = 0; x < MAP_WIDTH; x++)
+        for (uint8_t x = 0; x < map->width; x++)
         {
-            if (map[map_idx][y][x] == 's')
+            if (map->grid[0][y][x] == 's')
             {
                 player.x = x;
                 player.y = y;

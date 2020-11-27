@@ -7,145 +7,11 @@
 #include "player.h"
 #include "rdp.h"
 
+#include "debug.h"
+
 extern player_t player;
 
-int map_idx = 0;
-
-char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
-    {
-        {"........................"},
-        {"........................"},
-        {"..{------------------}.."},
-        {"..|                  |.."},
-        {"..| s                |.."},
-        {"..|                  |.."},
-        {"..|                  |.."},
-        {"..|    {--------}    |.."},
-        {"..|    |........|    |.."},
-        {"..|    |........|    |.."},
-        {"..| v  |........|    |.."},
-        {"..|    |........|    |.."},
-        {"..|    |........|    |.."},
-        {"..|    |........|    |.."},
-        {"..|    |........|    |.."},
-        {"..|    |........|    |.."},
-        {"..|    [--------]    |.."},
-        {"..|                  |.."},
-        {"..|                  |.."},
-        {"..|          w     e |.."},
-        {"..|                  |.."},
-        {"..[------------------].."},
-        {"........................"},
-        {"........................"},
-    },
-};
-
-/*
-char map[MAP_LAYERS][MAP_HEIGHT][MAP_WIDTH] = {
-    {
-        {"...................."},
-        {"..{--------------}.."},
-        {"..|s          C C|.."},
-        {"..|   p    p     |.."},
-        {"..|             C|.."},
-        {"..>------y-------<.."},
-        {"..|     e|       |.."},
-        {"..>)     >---} (-<.."},
-        {"..|      |  B|   |.."},
-        {"..|    {-]   |   |.."},
-        {"..|    |    B| p |.."},
-        {"..>L---^-}   |   |.."},
-        {"..|     k|   |  A|.."},
-        {"..[------^---^---].."},
-        {"...................."},
-    },
-    {
-        {"...................."},
-        {"..{--------------}.."},
-        {"..|s          c c|.."},
-        {"..|   p    p     |.."},
-        {"..|             c|.."},
-        {"..>------y) (----<.."},
-        {"..|     e|       |.."},
-        {"..>)     >---} (-<.."},
-        {"..|      |  B|   |.."},
-        {"..|    {-]   |   |.."},
-        {"..|    |    B| p |.."},
-        {"..>L---^-}   |   |.."},
-        {"..|     k|   |  A|.."},
-        {"..[------^---^---].."},
-        {"...................."},
-    },
-    {
-        {"...................."},
-        {"..{--------------}.."},
-        {"..|s          c c|.."},
-        {"..|   p    p     |.."},
-        {"..|             c|.."},
-        {"..>------y) (----<.."},
-        {"..|     e|       |.."},
-        {"..>)     >---} (-<.."},
-        {"..|      |  B|   |.."},
-        {"..|    {-]   |   |.."},
-        {"..|    |    B| p |.."},
-        {"..>L---^-}   ,   |.."},
-        {"..|     k|      a|.."},
-        {"..[------^-------].."},
-        {"...................."},
-    },
-    {
-        {"...................."},
-        {"..{--------------}.."},
-        {"..|s          c c|.."},
-        {"..|   p    p     |.."},
-        {"..|             c|.."},
-        {"..>------y) (----<.."},
-        {"..|     e|       |.."},
-        {"..>)     >---} (-<.."},
-        {"..|      |  b|   |.."},
-        {"..|    {-]   |   |.."},
-        {"..|    |    b| p |.."},
-        {"..>L---] i   ,   |.."},
-        {"..|     k|      a|.."},
-        {"..[------^-------].."},
-        {"...................."},
-    },
-    {
-        {"...................."},
-        {"..{--------------}.."},
-        {"..|s          c c|.."},
-        {"..|   p    p     |.."},
-        {"..|             c|.."},
-        {"..>------y) (----<.."},
-        {"..|     e|       |.."},
-        {"..>)     >---} (-<.."},
-        {"..|      |  b|   |.."},
-        {"..|    {-]   |   |.."},
-        {"..|    |    b| p |.."},
-        {"..>D---] i   ,   |.."},
-        {"..|      |      a|.."},
-        {"..[------^-------].."},
-        {"...................."},
-    },
-    {
-        {"...................."},
-        {"..{--------------}.."},
-        {"..|s          c c|.."},
-        {"..|   p    p     |.."},
-        {"..|             c|.."},
-        {"..>------y) (----<.."},
-        {"..|     e|       |.."},
-        {"..>)     >---} (-<.."},
-        {"..|      |  b|   |.."},
-        {"..|    {-]   |   |.."},
-        {"..|    |    b| p |.."},
-        {"..>d---] i   ,   |.."},
-        {"..|      |      a|.."},
-        {"..[------^-------].."},
-        {"...................."},
-    },
-};
-*/
+map_t *map;
 
 sprite_t *tiles[255] = {0};
 
@@ -215,19 +81,19 @@ void map_draw()
     {
         sx = 0;
     }
-    if (sy + SCREEN_HEIGHT > MAP_HEIGHT)
+    if (sy + SCREEN_HEIGHT > map->height)
     {
-        sy -= (sy + SCREEN_HEIGHT) - MAP_HEIGHT;
+        sy -= (sy + SCREEN_HEIGHT) - map->height;
     }
-    if (sx + SCREEN_WIDTH > MAP_WIDTH)
+    if (sx + SCREEN_WIDTH > map->width)
     {
-        sx -= (sx + SCREEN_WIDTH) - MAP_WIDTH;
+        sx -= (sx + SCREEN_WIDTH) - map->width;
     }
     for (uint8_t y = 0; y < SCREEN_HEIGHT; y++)
     {
         for (uint8_t x = 0; x < SCREEN_WIDTH; x++)
         {
-            sprite_t *tile = tiles[(int)map[map_idx][sy + y][sx + x]];
+            sprite_t *tile = tiles[(int)map->grid[map->layer_idx][sy + y][sx + x]];
             if (tile != NULL)
                 rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
         }
@@ -236,17 +102,53 @@ void map_draw()
 
 void map_next()
 {
-    map_idx++;
+    map->layer_idx++;
+}
+
+map_t *map_load(char *path)
+{
+    int fp = dfs_open(path);
+    map_t *_map = NULL;
+    if (fp > 0)
+    {
+        _map = calloc(1, sizeof(map_t));
+        // getting grid dimensions
+        char buffer[GRID_CHARS];
+        dfs_read(buffer, 1, GRID_CHARS, fp);
+
+        int h, w;
+        sscanf(buffer, "%dx%d", &h, &w);
+        _map->width = (uint8_t)w;
+        _map->height = (uint8_t)h;
+        dfs_read(buffer, 1, LAYER_CHARS, fp);
+        _map->layers = buffer[0] - '0';
+
+        _map->grid = calloc(_map->layers, sizeof(char **));
+        for (uint8_t l = 0; l < _map->layers; l++)
+        {
+            _map->grid[l] = calloc(_map->height, sizeof(char *));
+            for (uint8_t y = 0; y < _map->height; y++)
+            {
+                _map->grid[l][y] = calloc(_map->width, sizeof(char));
+                dfs_read(_map->grid[l][y], 1, _map->width, fp);
+                dfs_seek(fp, 1, SEEK_CUR);
+            }
+        }
+
+        dfs_close(fp);
+    }
+
+    return _map;
 }
 
 void map_reset()
 {
-    map_idx = 0;
-    for (uint8_t y = 0; y < MAP_HEIGHT; y++)
+    map = map_load("/maps/layers.map");
+    for (uint8_t y = 0; y < map->height; y++)
     {
-        for (uint8_t x = 0; x < MAP_WIDTH; x++)
+        for (uint8_t x = 0; x < map->width; x++)
         {
-            if (strchr(TILES_VEGETATION, map[map_idx][y][x]))
+            if (strchr(TILES_VEGETATION, map->grid[map->layer_idx][y][x]))
             {
                 int n = rand() % 50;
                 char out = '.';
@@ -259,8 +161,8 @@ void map_reset()
                 if (n == 8)
                     out = '%';
 
-                for (int i = 0; i < MAP_LAYERS; i++)
-                    map[i][y][x] = out;
+                for (int i = 0; i < map->layers; i++)
+                    map->grid[i][y][x] = out;
             }
         }
     }
