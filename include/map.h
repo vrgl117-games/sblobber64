@@ -38,7 +38,7 @@ typedef struct map
     char ***grid;
 } map_t;
 
-void map_draw();
+void map_draw(int tick);
 void map_free();
 void map_init();
 void map_layer_next();

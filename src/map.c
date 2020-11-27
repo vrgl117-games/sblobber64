@@ -12,8 +12,8 @@ map_t *map;
 
 sprite_t *tiles[255] = {0};
 char *level_paths[NUM_MAPS] = {
-    "/maps/00_layers.map",
     "/maps/01_warp.map",
+    "/maps/00_layers.map",
 };
 
 void map_init()
@@ -70,7 +70,7 @@ void map_init()
     map_reset(0);
 }
 
-void map_draw()
+void map_draw(int tick)
 {
     int8_t sy = player.y - (SCREEN_HEIGHT / 2);
     int8_t sx = player.x - (SCREEN_WIDTH / 2);
@@ -94,9 +94,15 @@ void map_draw()
     {
         for (uint8_t x = 0; x < SCREEN_WIDTH; x++)
         {
-            sprite_t *tile = tiles[(int)map->grid[map->layer_idx][sy + y][sx + x]];
+            char c = map->grid[map->layer_idx][sy + y][sx + x];
+            sprite_t *tile = tiles[(int)c];
             if (tile != NULL)
-                rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
+            {
+                mirror_t mirror = MIRROR_DISABLED;
+                if (strchr(TILES_WARP, c))
+                    mirror = tick % 6 / 3;
+                rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, mirror);
+            }
         }
     }
 }
@@ -134,9 +140,12 @@ map_t *map_load(uint8_t map_id)
         sscanf(buffer, "%dx%d", &h, &w);
         _map->width = (uint8_t)w;
         _map->height = (uint8_t)h;
+
+        // getting layer count
         dfs_read(buffer, 1, LAYER_CHARS, fp);
         _map->layers = buffer[0] - '0';
 
+        // getting grid
         _map->grid = calloc(_map->layers, sizeof(char **));
         for (uint8_t l = 0; l < _map->layers; l++)
         {

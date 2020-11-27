@@ -62,7 +62,7 @@ bool screen_game(display_context_t disp, input_t *input)
 
     rdp_draw_filled_fullscreen(colors[COLOR_BG]);
 
-    map_draw();
+    map_draw(tick);
     player_draw();
 
     rdp_detach_display();
