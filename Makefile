@@ -47,6 +47,13 @@ filesystem/sfx/%.raw: resources/sfx/%.ogg
 	@mkdir -p `echo $@ | xargs dirname`
 	sox $< -b 16 -e signed-integer -B -r 44100 $@ remix -
 
+# maps #
+TXTS := $(wildcard resources/maps/*.txt)
+MAPS := $(subst .txt,.map,$(subst resources/,filesystem/,$(TXTS)))
+filesystem/maps/%.map: resources/maps/%.txt
+	@mkdir -p `echo $@ | xargs dirname`
+	cp $< $@
+
 # code #
 SRCS := $(wildcard src/*.c)
 OBJS := $(SRCS:.c=.o)
@@ -57,7 +64,7 @@ $(PROG_NAME).bin : $(PROG_NAME).elf
 	$(OBJCOPY) -O binary $< $@
 
 # dfs #
-$(PROG_NAME).dfs: $(SPRITES) $(RAWS)
+$(PROG_NAME).dfs: $(SPRITES) $(RAWS) $(MAPS)
 	@mkdir -p ./filesystem/
 	@echo `git rev-parse HEAD` > ./filesystem/hash
 	$(MKDFSPATH) $@ ./filesystem/
