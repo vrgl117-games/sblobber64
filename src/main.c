@@ -95,7 +95,7 @@ int main()
         fps_frame();
 
         // display fps
-        //fps_draw(disp);
+        fps_draw(disp);
 
         debug_draw(disp);
 
