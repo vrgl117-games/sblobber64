@@ -1,8 +1,5 @@
 #include "map.h"
 
-#include <stdlib.h>
-#include <string.h>
-
 #include "dfs.h"
 #include "player.h"
 #include "rdp.h"
@@ -14,6 +11,10 @@ extern player_t player;
 map_t *map;
 
 sprite_t *tiles[255] = {0};
+char *level_paths[NUM_MAPS] = {
+    "/maps/00_layers.map",
+    "/maps/01_warp.map",
+};
 
 void map_init()
 {
@@ -66,7 +67,7 @@ void map_init()
     tiles['w'] = dfs_load_sprite("/gfx/sprites/map/tile_w.sprite");
     tiles['v'] = tiles['w'];
 
-    map_reset();
+    map_reset(0);
 }
 
 void map_draw()
@@ -100,14 +101,27 @@ void map_draw()
     }
 }
 
-void map_next()
+void map_layer_next()
 {
     map->layer_idx++;
 }
 
-map_t *map_load(char *path)
+bool map_next()
 {
-    int fp = dfs_open(path);
+    uint8_t id = map->id;
+    map_free();
+    if (id + 1 >= NUM_MAPS)
+    {
+        return true;
+    }
+    map_reset(id + 1);
+    player_reset();
+    return false;
+}
+
+map_t *map_load(uint8_t map_id)
+{
+    int fp = dfs_open(level_paths[map_id]);
     map_t *_map = NULL;
     if (fp > 0)
     {
@@ -135,15 +149,31 @@ map_t *map_load(char *path)
             }
         }
 
+        _map->id = map_id;
         dfs_close(fp);
     }
 
     return _map;
 }
 
-void map_reset()
+void map_free()
 {
-    map = map_load("/maps/layers.map");
+    for (uint8_t l = 0; l < map->layers; l++)
+    {
+        for (uint8_t y = 0; y < map->height; y++)
+        {
+            free(map->grid[l][y]);
+        }
+        free(map->grid[l]);
+    }
+    free(map->grid);
+    free(map);
+    map = NULL;
+}
+
+void map_restart()
+{
+    map->layer_idx = 0;
     for (uint8_t y = 0; y < map->height; y++)
     {
         for (uint8_t x = 0; x < map->width; x++)
@@ -166,4 +196,10 @@ void map_reset()
             }
         }
     }
+}
+
+void map_reset(uint8_t map_id)
+{
+    map = map_load(map_id);
+    map_restart();
 }

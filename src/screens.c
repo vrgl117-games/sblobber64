@@ -67,6 +67,10 @@ bool screen_game(display_context_t disp, input_t *input)
 
     rdp_detach_display();
 
+    if (win)
+    {
+        win = map_next();
+    }
     return win;
 }
 

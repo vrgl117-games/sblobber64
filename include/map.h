@@ -3,8 +3,13 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 
 #define MAP_CELL_SIZE 32
+
+#define NUM_MAPS 2
 
 #define SCREEN_HEIGHT 15
 #define SCREEN_WIDTH 20
@@ -24,6 +29,7 @@ typedef struct coordinates
 
 typedef struct map
 {
+    uint8_t id;
     uint8_t layers;
     uint8_t height;
     uint8_t width;
@@ -33,8 +39,11 @@ typedef struct map
 } map_t;
 
 void map_draw();
+void map_free();
 void map_init();
-void map_next();
-void map_reset();
+void map_layer_next();
+bool map_next();
+void map_reset(uint8_t map_id);
+void map_restart();
 
 #endif // __MAP_H__

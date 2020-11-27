@@ -293,11 +293,11 @@ bool player_move(input_t *input)
     if (detect_tile("ABC"))
     {
         sound_start(0);
-        map_next();
+        map_layer_next();
     }
     // key & closed door
     if (detect_tile("kD"))
-        map_next();
+        map_layer_next();
 
     // warp
     if (!on_warp)

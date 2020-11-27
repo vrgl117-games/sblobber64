@@ -55,7 +55,7 @@ int main()
             screen_title(disp);
             if (input.start)
             {
-                map_reset();
+                map_reset(0);
                 player_reset();
                 screen = game;
             }
@@ -73,7 +73,7 @@ int main()
             switch (screen_pause(disp, &input, false))
             {
             case restart:
-                map_reset();
+                map_restart();
                 player_reset();
             case resume:
                 screen = game;
