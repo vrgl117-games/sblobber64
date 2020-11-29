@@ -22,6 +22,7 @@ int main()
     timer_init();
     debug_clear();
     colors_init();
+    screen_init(); //TODO: remove
     sound_init();
 
     map_init();
@@ -49,16 +50,7 @@ int main()
         {
         case intro: // n64, n64brew jam and vrgl117 logo.
             if (screen_intro(disp))
-                screen = title;
-            break;
-        case title: // press start.
-            screen_title(disp);
-            if (input.start)
-            {
-                map_reset(0);
-                player_reset();
                 screen = game;
-            }
             break;
         case game: // actual game.
             if (input.start)
@@ -79,7 +71,8 @@ int main()
                 screen = game;
                 break;
             case quit:
-                screen = title;
+                map_reset(0);
+                screen = game;
                 break;
             default:
                 break;
@@ -87,7 +80,10 @@ int main()
             break;
         case win:
             if (screen_win(disp, &input))
-                screen = title;
+            {
+                map_reset(0);
+                screen = game;
+            }
             break;
         }
 

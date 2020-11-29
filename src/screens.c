@@ -12,10 +12,21 @@ extern uint32_t __height;
 extern uint32_t colors[];
 static volatile int tick = 0;
 
+static sprites_t *logo;
+static sprites_t *take_the_stairs;
+
+void screen_init()
+{
+    logo = dfs_load_sprites("/gfx/sprites_sets/ui/logo-%d_%d.sprite", NULL);
+    take_the_stairs = dfs_load_sprites("/gfx/sprites_sets/ui/take_the_stairs-%d_%d.sprite", NULL);
+}
+
 // display the n64 logo and then the vrgl117 games logo.
 // return true when the animation is done.
 bool screen_intro(display_context_t disp)
 {
+    static int anim = 0;
+
     rdp_attach(disp);
 
     rdp_draw_filled_fullscreen(colors[COLOR_BLACK]);
@@ -23,7 +34,7 @@ bool screen_intro(display_context_t disp)
     rdp_detach_display();
     sprite_t *intro = NULL;
 
-    switch (tick)
+    switch (anim)
     {
     case 1 ... 9:
         intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", tick);
@@ -33,6 +44,10 @@ bool screen_intro(display_context_t disp)
         break;
     case 31 ... 39:
         intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", 40 - tick);
+        break;
+    case 40:
+        logo = dfs_load_sprites("/gfx/sprites_sets/ui/logo-%d_%d.sprite", NULL);
+        take_the_stairs = dfs_load_sprites("/gfx/sprites_sets/ui/take_the_stairs-%d_%d.sprite", NULL);
         break;
     case 41 ... 49:
         intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", tick - 40);
@@ -51,7 +66,8 @@ bool screen_intro(display_context_t disp)
         free(intro);
     }
 
-    return (tick >= 82);
+    anim++;
+    return (anim >= 82);
 }
 
 bool screen_game(display_context_t disp, input_t *input)
@@ -62,14 +78,35 @@ bool screen_game(display_context_t disp, input_t *input)
 
     rdp_draw_filled_fullscreen(colors[COLOR_BLACK]);
 
-    map_draw(tick);
+    uint8_t map_id = map_draw(tick);
+
     player_draw();
+
+    // display logo on title map
+    if (map_id == 0)
+    {
+        rdp_draw_sprites_with_texture(logo, __width / 2 - logo->width / 2, 32, 0);
+
+        if (tick % 14 < 7)
+        {
+            rdp_draw_sprites_with_texture(take_the_stairs, __width / 2 - take_the_stairs->width / 2, 340, 0);
+        }
+    }
 
     rdp_detach_display();
 
     // detect if we are on the end
     if (player_detect_tile("e"))
-        return map_next();
+    {
+        int8_t new_map_id = map_next();
+        // if we were on title and just change map, free sprites
+        if (map_id == 0 && new_map_id != map_id)
+        {
+            dfs_free_sprites(logo);
+            dfs_free_sprites(take_the_stairs);
+        }
+        return new_map_id == -1;
+    }
 
     return false;
 }
@@ -116,28 +153,6 @@ pause_selection_t screen_pause(display_context_t disp, input_t *input, bool rese
 void screen_timer_title()
 {
     tick++;
-}
-
-// display the title screen.
-void screen_title(display_context_t disp)
-{
-    rdp_attach(disp);
-
-    rdp_draw_filled_fullscreen(colors[COLOR_BG]);
-
-    rdp_detach_display();
-
-    sprite_t *logo = dfs_load_sprite("/gfx/sprites/ui/logo.sprite");
-    graphics_draw_sprite(disp, __width / 2 - logo->width / 2, 10, logo);
-    free(logo);
-
-    // draw only press start half of the time (blink).
-    if (tick % 14 < 7)
-    {
-        sprite_t *press_start = dfs_load_sprite("/gfx/sprites/ui/press_start.sprite");
-        graphics_draw_sprite(disp, __width / 2 - press_start->width / 2, 340, press_start);
-        free(press_start);
-    }
 }
 
 bool screen_win(display_context_t disp, input_t *input)

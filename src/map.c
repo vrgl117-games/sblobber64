@@ -14,8 +14,9 @@ map_t *map;
 
 sprite_t *tiles[255] = {0};
 char *level_paths[NUM_MAPS] = {
+    "/maps/00_title.map",
     "/maps/01_warp.map",
-    "/maps/00_layers.map",
+    "/maps/02_layers.map",
 };
 
 void map_init()
@@ -70,9 +71,10 @@ void map_init()
     tiles['v'] = tiles['w'];
 
     map_reset(0);
+    map->anim = MAP_NUM_ANIMS; // do not animate title map
 }
 
-void map_draw(int tick)
+uint8_t map_draw(int tick)
 {
     //calculate top/left coordinates of visible map
     int8_t sy = player.y - (SCREEN_HEIGHT / 2);
@@ -119,10 +121,10 @@ void map_draw(int tick)
         }
     }
 
-    debug_setf("anim: %d, dir: %d", map->anim, map->anim_direction);
-
-    if ((map->anim_direction == 1 && map->anim < SCREEN_WIDTH) || (map->anim_direction == -1 && map->anim > 0))
+    if ((map->anim_direction == 1 && map->anim < MAP_NUM_ANIMS) || (map->anim_direction == -1 && map->anim > 0))
         map->anim += map->anim_direction;
+
+    return map->id;
 }
 
 void map_layer_next()
@@ -130,7 +132,7 @@ void map_layer_next()
     map->layer_idx++;
 }
 
-bool map_next()
+int8_t map_next()
 {
     if (map->anim == 0)
     {
@@ -138,16 +140,16 @@ bool map_next()
         map_free();
         if (id + 1 >= NUM_MAPS)
         {
-            return true;
+            return -1;
         }
         map_reset(id + 1);
         player_reset();
-        return false;
+        return id + 1;
     }
     else
         map->anim_direction = -1;
 
-    return false;
+    return map->id;
 }
 
 map_t *map_load(uint8_t map_id)

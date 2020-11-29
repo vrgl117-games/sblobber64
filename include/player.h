@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "screens.h"
 
-#define NUM_ANIMS 2
+#define PLAYER_NUM_ANIMS 2
 
 typedef struct player
 {

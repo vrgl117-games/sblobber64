@@ -9,10 +9,11 @@
 
 #define MAP_CELL_SIZE 32
 
-#define NUM_MAPS 2
+#define NUM_MAPS 3
 
 #define SCREEN_HEIGHT 15
 #define SCREEN_WIDTH 20
+#define MAP_NUM_ANIMS SCREEN_WIDTH
 
 #define TILES_WALL "-|[]{}y<>^p()i,L"
 #define TILES_WARP "vw"
@@ -42,11 +43,11 @@ typedef struct map
     char ***grid;
 } map_t;
 
-void map_draw(int tick);
+uint8_t map_draw(int tick);
 void map_free();
 void map_init();
 void map_layer_next();
-bool map_next();
+int8_t map_next();
 void map_reset(uint8_t map_id);
 void map_restart();
 

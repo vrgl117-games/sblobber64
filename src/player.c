@@ -245,7 +245,7 @@ void player_move(input_t *input)
         if (player.h_of == 0)
         {
             player.h_of = 1;
-            player.h_of_anim = NUM_ANIMS;
+            player.h_of_anim = PLAYER_NUM_ANIMS;
         }
         player.y -= 1;
     }
@@ -254,7 +254,7 @@ void player_move(input_t *input)
         if (player.h_of == 1)
         {
             player.h_of = 0;
-            player.h_of_anim = NUM_ANIMS;
+            player.h_of_anim = PLAYER_NUM_ANIMS;
         }
         player.y += 1;
     }
@@ -263,7 +263,7 @@ void player_move(input_t *input)
         if (player.w_of == 1)
         {
             player.w_of = 0;
-            player.w_of_anim = NUM_ANIMS;
+            player.w_of_anim = PLAYER_NUM_ANIMS;
         }
         player.x -= 1;
     }
@@ -272,7 +272,7 @@ void player_move(input_t *input)
         if (player.w_of == 0)
         {
             player.w_of = 1;
-            player.w_of_anim = NUM_ANIMS;
+            player.w_of_anim = PLAYER_NUM_ANIMS;
         }
         player.x += 1;
     }
@@ -322,7 +322,8 @@ void player_reset()
     {
         for (uint8_t x = 0; x < map->width; x++)
         {
-            if (map->grid[0][y][x] == 's')
+            // capital S is used in the title map to start without printing the stairs
+            if (map->grid[0][y][x] == 's' || map->grid[0][y][x] == 'S')
             {
                 player.x = x;
                 player.y = y;
