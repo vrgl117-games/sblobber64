@@ -35,6 +35,10 @@ typedef struct map
     uint8_t width;
     uint8_t layer_idx;
     coords_t *tiles_pos[255];
+
+    int8_t anim;           // "frame of the transition animation"
+    int8_t anim_direction; // +1 or -1
+
     char ***grid;
 } map_t;
 

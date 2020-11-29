@@ -35,6 +35,22 @@ static inline void player_warp(char on_warp)
     }
 }
 
+static inline void player_update_screen_coordinates()
+{
+    player.sy = player.y;
+    player.sx = player.x;
+
+    if (player.y >= (map->height - SCREEN_HEIGHT / 2))
+        player.sy = SCREEN_HEIGHT - (map->height - player.y);
+    else if (player.y >= SCREEN_HEIGHT / 2)
+        player.sy = SCREEN_HEIGHT / 2;
+
+    if (player.x >= (map->width - SCREEN_WIDTH / 2))
+        player.sx = SCREEN_WIDTH - (map->width - player.x);
+    else if (player.x >= SCREEN_WIDTH / 2)
+        player.sx = SCREEN_WIDTH / 2;
+}
+
 void player_init()
 {
     body[SLIME_SINGLE] = dfs_load_sprite("/gfx/sprites/slime/tile_single_0.sprite");
@@ -65,129 +81,111 @@ void player_init()
 
 void player_draw()
 {
-    uint8_t save_y = player.y;
-    uint8_t save_x = player.x;
-    if (player.y >= (map->height - SCREEN_HEIGHT / 2))
-    {
-        player.y = SCREEN_HEIGHT - (map->height - player.y);
-    }
-    else if (player.y >= SCREEN_HEIGHT / 2)
-    {
-        player.y = SCREEN_HEIGHT / 2;
-    }
-    if (player.x >= (map->width - SCREEN_WIDTH / 2))
-    {
-        player.x = SCREEN_WIDTH - (map->width - player.x);
-    }
-    else if (player.x >= SCREEN_WIDTH / 2)
-    {
-        player.x = SCREEN_WIDTH / 2;
-    }
     if (player.h_of == 0 && player.w_of == 0) // single
     {
         if (player.h_of_anim != 0) // shrinking horizontally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
         }
         else if (player.w_of_anim != 0) // shrinking vertically
         {
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
         }
         else // full
-            rdp_draw_sprite_with_texture(body[SLIME_SINGLE], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SINGLE], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
     }
     else if (player.h_of == 1 && player.w_of == 0) // vertical
     {
         if (player.w_of_anim != 0) // shrinking horizontally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy - 1), 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy + 1), 0);
         }
         else if (player.h_of_anim == 0) // full
         {
-            rdp_draw_sprite_with_texture(body[SLIME_VER_0], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_VER_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_VER_2], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_0], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_2], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
         }
         else // growing vertivally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
         }
     }
     else if (player.h_of == 0 && player.w_of == 1) // horizontal
     {
         if (player.h_of_anim != 0) // shrinking vertically
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy - 1), 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
         }
         else if (player.w_of_anim == 0) // full
         {
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_0], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_2], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_0], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_2], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
         }
         else // growing horizontally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
         }
     }
     else // square
     {
         if (player.h_of_anim != 0) // growing vertically
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy + 1), 0);
         }
         else if (player.w_of_anim != 0) // growing horizontally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
         }
         else // full
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_3], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_4], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_5], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * player.y, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.x - 1), MAP_CELL_SIZE * (player.y + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.x, MAP_CELL_SIZE * (player.y + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.x + 1), MAP_CELL_SIZE * (player.y + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_3], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_4], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_5], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy + 1), 0);
         }
     }
 
     // draw any transparant tile over the player
-    for (int y = player.y - player.h_of; y <= player.y + player.h_of; y++)
+    for (int y = player.sy - player.h_of; y <= player.sy + player.h_of; y++)
     {
-        for (int x = player.x - player.w_of; x <= player.x + player.w_of; x++)
+        for (int x = player.sx - player.w_of; x <= player.sx + player.w_of; x++)
         {
             if (map->grid[map->layer_idx][y][x] == 'd')
                 rdp_draw_sprite_with_texture(tiles[(int)map->grid[map->layer_idx][y][x]], MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
@@ -198,11 +196,9 @@ void player_draw()
         player.h_of_anim--;
     if (player.w_of_anim > 0)
         player.w_of_anim--;
-    player.y = save_y;
-    player.x = save_x;
 }
 
-static inline char detect_tile(char *tiles)
+char player_detect_tile(char *tiles)
 {
     int found = 0;
     for (int h = player.y - player.h_of; h <= player.y + player.h_of; h++)
@@ -230,14 +226,19 @@ static inline char detect_tile(char *tiles)
     return 0;
 }
 
-bool player_move(input_t *input)
+void player_move(input_t *input)
 {
+    // prevent move during animation
+    if (map->anim != SCREEN_WIDTH)
+        return;
+
+    // return early if no button is pressed
     if (!input->up && !input->down && !input->left && !input->right)
-        return false;
+        return;
 
     player_t save_player = player;
 
-    char on_warp = detect_tile(TILES_WARP);
+    char on_warp = player_detect_tile(TILES_WARP);
 
     if (input->up)
     {
@@ -276,11 +277,11 @@ bool player_move(input_t *input)
         player.x += 1;
     }
 
-    if (detect_tile(TILES_WALL))
+    if (player_detect_tile(TILES_WALL))
     {
         player.x = save_player.x;
         player.y = save_player.y;
-        if (detect_tile(TILES_WALL))
+        if (player_detect_tile(TILES_WALL))
         {
             player.h_of = save_player.h_of;
             player.w_of = save_player.w_of;
@@ -290,25 +291,24 @@ bool player_move(input_t *input)
     }
 
     // buttons
-    if (detect_tile("ABC"))
+    if (player_detect_tile("ABC"))
     {
         sound_start(0);
         map_layer_next();
     }
     // key & closed door
-    if (detect_tile("kD"))
+    if (player_detect_tile("kD"))
         map_layer_next();
 
     // warp
     if (!on_warp)
     {
-        on_warp = detect_tile(TILES_WARP);
+        on_warp = player_detect_tile(TILES_WARP);
         if (on_warp)
             player_warp(on_warp);
     }
 
-    // end
-    return detect_tile("e");
+    player_update_screen_coordinates();
 }
 
 void player_reset()
@@ -326,6 +326,9 @@ void player_reset()
             {
                 player.x = x;
                 player.y = y;
+
+                player_update_screen_coordinates();
+                return;
             }
         }
     }

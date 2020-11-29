@@ -8,10 +8,19 @@
 
 typedef struct player
 {
+    // coordinates in map
     uint8_t x;
     uint8_t y;
+
+    // coordinates on screen
+    uint8_t sx;
+    uint8_t sy;
+
+    // size offset (0 or 1)
     uint8_t h_of;
     uint8_t w_of;
+
+    // "frame" of the animaton
     uint8_t h_of_anim;
     uint8_t w_of_anim;
 
@@ -44,9 +53,10 @@ typedef struct player
 #define SLIME_SQ_4_ANIM 20
 #define SLIME_SQ_5_ANIM 21
 
+char player_detect_tile(char *tiles);
 void player_draw();
 void player_init();
-bool player_move(input_t *input);
+void player_move(input_t *input);
 void player_reset();
 
 #endif // __PLAYER_H__

@@ -56,22 +56,22 @@ bool screen_intro(display_context_t disp)
 
 bool screen_game(display_context_t disp, input_t *input)
 {
-    bool win = player_move(input);
+    player_move(input);
 
     rdp_attach(disp);
 
-    rdp_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdp_draw_filled_fullscreen(colors[COLOR_BLACK]);
 
     map_draw(tick);
     player_draw();
 
     rdp_detach_display();
 
-    if (win)
-    {
-        win = map_next();
-    }
-    return win;
+    // detect if we are on the end
+    if (player_detect_tile("e"))
+        return map_next();
+
+    return false;
 }
 
 pause_selection_t screen_pause(display_context_t disp, input_t *input, bool reset)

@@ -1,11 +1,13 @@
 #include "map.h"
 
+#include "colors.h"
 #include "dfs.h"
 #include "player.h"
 #include "rdp.h"
 
 #include "debug.h"
 
+extern uint32_t colors[];
 extern player_t player;
 
 map_t *map;
@@ -72,27 +74,36 @@ void map_init()
 
 void map_draw(int tick)
 {
+    //calculate top/left coordinates of visible map
     int8_t sy = player.y - (SCREEN_HEIGHT / 2);
     int8_t sx = player.x - (SCREEN_WIDTH / 2);
     if (sy < 0)
-    {
         sy = 0;
-    }
     if (sx < 0)
-    {
         sx = 0;
-    }
+
     if (sy + SCREEN_HEIGHT > map->height)
-    {
         sy -= (sy + SCREEN_HEIGHT) - map->height;
-    }
+
     if (sx + SCREEN_WIDTH > map->width)
-    {
         sx -= (sx + SCREEN_WIDTH) - map->width;
-    }
-    for (uint8_t y = 0; y < SCREEN_HEIGHT; y++)
+
+    int8_t start_y = player.sy - map->anim;
+    if (start_y < 0)
+        start_y = 0;
+    int8_t end_y = player.sy + map->anim;
+    if (end_y > SCREEN_HEIGHT)
+        end_y = SCREEN_HEIGHT;
+    for (uint8_t y = start_y; y < end_y; y++)
     {
-        for (uint8_t x = 0; x < SCREEN_WIDTH; x++)
+
+        int8_t start_x = player.sx - map->anim;
+        if (start_x < 0)
+            start_x = 0;
+        int8_t end_x = player.sx + map->anim;
+        if (end_x > SCREEN_WIDTH)
+            end_x = SCREEN_WIDTH;
+        for (uint8_t x = start_x; x < end_x; x++)
         {
             char c = map->grid[map->layer_idx][sy + y][sx + x];
             sprite_t *tile = tiles[(int)c];
@@ -103,8 +114,15 @@ void map_draw(int tick)
                     mirror = tick % 6 / 3;
                 rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, mirror);
             }
+            else
+                rdp_draw_filled_rectangle_size(MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, MAP_CELL_SIZE, MAP_CELL_SIZE, colors[COLOR_BG]);
         }
     }
+
+    debug_setf("anim: %d, dir: %d", map->anim, map->anim_direction);
+
+    if ((map->anim_direction == 1 && map->anim < SCREEN_WIDTH) || (map->anim_direction == -1 && map->anim > 0))
+        map->anim += map->anim_direction;
 }
 
 void map_layer_next()
@@ -114,14 +132,21 @@ void map_layer_next()
 
 bool map_next()
 {
-    uint8_t id = map->id;
-    map_free();
-    if (id + 1 >= NUM_MAPS)
+    if (map->anim == 0)
     {
-        return true;
+        uint8_t id = map->id;
+        map_free();
+        if (id + 1 >= NUM_MAPS)
+        {
+            return true;
+        }
+        map_reset(id + 1);
+        player_reset();
+        return false;
     }
-    map_reset(id + 1);
-    player_reset();
+    else
+        map->anim_direction = -1;
+
     return false;
 }
 
@@ -159,6 +184,7 @@ map_t *map_load(uint8_t map_id)
         }
 
         _map->id = map_id;
+        _map->anim_direction = 1;
         dfs_close(fp);
     }
 
