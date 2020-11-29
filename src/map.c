@@ -70,6 +70,11 @@ void map_init()
     tiles['w'] = dfs_load_sprite("/gfx/sprites/map/tile_w.sprite");
     tiles['v'] = tiles['w'];
 
+    //arrow
+    tiles['@'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_start.sprite");
+    tiles['='] = dfs_load_sprite("/gfx/sprites/map/tile_arrow.sprite");
+    tiles['$'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end.sprite");
+
     map_reset(0);
     map->anim = MAP_NUM_ANIMS; // do not animate title map
 }

@@ -89,7 +89,7 @@ bool screen_game(display_context_t disp, input_t *input)
 
         if (tick % 14 < 7)
         {
-            rdp_draw_sprites_with_texture(take_the_stairs, __width / 2 - take_the_stairs->width / 2, 340, 0);
+            rdp_draw_sprites_with_texture(take_the_stairs, __width / 2 - take_the_stairs->width / 2, 352, 0);
         }
     }
 

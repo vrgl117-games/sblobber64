@@ -322,7 +322,6 @@ void player_reset()
     {
         for (uint8_t x = 0; x < map->width; x++)
         {
-            // capital S is used in the title map to start without printing the stairs
             if (map->grid[0][y][x] == 's' || map->grid[0][y][x] == 'S')
             {
                 player.x = x;

@@ -6,7 +6,7 @@ fontb='resources/fonts/Kenney Blocks.ttf'
 #-extent XXxYY
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"sblobber 64" -extent 528x128 -gravity center resources/gfx/sprites/ui/logo.png
 convert -strip resources/gfx/sprites/ui/logo.png -crop 16 resources/gfx/sprites_sets/ui/logo-%d_0.png
-convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Take the stairs" -extent 288x64 -crop 32 -gravity center resources/gfx/sprites_sets/ui/take_the_stairs-%d_0.png
+convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 28 label:"Take the stairs" -extent 288x64 -crop 32 -gravity center resources/gfx/sprites_sets/ui/take_the_stairs-%d_0.png
 convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Pause" -extent 256x104 -gravity center resources/gfx/sprites/ui/pause.png
 convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 -gravity center resources/gfx/sprites/ui/resume.png
 convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 -gravity center resources/gfx/sprites/ui/restart.png
