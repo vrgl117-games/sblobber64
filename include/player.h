@@ -57,6 +57,6 @@ char player_detect_tile(char *tiles);
 void player_draw();
 void player_init();
 void player_move(input_t *input);
-void player_reset();
+void player_reset_in_map();
 
 #endif // __PLAYER_H__

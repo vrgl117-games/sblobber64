@@ -49,7 +49,7 @@ void map_free();
 void map_init();
 void map_layer_next();
 int8_t map_next();
-void map_reset(uint8_t map_id);
-void map_restart();
+void map_select(uint8_t map_id);
+void map_regen_vegetation();
 
 #endif // __MAP_H__

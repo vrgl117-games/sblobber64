@@ -15,11 +15,13 @@ extern sprite_t *tiles[255];
 player_t player = {0, 0, 0, 0};
 static sprite_t *body[22] = {0};
 
+// return true if player is on {x,y}
 static inline bool isPlayer(uint8_t x, uint8_t y)
 {
     return ((y == player.y || y == player.y - player.h_of || y == player.y + player.h_of) && (x == player.x || x == player.x - player.w_of || x == player.x + player.w_of));
 }
 
+// warp player to other end of warp
 static inline void player_warp(char on_warp)
 {
     for (uint8_t y = 0; y < map->height; y++)
@@ -35,6 +37,7 @@ static inline void player_warp(char on_warp)
     }
 }
 
+// update player {x,y} inside the screen
 static inline void player_update_screen_coordinates()
 {
     player.sy = player.y;
@@ -51,6 +54,7 @@ static inline void player_update_screen_coordinates()
         player.sx = SCREEN_WIDTH / 2;
 }
 
+// init player "package", load all tiles in memory and place player on start tile in map
 void player_init()
 {
     body[SLIME_SINGLE] = dfs_load_sprite("/gfx/sprites/slime/tile_single_0.sprite");
@@ -76,9 +80,10 @@ void player_init()
     body[SLIME_SQ_4_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_4_alt.sprite");
     body[SLIME_SQ_5_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_5_alt.sprite");
 
-    player_reset();
+    player_reset_in_map();
 }
 
+// draw player on screen
 void player_draw()
 {
     if (player.h_of == 0 && player.w_of == 0) // single
@@ -198,6 +203,7 @@ void player_draw()
         player.w_of_anim--;
 }
 
+// detect it player is on a soecific tile and returns that tile
 char player_detect_tile(char *tiles)
 {
     int found = 0;
@@ -226,6 +232,7 @@ char player_detect_tile(char *tiles)
     return 0;
 }
 
+// move the play if input is given and map is not animating
 void player_move(input_t *input)
 {
     // prevent move during animation
@@ -311,7 +318,8 @@ void player_move(input_t *input)
     player_update_screen_coordinates();
 }
 
-void player_reset()
+// set the player back to the start tile and resize it to small
+void player_reset_in_map()
 {
     // reset player size to small
     player.h_of = 0;

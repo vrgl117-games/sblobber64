@@ -7,14 +7,24 @@ fontb='resources/fonts/Kenney Blocks.ttf'
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"sblobber 64" -extent 528x128 -gravity center resources/gfx/sprites/ui/logo.png
 convert -strip resources/gfx/sprites/ui/logo.png -crop 16 resources/gfx/sprites_sets/ui/logo-%d_0.png
 convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 28 label:"Take the stairs" -extent 288x64 -crop 32 -gravity center resources/gfx/sprites_sets/ui/take_the_stairs-%d_0.png
-convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Pause" -extent 256x104 -gravity center resources/gfx/sprites/ui/pause.png
-convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 -gravity center resources/gfx/sprites/ui/resume.png
-convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 -gravity center resources/gfx/sprites/ui/restart.png
-convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 -gravity center resources/gfx/sprites/ui/quit.png
-convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 -gravity center resources/gfx/sprites/ui/resume_selected.png
-convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 -gravity center resources/gfx/sprites/ui/restart_selected.png
-convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 -gravity center resources/gfx/sprites/ui/quit_selected.png
-convert -strip -background "#000000ff" -fill "#f2a65eff" -font "$fontb" -pointsize 42 label:"Thanks for playing!" -extent 556x64 -gravity center resources/gfx/sprites/ui/you_win.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Pause" -extent 256x104 -gravity center resources/gfx/sprites/ui/pause.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Credits" -extent 358x104 -gravity center resources/gfx/sprites/ui/credits_big.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 -gravity center resources/gfx/sprites/ui/resume.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 -gravity center resources/gfx/sprites/ui/restart.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Credits" -extent 148x44 -gravity center resources/gfx/sprites/ui/credits.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 -gravity center resources/gfx/sprites/ui/quit.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 -gravity center resources/gfx/sprites/ui/resume_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 -gravity center resources/gfx/sprites/ui/restart_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Credits" -extent 148x44 -gravity center resources/gfx/sprites/ui/credits_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 -gravity center resources/gfx/sprites/ui/quit_selected.png
+convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 42 label:"Thanks for playing!" -extent 556x64 -gravity center resources/gfx/sprites/ui/you_win.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Programming" -extent 246x44 -gravity center resources/gfx/sprites/ui/programming.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"Isabel Jimenez & Victor Vieux" -extent 482x38 -gravity center resources/gfx/sprites/ui/isabel_victor.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"www.vrgl117.games" -extent 320x38  -gravity center resources/gfx/sprites/ui/vrgl117games.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Art" -extent 64x44 -gravity center resources/gfx/sprites/ui/art.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"Kenney" -extent 110x38 -gravity center resources/gfx/sprites/ui/kenney.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"www.kenney.nl" -extent 242x38 -gravity center resources/gfx/sprites/ui/kenneynl.png
+
 
 # studio logo
 convert -strip -brightness-contrast -10 resources/gfx/sprites/intro/vrgl117_logo.png resources/gfx/sprites/intro/vrgl117_logo_9.png

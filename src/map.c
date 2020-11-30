@@ -22,6 +22,7 @@ char *level_paths[NUM_MAPS] = {
     // "/maps/02_layers.map",
 };
 
+// init map "package", load all tiles in memory
 void map_init()
 {
     //walls
@@ -79,9 +80,10 @@ void map_init()
     tiles['='] = dfs_load_sprite("/gfx/sprites/map/tile_arrow.sprite");
     tiles['$'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end.sprite");
 
-    map_reset(0);
+    map_select(0);
 }
 
+// draw current map on screen
 uint8_t map_draw(int tick)
 {
     //calculate top/left coordinates of visible map
@@ -135,11 +137,13 @@ uint8_t map_draw(int tick)
     return map->id;
 }
 
+// move to the next layer in current map
 void map_layer_next()
 {
     map->layer_idx++;
 }
 
+// start map fade animation, move to the next map when animation is done
 int8_t map_next()
 {
     if (map->anim == 0)
@@ -150,8 +154,8 @@ int8_t map_next()
         {
             return -1;
         }
-        map_reset(id + 1);
-        player_reset();
+        map_select(id + 1);
+        player_reset_in_map();
         return id + 1;
     }
     else
@@ -160,6 +164,7 @@ int8_t map_next()
     return map->id;
 }
 
+// load map from disk and returns it
 map_t *map_load(uint8_t map_id)
 {
     int fp = dfs_open(level_paths[map_id]);
@@ -201,6 +206,7 @@ map_t *map_load(uint8_t map_id)
     return _map;
 }
 
+// free current map from memory
 void map_free()
 {
     for (uint8_t l = 0; l < map->layers; l++)
@@ -216,7 +222,8 @@ void map_free()
     map = NULL;
 }
 
-void map_restart()
+// (re)generate vegetation for current map
+void map_regen_vegetation()
 {
     map->layer_idx = 0;
     for (uint8_t y = 0; y < map->height; y++)
@@ -243,10 +250,11 @@ void map_restart()
     }
 }
 
-void map_reset(uint8_t map_id)
+// select (load, genwrate vegetation) a new map as current map
+void map_select(uint8_t map_id)
 {
     map = map_load(map_id);
-    map_restart();
+    map_regen_vegetation();
     if (map_id == 0)
         map->anim = MAP_NUM_ANIMS; // do not animate title map
 }

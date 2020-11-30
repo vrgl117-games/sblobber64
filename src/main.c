@@ -10,6 +10,7 @@
 #include "sounds.h"
 
 screen_t screen = game; //TODO: set back to intro
+screen_t prev_screen;   //used in credits to know where to go back to
 
 int main()
 {
@@ -22,7 +23,7 @@ int main()
     timer_init();
     debug_clear();
     colors_init();
-    screen_init(); //TODO: remove
+    screen_load_title_resources(); //TODO: remove
     sound_init();
 
     map_init();
@@ -65,13 +66,16 @@ int main()
             switch (screen_pause(disp, &input, false))
             {
             case restart:
-                map_restart();
-                player_reset();
+                player_reset_in_map();
             case resume:
                 screen = game;
                 break;
+            case creds:
+                prev_screen = pause;
+                screen = credits;
+                break;
             case quit:
-                map_reset(0);
+                map_select(0);
                 screen = game;
                 break;
             default:
@@ -81,12 +85,25 @@ int main()
         case win:
             if (screen_win(disp, &input))
             {
-                map_reset(0);
-                player_reset();
-                screen_init();
-                screen = game;
+                prev_screen = win;
+                screen = credits;
             }
             break;
+        case credits:
+            if (screen_credits(disp, &input))
+            {
+                if (prev_screen == win)
+                {
+                    map_select(0);
+                    player_reset_in_map();
+                    screen_load_title_resources();
+                    screen = game;
+                }
+                else
+                {
+                    screen = prev_screen;
+                }
+            }
         }
 
         // increment fps counter
