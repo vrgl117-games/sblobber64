@@ -82,6 +82,8 @@ int main()
             if (screen_win(disp, &input))
             {
                 map_reset(0);
+                player_reset();
+                screen_init();
                 screen = game;
             }
             break;

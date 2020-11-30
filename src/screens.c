@@ -96,7 +96,7 @@ bool screen_game(display_context_t disp, input_t *input)
     rdp_detach_display();
 
     // detect if we are on the end
-    if (player_detect_tile("e"))
+    if (player_detect_tile(TILES_END))
     {
         int8_t new_map_id = map_next();
         // if we were on title and just change map, free sprites

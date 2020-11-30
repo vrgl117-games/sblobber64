@@ -14,7 +14,7 @@ convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsi
 convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 -gravity center resources/gfx/sprites/ui/resume_selected.png
 convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 -gravity center resources/gfx/sprites/ui/restart_selected.png
 convert -strip -background "#000000ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 -gravity center resources/gfx/sprites/ui/quit_selected.png
-convert -strip -background "#000000ff" -fill "#5dde87ff" -font "$fontb" -pointsize 96 label:"You Win!" -extent 530x146 -gravity center resources/gfx/sprites/ui/you_win.png
+convert -strip -background "#000000ff" -fill "#f2a65eff" -font "$fontb" -pointsize 42 label:"Thanks for playing!" -extent 556x64 -gravity center resources/gfx/sprites/ui/you_win.png
 
 # studio logo
 convert -strip -brightness-contrast -10 resources/gfx/sprites/intro/vrgl117_logo.png resources/gfx/sprites/intro/vrgl117_logo_9.png

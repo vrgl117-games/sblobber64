@@ -15,8 +15,11 @@ map_t *map;
 sprite_t *tiles[255] = {0};
 char *level_paths[NUM_MAPS] = {
     "/maps/00_title.map",
+
     "/maps/01_warp.map",
-    "/maps/02_layers.map",
+    "/maps/10_end.map",
+
+    // "/maps/02_layers.map",
 };
 
 void map_init()
@@ -48,6 +51,7 @@ void map_init()
 
     //end
     tiles['e'] = dfs_load_sprite("/gfx/sprites/map/tile_e.sprite");
+    tiles['#'] = dfs_load_sprite("/gfx/sprites/map/tile_end.sprite");
 
     //buttons
     tiles['A'] = dfs_load_sprite("/gfx/sprites/map/tile_a_up.sprite");
@@ -76,7 +80,6 @@ void map_init()
     tiles['$'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end.sprite");
 
     map_reset(0);
-    map->anim = MAP_NUM_ANIMS; // do not animate title map
 }
 
 uint8_t map_draw(int tick)
@@ -244,4 +247,6 @@ void map_reset(uint8_t map_id)
 {
     map = map_load(map_id);
     map_restart();
+    if (map_id == 0)
+        map->anim = MAP_NUM_ANIMS; // do not animate title map
 }
