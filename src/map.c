@@ -76,6 +76,9 @@ void map_init()
     tiles['k'] = dfs_load_sprite("/gfx/sprites/map/tile_k.sprite");
     tiles['w'] = dfs_load_sprite("/gfx/sprites/map/tile_w.sprite");
     tiles['v'] = tiles['w'];
+    tiles['f'] = dfs_load_sprite("/gfx/sprites/map/tile_f.sprite");
+    tiles['g'] = dfs_load_sprite("/gfx/sprites/map/tile_g.sprite");
+    tiles['h'] = dfs_load_sprite("/gfx/sprites/map/tile_h.sprite");
 
     //arrow
     tiles['@'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_start.sprite");
@@ -124,7 +127,7 @@ uint8_t map_draw(int tick)
             if (tile != NULL)
             {
                 mirror_t mirror = MIRROR_DISABLED;
-                if (strchr(TILES_WARP, c))
+                if (strchr(TILES_ANIMATED, c))
                     mirror = tick % 6 / 3;
                 rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, mirror);
             }

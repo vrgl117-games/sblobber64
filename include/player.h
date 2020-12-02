@@ -20,9 +20,15 @@ typedef struct player
     uint8_t h_of;
     uint8_t w_of;
 
+    // size (1, 3 or 9)
+    uint8_t size;
+
     // "frame" of the animaton
     uint8_t h_of_anim;
     uint8_t w_of_anim;
+
+    // player lives (0 to PLAYER_MAX_LIVES)
+    uint8_t lives;
 
 } player_t;
 
@@ -53,10 +59,13 @@ typedef struct player
 #define SLIME_SQ_4_ANIM 20
 #define SLIME_SQ_5_ANIM 21
 
+#define PLAYER_MAX_LIVES 3
+
 char player_detect_tile(char *tiles);
 void player_draw();
 void player_init();
-void player_move(input_t *input);
+bool player_move(input_t *input);
 void player_reset_in_map();
+void player_reset();
 
 #endif // __PLAYER_H__

@@ -80,6 +80,7 @@ void player_init()
     body[SLIME_SQ_4_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_4_alt.sprite");
     body[SLIME_SQ_5_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_5_alt.sprite");
 
+    player_reset();
     player_reset_in_map();
 }
 
@@ -224,6 +225,16 @@ char player_detect_tile(char *tiles)
                     if (found == 3)
                         return map->grid[map->layer_idx][h][w];
                 }
+                else if (map->grid[map->layer_idx][h][w] == 'g')
+                {
+                    if (found == player.size)
+                        return map->grid[map->layer_idx][h][w];
+                }
+                else if (map->grid[map->layer_idx][h][w] == 'h')
+                {
+                    map->grid[map->layer_idx][h][w] = 0;
+                    return 'h';
+                }
                 else
                     return map->grid[map->layer_idx][h][w];
             }
@@ -233,15 +244,15 @@ char player_detect_tile(char *tiles)
 }
 
 // move the play if input is given and map is not animating
-void player_move(input_t *input)
+bool player_move(input_t *input)
 {
     // prevent move during animation
     if (map->anim != SCREEN_WIDTH)
-        return;
+        return false;
 
     // return early if no button is pressed
     if (!input->up && !input->down && !input->left && !input->right)
-        return;
+        return false;
 
     player_t save_player = player;
 
@@ -252,6 +263,7 @@ void player_move(input_t *input)
         if (player.h_of == 0)
         {
             player.h_of = 1;
+            player.size *= 3;
             player.h_of_anim = PLAYER_NUM_ANIMS;
         }
         player.y -= 1;
@@ -261,6 +273,7 @@ void player_move(input_t *input)
         if (player.h_of == 1)
         {
             player.h_of = 0;
+            player.size /= 3;
             player.h_of_anim = PLAYER_NUM_ANIMS;
         }
         player.y += 1;
@@ -270,6 +283,7 @@ void player_move(input_t *input)
         if (player.w_of == 1)
         {
             player.w_of = 0;
+            player.size /= 3;
             player.w_of_anim = PLAYER_NUM_ANIMS;
         }
         player.x -= 1;
@@ -279,6 +293,7 @@ void player_move(input_t *input)
         if (player.w_of == 0)
         {
             player.w_of = 1;
+            player.size *= 3;
             player.w_of_anim = PLAYER_NUM_ANIMS;
         }
         player.x += 1;
@@ -295,6 +310,20 @@ void player_move(input_t *input)
             player.h_of_anim = 0;
             player.w_of_anim = 0;
         }
+    }
+
+    // fire or grids
+    if (player_detect_tile("gf"))
+    {
+        player.lives--;
+        player_reset_in_map();
+        return player.lives == 0;
+    }
+
+    // heart
+    if (player.lives < PLAYER_MAX_LIVES && player_detect_tile("h"))
+    {
+        player.lives++;
     }
 
     // buttons
@@ -322,6 +351,7 @@ void player_move(input_t *input)
     }
 
     player_update_screen_coordinates();
+    return false;
 }
 
 // set the player back to the start tile and resize it to small
@@ -330,6 +360,7 @@ void player_reset_in_map()
     // reset player size to small
     player.h_of = 0;
     player.w_of = 0;
+    player.size = 1;
 
     // set player start position
     for (uint8_t y = 0; y < map->height; y++)
@@ -346,4 +377,10 @@ void player_reset_in_map()
             }
         }
     }
+}
+
+// reset player attributes
+void player_reset()
+{
+    player.lives = PLAYER_MAX_LIVES;
 }

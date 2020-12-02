@@ -6,6 +6,7 @@
 #include "player.h"
 #include "rdp.h"
 #include "screens.h"
+#include "ui.h"
 
 extern uint32_t __width;
 extern uint32_t __height;
@@ -71,9 +72,12 @@ bool screen_intro(display_context_t disp)
 }
 
 // main screen for the game
-bool screen_game(display_context_t disp, input_t *input)
+screen_t screen_game(display_context_t disp, input_t *input)
 {
-    player_move(input);
+    bool is_dead = player_move(input);
+
+    if (is_dead)
+        return death;
 
     rdp_attach(disp);
 
@@ -93,6 +97,10 @@ bool screen_game(display_context_t disp, input_t *input)
             rdp_draw_sprites_with_texture(take_the_stairs, __width / 2 - take_the_stairs->width / 2, 352, 0);
         }
     }
+    else
+    {
+        ui_draw();
+    }
 
     rdp_detach_display();
 
@@ -106,10 +114,12 @@ bool screen_game(display_context_t disp, input_t *input)
             dfs_free_sprites(logo);
             dfs_free_sprites(take_the_stairs);
         }
-        return new_map_id == -1;
+        if (new_map_id == -1)
+            return win;
+        return game;
     }
 
-    return false;
+    return game;
 }
 
 // pause menu
@@ -174,7 +184,7 @@ bool screen_win(display_context_t disp, input_t *input)
     free(slime_g);
     free(slime_y);
 
-    rdp_attach(disp);
+    rdp_detach_display();
 
     sprite_t *you_win_sp = dfs_load_sprite("/gfx/sprites/ui/you_win.sprite");
     graphics_draw_sprite(disp, __width / 2 - you_win_sp->width / 2, 40, you_win_sp);
@@ -183,6 +193,18 @@ bool screen_win(display_context_t disp, input_t *input)
     sprite_t *credits_sp = dfs_load_sprite("/gfx/sprites/ui/credits_selected.sprite");
     graphics_draw_sprite(disp, __width / 2 - credits_sp->width / 2, 320, credits_sp);
     free(credits_sp);
+
+    return (input->A || input->start);
+}
+
+// player death screen
+bool screen_death(display_context_t disp, input_t *input)
+{
+    rdp_attach(disp);
+
+    rdp_draw_filled_fullscreen(colors[COLOR_BLACK]);
+
+    rdp_detach_display();
 
     return (input->A || input->start);
 }

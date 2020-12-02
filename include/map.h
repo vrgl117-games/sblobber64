@@ -19,6 +19,7 @@
 #define TILES_WARP "vw"
 #define TILES_VEGETATION ".%&+*"
 #define TILES_END "eE"
+#define TILES_ANIMATED "fvw"
 
 #define GRID_CHARS 6  // HHxWW\n
 #define LAYER_CHARS 2 // L\n

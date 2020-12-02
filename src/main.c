@@ -8,6 +8,7 @@
 #include "rdp.h"
 #include "screens.h"
 #include "sounds.h"
+#include "ui.h"
 
 screen_t screen = game; //TODO: set back to intro
 screen_t prev_screen;   //used in credits to know where to go back to
@@ -28,6 +29,7 @@ int main()
 
     map_init();
     player_init();
+    ui_init();
 
     srand(timer_ticks() & 0x7FFFFFFF);
 
@@ -62,8 +64,8 @@ int main()
                 screen = pause;
                 screen_pause(disp, &input, true);
             }
-            else if (screen_game(disp, &input))
-                screen = win;
+            else
+                screen = screen_game(disp, &input);
             break;
         case pause: // pause menu.
             switch (screen_pause(disp, &input, false))
@@ -79,6 +81,9 @@ int main()
                 break;
             case quit:
                 map_select(0);
+                player_reset_in_map();
+                player_reset();
+                screen_load_title_resources();
                 screen = game;
                 break;
             default:
@@ -99,6 +104,7 @@ int main()
                 {
                     map_select(0);
                     player_reset_in_map();
+                    player_reset();
                     screen_load_title_resources();
                     screen = game;
                 }
@@ -107,6 +113,16 @@ int main()
                     screen = prev_screen;
                 }
             }
+        case death:
+            if (screen_death(disp, &input))
+            {
+                map_select(0);
+                player_reset_in_map();
+                player_reset();
+                screen_load_title_resources();
+                screen = game;
+            }
+            break;
         }
 
         // increment fps counter
