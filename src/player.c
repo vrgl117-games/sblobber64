@@ -194,7 +194,7 @@ void player_draw()
         for (int x = player.sx - player.w_of; x <= player.sx + player.w_of; x++)
         {
             if (map->grid[map->layer_idx][y][x] == 'd')
-                rdp_draw_sprite_with_texture(tiles[(int)map->grid[map->layer_idx][y][x]], MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
+                rdp_draw_sprite_with_texture(tiles['E'], MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
         }
     }
 

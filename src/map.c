@@ -47,6 +47,7 @@ void map_init()
     //door
     tiles['d'] = dfs_load_sprite("/gfx/sprites/map/tile_d_open.sprite");
     tiles['D'] = dfs_load_sprite("/gfx/sprites/map/tile_d_close.sprite");
+    tiles['E'] = dfs_load_sprite("/gfx/sprites/map/tile_d_top.sprite");
     tiles['L'] = dfs_load_sprite("/gfx/sprites/map/tile_d_lock.sprite");
 
     //start
