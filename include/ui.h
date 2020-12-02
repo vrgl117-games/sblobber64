@@ -6,4 +6,4 @@
 void ui_draw();
 void ui_init();
 
-#endif // __UI__H__
+#endif // __UI_H__

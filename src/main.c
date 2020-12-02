@@ -109,10 +109,9 @@ int main()
                     screen = game;
                 }
                 else
-                {
                     screen = prev_screen;
-                }
             }
+            break;
         case death:
             if (screen_death(disp, &input))
             {

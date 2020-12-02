@@ -12,7 +12,9 @@
 #define NUM_MAPS 4
 
 #define SCREEN_HEIGHT 15
+#define SCREEN_HEIGHT_2 8
 #define SCREEN_WIDTH 20
+#define SCREEN_WIDTH_2 10
 #define MAP_NUM_ANIMS SCREEN_WIDTH
 
 #define TILES_WALL "-|[]{}y<>^p()i,L"
@@ -23,6 +25,11 @@
 
 #define GRID_CHARS 6  // HHxWW\n
 #define LAYER_CHARS 2 // L\n
+
+#define MIN(a, b) \
+    ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a < _b ? _a : _b; })
 
 typedef struct coordinates
 {
@@ -39,7 +46,7 @@ typedef struct map
     uint8_t layer_idx;
     coords_t *tiles_pos[255];
 
-    int8_t anim;           // "frame of the transition animation"
+    uint8_t anim;          // "frame of the transition animation"
     int8_t anim_direction; // +1 or -1
 
     char ***grid;

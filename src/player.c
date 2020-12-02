@@ -10,9 +10,7 @@
 
 extern map_t *map;
 
-extern sprite_t *tiles[255];
-
-player_t player = {0, 0, 0, 0};
+player_t player = {0};
 static sprite_t *body[22] = {0};
 
 // return true if player is on {x,y}
@@ -187,6 +185,8 @@ void player_draw()
             rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy + 1), 0);
         }
     }
+
+    extern sprite_t *tiles[255];
 
     // draw any transparant tile over the player
     for (int y = player.sy - player.h_of; y <= player.sy + player.h_of; y++)

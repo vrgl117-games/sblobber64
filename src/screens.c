@@ -11,6 +11,7 @@
 extern uint32_t __width;
 extern uint32_t __height;
 extern uint32_t colors[];
+extern map_t *map;
 static volatile int tick = 0;
 
 static sprites_t *logo;
@@ -88,18 +89,17 @@ screen_t screen_game(display_context_t disp, input_t *input)
     player_draw();
 
     // display logo on title map
-    if (map_id == 0)
+    if (map->anim == MAP_NUM_ANIMS)
     {
-        rdp_draw_sprites_with_texture(logo, __width / 2 - logo->width / 2, 32, 0);
-
-        if (tick % 14 < 7)
+        if (map_id == 0)
         {
-            rdp_draw_sprites_with_texture(take_the_stairs, __width / 2 - take_the_stairs->width / 2, 352, 0);
+            rdp_draw_sprites_with_texture(logo, __width / 2 - logo->width / 2, 32, 0);
+
+            if (tick % 14 < 7)
+                rdp_draw_sprites_with_texture(take_the_stairs, __width / 2 - take_the_stairs->width / 2, 352, 0);
         }
-    }
-    else
-    {
-        ui_draw();
+        else
+            ui_draw();
     }
 
     rdp_detach_display();
@@ -125,7 +125,7 @@ screen_t screen_game(display_context_t disp, input_t *input)
 // pause menu
 pause_selection_t screen_pause(display_context_t disp, input_t *input, bool reset)
 {
-    static int selected = 0;
+    static uint8_t selected = 0;
 
     if (reset)
         selected = 0;
@@ -139,7 +139,7 @@ pause_selection_t screen_pause(display_context_t disp, input_t *input, bool rese
 
     rdp_draw_filled_fullscreen(colors[COLOR_BG]);
 
-    rdp_attach(disp);
+    rdp_detach_display();
 
     sprite_t *pause_sp = dfs_load_sprite("/gfx/sprites/ui/pause.sprite");
     graphics_draw_sprite(disp, __width / 2 - pause_sp->width / 2, 10, pause_sp);
@@ -154,9 +154,12 @@ pause_selection_t screen_pause(display_context_t disp, input_t *input, bool rese
     sprite_t *credits_sp = dfs_load_sprite((selected == 2 ? "/gfx/sprites/ui/credits_selected.sprite" : "/gfx/sprites/ui/credits.sprite"));
     graphics_draw_sprite(disp, __width / 2 - credits_sp->width / 2, 300, credits_sp);
     free(credits_sp);
-    sprite_t *quit_sp = dfs_load_sprite((selected == 3 ? "/gfx/sprites/ui/quit_selected.sprite" : "/gfx/sprites/ui/quit.sprite"));
-    graphics_draw_sprite(disp, __width / 2 - quit_sp->width / 2, 350, quit_sp);
-    free(quit_sp);
+    if (map->id) // do not display quit on title
+    {
+        sprite_t *quit_sp = dfs_load_sprite((selected == 3 ? "/gfx/sprites/ui/quit_selected.sprite" : "/gfx/sprites/ui/quit.sprite"));
+        graphics_draw_sprite(disp, __width / 2 - quit_sp->width / 2, 350, quit_sp);
+        free(quit_sp);
+    }
 
     if (input->A)
         return selected;
@@ -216,7 +219,7 @@ bool screen_credits(display_context_t disp, input_t *input)
 
     rdp_draw_filled_fullscreen(colors[COLOR_BG]);
 
-    rdp_attach(disp);
+    rdp_detach_display();
 
     sprite_t *credits_sp = dfs_load_sprite("/gfx/sprites/ui/credits_big.sprite");
     graphics_draw_sprite(disp, __width / 2 - credits_sp->width / 2, 10, credits_sp);

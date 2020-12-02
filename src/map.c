@@ -93,12 +93,8 @@ void map_init()
 uint8_t map_draw(int tick)
 {
     //calculate top/left coordinates of visible map
-    int8_t sy = player.y - (SCREEN_HEIGHT / 2);
-    int8_t sx = player.x - (SCREEN_WIDTH / 2);
-    if (sy < 0)
-        sy = 0;
-    if (sx < 0)
-        sx = 0;
+    uint8_t sy = (SCREEN_HEIGHT_2 > player.y ? 0 : player.y - SCREEN_HEIGHT_2);
+    uint8_t sx = (SCREEN_WIDTH_2 > player.x ? 0 : player.x - SCREEN_WIDTH_2);
 
     if (sy + SCREEN_HEIGHT > map->height)
         sy -= (sy + SCREEN_HEIGHT) - map->height;
@@ -106,21 +102,13 @@ uint8_t map_draw(int tick)
     if (sx + SCREEN_WIDTH > map->width)
         sx -= (sx + SCREEN_WIDTH) - map->width;
 
-    int8_t start_y = player.sy - map->anim;
-    if (start_y < 0)
-        start_y = 0;
-    int8_t end_y = player.sy + map->anim;
-    if (end_y > SCREEN_HEIGHT)
-        end_y = SCREEN_HEIGHT;
+    uint8_t start_y = (map->anim > player.sy ? 0 : player.sy - map->anim);
+    uint8_t end_y = MIN(player.sy + map->anim, SCREEN_HEIGHT);
     for (uint8_t y = start_y; y < end_y; y++)
     {
 
-        int8_t start_x = player.sx - map->anim;
-        if (start_x < 0)
-            start_x = 0;
-        int8_t end_x = player.sx + map->anim;
-        if (end_x > SCREEN_WIDTH)
-            end_x = SCREEN_WIDTH;
+        uint8_t start_x = (map->anim > player.sy ? 0 : player.sx - map->anim);
+        uint8_t end_x = MIN(player.sx + map->anim, SCREEN_WIDTH);
         for (uint8_t x = start_x; x < end_x; x++)
         {
             char c = map->grid[map->layer_idx][sy + y][sx + x];
