@@ -4,6 +4,7 @@
 #include "dfs.h"
 #include "player.h"
 #include "rdp.h"
+#include "sounds.h"
 
 #include "debug.h"
 
@@ -17,9 +18,10 @@ char *level_paths[NUM_MAPS] = {
     "/maps/00_title.map",
 
     "/maps/01_warp.map",
+    "/maps/02_layers.map",
+
     "/maps/10_end.map",
 
-    // "/maps/02_layers.map",
 };
 
 // init map "package", load all tiles in memory
@@ -158,8 +160,11 @@ int8_t map_next()
         player_reset_in_map();
         return id + 1;
     }
-    else
+    else if (map->anim_direction != -1)
+    {
+        sound_start("down");
         map->anim_direction = -1;
+    }
 
     return map->id;
 }

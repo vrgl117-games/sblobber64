@@ -300,11 +300,14 @@ void player_move(input_t *input)
     // buttons
     if (player_detect_tile("ABC"))
     {
-        sound_start(0);
+        sound_start("button");
         map_layer_next();
     }
     // key & closed door
-    if (player_detect_tile("kD"))
+    char kD = player_detect_tile("kD");
+    if (kD == 'k')
+        sound_start("key");
+    if (kD)
         map_layer_next();
 
     // warp
@@ -312,7 +315,10 @@ void player_move(input_t *input)
     {
         on_warp = player_detect_tile(TILES_WARP);
         if (on_warp)
+        {
+            sound_start("warp");
             player_warp(on_warp);
+        }
     }
 
     player_update_screen_coordinates();

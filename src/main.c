@@ -43,6 +43,9 @@ int main()
         controller_scan();
         input_t input = get_keys_down().c[0];
 
+        // update sound
+        sound_update();
+
         // wait for display
         while (!(disp = display_lock()))
             ;
@@ -116,7 +119,6 @@ int main()
 
         // update display
         display_show(disp);
-        sound_update();
     }
 
     return 0;

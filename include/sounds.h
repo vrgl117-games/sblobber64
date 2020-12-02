@@ -4,7 +4,7 @@
 #include <libdragon.h>
 
 void sound_init();
-void sound_start(int sound);
+void sound_start(char *sound);
 void sound_stop();
 void sound_play_pause();
 void sound_update();

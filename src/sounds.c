@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include <strings.h>
+#include <string.h>
 
 #include "sounds.h"
 #include "dfs.h"
@@ -11,12 +11,13 @@ static bool paused = false;
 void sound_init()
 {
     audio_init(44100, 4);
-    buffer = malloc(sizeof(signed short) * audio_get_buffer_length() * 2);
+    buffer = calloc(audio_get_buffer_length() * 2, sizeof(signed short));
+    audio_write_silence();
 }
 
-void sound_start(int sound)
+void sound_start(char *sound)
 {
-    fp = dfs_openf("/sfx/sound_%d.raw", sound);
+    fp = dfs_openf("/sfx/%s.raw", sound);
     paused = false;
 }
 
@@ -24,6 +25,10 @@ void sound_stop()
 {
     dfs_close(fp);
     fp = 0;
+    audio_write_silence();
+    audio_write_silence();
+    audio_write_silence();
+    audio_write_silence();
 }
 
 void sound_play_pause()
@@ -35,6 +40,7 @@ void sound_update()
 {
     if (!paused && fp != 0 && audio_can_write())
     {
+        memset(buffer, 0, audio_get_buffer_length() * 2 * sizeof(signed short));
         int did_read = dfs_read(buffer, sizeof(signed short), audio_get_buffer_length(), fp);
         did_read = did_read / sizeof(signed short);
         if (dfs_eof(fp))
@@ -48,6 +54,7 @@ void sound_update()
         // |a|a|b|b|c|c|d|d|.|.| -> |a|a|b|b|c|c|d|d|0|0|
         //for (int i = did_read; i < buffer_length * 2; i++)
         //    buffer[i] = 0;
-        audio_write(buffer);
+        if (audio_can_write())
+            audio_write(buffer);
     }
 }
