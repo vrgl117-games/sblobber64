@@ -73,6 +73,7 @@ int main()
             switch (screen_pause(disp, &input, false))
             {
             case restart:
+                map_layer_reset();
                 player_reset_in_map();
             case resume:
                 screen = game;
@@ -122,6 +123,7 @@ int main()
         case death_grid:
             if (screen_death(disp, &input, screen))
             {
+                map_layer_reset();
                 player_reset_in_map();
                 screen = game;
             }

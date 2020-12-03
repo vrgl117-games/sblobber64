@@ -135,6 +135,12 @@ void map_layer_next()
     map->layer_idx++;
 }
 
+// reset to the 1st layer (after death or restart)
+void map_layer_reset()
+{
+    map->layer_idx = 0;
+}
+
 // load map from disk and returns it
 bool map_load(uint8_t map_id)
 {

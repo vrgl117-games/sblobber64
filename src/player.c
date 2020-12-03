@@ -234,7 +234,9 @@ char player_detect_tile(char *tiles)
                 }
                 else if (map->grid[map->layer_idx][h][w] == 'h')
                 {
-                    map->grid[map->layer_idx][h][w] = ' ';
+                    // erase heart in all layers
+                    for (uint8_t idx = 0; idx <= map->layers - 1; idx++)
+                        map->grid[idx][h][w] = ' ';
                     return 'h';
                 }
                 else
