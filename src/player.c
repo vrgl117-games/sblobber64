@@ -19,22 +19,6 @@ static inline bool isPlayer(uint8_t x, uint8_t y)
     return ((y == player.y || y == player.y - player.h_of || y == player.y + player.h_of) && (x == player.x || x == player.x - player.w_of || x == player.x + player.w_of));
 }
 
-// warp player to other end of warp
-static inline void player_warp(char on_warp)
-{
-    for (uint8_t y = 0; y < map->height; y++)
-    {
-        for (uint8_t x = 0; x < map->width; x++)
-        {
-            if (map->grid[map->layer_idx][y][x] == (on_warp == 'w' ? 'v' : 'w'))
-            {
-                player.y = y;
-                player.x = x;
-            }
-        }
-    }
-}
-
 // update player {x,y} inside the screen
 static inline void player_update_screen_coordinates()
 {
@@ -50,6 +34,24 @@ static inline void player_update_screen_coordinates()
         player.sx = SCREEN_WIDTH - (map->width - player.x);
     else if (player.x >= SCREEN_WIDTH / 2)
         player.sx = SCREEN_WIDTH / 2;
+}
+
+// warp player to other end of warp
+static inline void player_warp(char on_warp)
+{
+    for (uint8_t y = 0; y < map->height; y++)
+    {
+        for (uint8_t x = 0; x < map->width; x++)
+        {
+            if (map->grid[map->layer_idx][y][x] == (on_warp == 'w' ? 'v' : 'w'))
+            {
+                player.y = y;
+                player.x = x;
+                player_update_screen_coordinates();
+                return;
+            }
+        }
+    }
 }
 
 // init player "package", load all tiles in memory and place player on start tile in map
@@ -324,7 +326,11 @@ char player_move(input_t *input)
 
     // heart
     if (player.lives < PLAYER_MAX_LIVES && player_detect_tile("h"))
+    {
         player.lives++;
+        if (player.lives < PLAYER_MAX_LIVES && player_detect_tile("h"))
+            player.lives++;
+    }
 
     // buttons
     if (player_detect_tile("ABC"))
