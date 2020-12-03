@@ -6,11 +6,13 @@
 #include "player.h"
 #include "rdp.h"
 #include "screens.h"
+#include "sounds.h"
 #include "ui.h"
 
 extern uint32_t __width;
 extern uint32_t __height;
 extern uint32_t colors[];
+extern player_t player;
 extern map_t *map;
 static volatile int tick = 0;
 
@@ -75,10 +77,16 @@ bool screen_intro(display_context_t disp)
 // main screen for the game
 screen_t screen_game(display_context_t disp, input_t *input)
 {
-    bool is_dead = player_move(input);
-
-    if (is_dead)
-        return death;
+    char danger = player_move(input);
+    if (danger)
+    {
+        if (player.lives == 0)
+            return game_over;
+        if (danger == 'f')
+            return death_fire;
+        if (danger == 'g')
+            return death_grid;
+    }
 
     rdp_attach(disp);
 
@@ -95,7 +103,7 @@ screen_t screen_game(display_context_t disp, input_t *input)
         {
             rdp_draw_sprites_with_texture(logo, __width / 2 - logo->width / 2, 32, 0);
 
-            if (tick % 14 < 7)
+            if (tick % 2 < 1)
                 rdp_draw_sprites_with_texture(take_the_stairs, __width / 2 - take_the_stairs->width / 2, 352, 0);
         }
         else
@@ -107,16 +115,22 @@ screen_t screen_game(display_context_t disp, input_t *input)
     // detect if we are on the end
     if (player_detect_tile(TILES_END))
     {
-        int8_t new_map_id = map_next();
-        // if we were on title and just change map, free sprites
-        if (map_id == 0 && new_map_id != map_id)
+        if (map->anim_direction != -1)
         {
-            dfs_free_sprites(logo);
-            dfs_free_sprites(take_the_stairs);
+            sound_start("down");
+            map->anim_direction = -1;
+            if (map->id == 0) // free sprites if we leaving title
+            {
+                dfs_free_sprites(logo);
+                dfs_free_sprites(take_the_stairs);
+            }
         }
-        if (new_map_id == -1)
-            return win;
-        return game;
+        else if (map->anim == 0)
+        {
+            if (!map_select(map->id + 1)) // next map can't be loaded means we were on the last one, win the game
+                return win;
+            return game;
+        }
     }
 
     return game;
@@ -201,13 +215,53 @@ bool screen_win(display_context_t disp, input_t *input)
 }
 
 // player death screen
-bool screen_death(display_context_t disp, input_t *input)
+bool screen_death(display_context_t disp, input_t *input, screen_t reason)
 {
+    sprite_t *danger_sp = dfs_load_sprite(reason == death_fire ? "/gfx/sprites/map/tile_f.sprite" : "/gfx/sprites/map/tile_g.sprite");
+
     rdp_attach(disp);
 
-    rdp_draw_filled_fullscreen(colors[COLOR_BLACK]);
+    rdp_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdp_draw_sprite_with_texture(danger_sp, __width / 2 - 16, 200, 0);
 
     rdp_detach_display();
+
+    free(danger_sp);
+
+    sprite_t *reason_sp = dfs_load_sprite(reason == death_fire ? "/gfx/sprites/ui/fire.sprite" : "/gfx/sprites/ui/grid.sprite");
+    graphics_draw_sprite(disp, __width / 2 - reason_sp->width / 2, 100, reason_sp);
+    free(reason_sp);
+
+    sprite_t *restart_sp = dfs_load_sprite("/gfx/sprites/ui/restart_selected.sprite");
+    graphics_draw_sprite(disp, __width / 2 - restart_sp->width / 2, 350, restart_sp);
+    free(restart_sp);
+
+    return (input->A || input->start);
+}
+
+// game over screen
+bool screen_game_over(display_context_t disp, input_t *input)
+{
+    sprite_t *heart_sp = dfs_load_sprite("/gfx/sprites/map/tile_h_empty.sprite");
+
+    rdp_attach(disp);
+
+    rdp_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdp_draw_sprite_with_texture(heart_sp, __width / 2 - 48 - 2, 200, 0);
+    rdp_draw_sprite_with_texture(heart_sp, __width / 2 - 16, 200, 0);
+    rdp_draw_sprite_with_texture(heart_sp, __width / 2 + 16 + 2, 200, 0);
+
+    rdp_detach_display();
+
+    free(heart_sp);
+
+    sprite_t *game_over_sp = dfs_load_sprite("/gfx/sprites/ui/game_over.sprite");
+    graphics_draw_sprite(disp, __width / 2 - game_over_sp->width / 2, 10, game_over_sp);
+    free(game_over_sp);
+
+    sprite_t *quit_sp = dfs_load_sprite("/gfx/sprites/ui/quit_selected.sprite");
+    graphics_draw_sprite(disp, __width / 2 - quit_sp->width / 2, 350, quit_sp);
+    free(quit_sp);
 
     return (input->A || input->start);
 }

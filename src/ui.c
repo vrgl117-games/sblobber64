@@ -19,6 +19,6 @@ void ui_init()
 void ui_draw()
 {
     rdp_draw_sprite_with_texture(heart_full, 10, 10, 0);
-    rdp_draw_sprite_with_texture(player.lives > 1 ? heart_full : heart_empty, 10 + UI_LIVES_SIZE, 10, 0);
-    rdp_draw_sprite_with_texture(player.lives > 2 ? heart_full : heart_empty, 10 + UI_LIVES_SIZE * 2, 10, 0);
+    rdp_draw_sprite_with_texture(player.lives > 1 ? heart_full : heart_empty, 10 + UI_LIVES_SIZE + 2, 10, 0);
+    rdp_draw_sprite_with_texture(player.lives > 2 ? heart_full : heart_empty, 10 + (UI_LIVES_SIZE + 2) * 2, 10, 0);
 }

@@ -33,9 +33,11 @@ int main()
 
     srand(timer_ticks() & 0x7FFFFFFF);
 
+    // 1s
     new_timer(TIMER_TICKS(1000000), TF_CONTINUOUS, fps_timer);
 
-    new_timer(TIMER_TICKS(50000), TF_CONTINUOUS, screen_timer_title);
+    // 500ms
+    new_timer(TIMER_TICKS(500000), TF_CONTINUOUS, screen_timer_title);
 
     display_context_t disp = 0;
 
@@ -81,9 +83,7 @@ int main()
                 break;
             case quit:
                 map_select(0);
-                player_reset_in_map();
                 player_reset();
-                screen_load_title_resources();
                 screen = game;
                 break;
             default:
@@ -103,22 +103,26 @@ int main()
                 if (prev_screen == win)
                 {
                     map_select(0);
-                    player_reset_in_map();
                     player_reset();
-                    screen_load_title_resources();
                     screen = game;
                 }
                 else
                     screen = prev_screen;
             }
             break;
-        case death:
-            if (screen_death(disp, &input))
+        case game_over:
+            if (screen_game_over(disp, &input))
             {
                 map_select(0);
-                player_reset_in_map();
                 player_reset();
-                screen_load_title_resources();
+                screen = game;
+            }
+            break;
+        case death_fire:
+        case death_grid:
+            if (screen_death(disp, &input, screen))
+            {
+                player_reset_in_map();
                 screen = game;
             }
             break;

@@ -244,15 +244,16 @@ char player_detect_tile(char *tiles)
 }
 
 // move the play if input is given and map is not animating
-bool player_move(input_t *input)
+// if damaged, return the tile causing the damage, otherwise 0
+char player_move(input_t *input)
 {
     // prevent move during animation
     if (map->anim != SCREEN_WIDTH)
-        return false;
+        return 0;
 
     // return early if no button is pressed
     if (!input->up && !input->down && !input->left && !input->right)
-        return false;
+        return 0;
 
     player_t save_player = player;
 
@@ -313,18 +314,16 @@ bool player_move(input_t *input)
     }
 
     // fire or grids
-    if (player_detect_tile("gf"))
+    char danger = player_detect_tile("gf");
+    if (danger)
     {
         player.lives--;
-        player_reset_in_map();
-        return player.lives == 0;
+        return danger;
     }
 
     // heart
     if (player.lives < PLAYER_MAX_LIVES && player_detect_tile("h"))
-    {
         player.lives++;
-    }
 
     // buttons
     if (player_detect_tile("ABC"))
@@ -351,7 +350,7 @@ bool player_move(input_t *input)
     }
 
     player_update_screen_coordinates();
-    return false;
+    return 0;
 }
 
 // set the player back to the start tile and resize it to small

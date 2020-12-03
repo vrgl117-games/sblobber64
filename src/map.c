@@ -92,6 +92,9 @@ void map_init()
 // draw current map on screen
 uint8_t map_draw(int tick)
 {
+    // animate some tiles everyother tick
+    mirror_t mirror = tick % 2 < 1;
+
     //calculate top/left coordinates of visible map
     uint8_t sy = (SCREEN_HEIGHT_2 > player.y ? 0 : player.y - SCREEN_HEIGHT_2);
     uint8_t sx = (SCREEN_WIDTH_2 > player.x ? 0 : player.x - SCREEN_WIDTH_2);
@@ -114,12 +117,7 @@ uint8_t map_draw(int tick)
             char c = map->grid[map->layer_idx][sy + y][sx + x];
             sprite_t *tile = tiles[(int)c];
             if (tile != NULL)
-            {
-                mirror_t mirror = MIRROR_DISABLED;
-                if (strchr(TILES_ANIMATED, c))
-                    mirror = tick % 6 / 3;
-                rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, mirror);
-            }
+                rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, (strchr(TILES_ANIMATED, c) ? mirror : MIRROR_DISABLED));
             else
                 rdp_draw_filled_rectangle_size(MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, MAP_CELL_SIZE, MAP_CELL_SIZE, colors[COLOR_BG]);
         }
@@ -128,6 +126,7 @@ uint8_t map_draw(int tick)
     if ((map->anim_direction == 1 && map->anim < MAP_NUM_ANIMS) || (map->anim_direction == -1 && map->anim > 0))
         map->anim += map->anim_direction;
 
+    debug_setf("anim %d dir %d tick %d", map->anim, map->anim_direction, tick);
     return map->id;
 }
 
@@ -137,70 +136,50 @@ void map_layer_next()
     map->layer_idx++;
 }
 
-// start map fade animation, move to the next map when animation is done
-int8_t map_next()
-{
-    if (map->anim == 0)
-    {
-        uint8_t id = map->id;
-        map_free();
-        if (id + 1 >= NUM_MAPS)
-        {
-            return -1;
-        }
-        map_select(id + 1);
-        player_reset_in_map();
-        return id + 1;
-    }
-    else if (map->anim_direction != -1)
-    {
-        sound_start("down");
-        map->anim_direction = -1;
-    }
-
-    return map->id;
-}
-
 // load map from disk and returns it
-map_t *map_load(uint8_t map_id)
+bool map_load(uint8_t map_id)
 {
+    if (map)
+        map_free();
+    if (map_id >= NUM_MAPS)
+        return false;
+
     int fp = dfs_open(level_paths[map_id]);
-    map_t *_map = NULL;
     if (fp > 0)
     {
-        _map = calloc(1, sizeof(map_t));
+        map = calloc(1, sizeof(map_t));
         // getting grid dimensions
         char buffer[GRID_CHARS];
         dfs_read(buffer, 1, GRID_CHARS, fp);
 
         int h, w;
         sscanf(buffer, "%dx%d", &h, &w);
-        _map->width = (uint8_t)w;
-        _map->height = (uint8_t)h;
+        map->width = (uint8_t)w;
+        map->height = (uint8_t)h;
 
         // getting layer count
         dfs_read(buffer, 1, LAYER_CHARS, fp);
-        _map->layers = buffer[0] - '0';
+        map->layers = buffer[0] - '0';
 
         // getting grid
-        _map->grid = calloc(_map->layers, sizeof(char **));
-        for (uint8_t l = 0; l < _map->layers; l++)
+        map->grid = calloc(map->layers, sizeof(char **));
+        for (uint8_t l = 0; l < map->layers; l++)
         {
-            _map->grid[l] = calloc(_map->height, sizeof(char *));
-            for (uint8_t y = 0; y < _map->height; y++)
+            map->grid[l] = calloc(map->height, sizeof(char *));
+            for (uint8_t y = 0; y < map->height; y++)
             {
-                _map->grid[l][y] = calloc(_map->width, sizeof(char));
-                dfs_read(_map->grid[l][y], 1, _map->width, fp);
+                map->grid[l][y] = calloc(map->width, sizeof(char));
+                dfs_read(map->grid[l][y], 1, map->width, fp);
                 dfs_seek(fp, 1, SEEK_CUR);
             }
         }
 
-        _map->id = map_id;
-        _map->anim_direction = 1;
+        map->id = map_id;
+        map->anim_direction = 1;
         dfs_close(fp);
     }
 
-    return _map;
+    return true;
 }
 
 // free current map from memory
@@ -247,11 +226,19 @@ void map_regen_vegetation()
     }
 }
 
-// select (load, genwrate vegetation) a new map as current map
-void map_select(uint8_t map_id)
+// select (load, generate vegetation) a new map as current map
+// return false when map can't be loaded
+bool map_select(uint8_t map_id)
 {
-    map = map_load(map_id);
+    if (map_id == 0)
+        screen_load_title_resources();
+
+    if (!map_load(map_id))
+        return false;
+
     map_regen_vegetation();
+    player_reset_in_map();
     if (map_id == 0)
         map->anim = MAP_NUM_ANIMS; // do not animate title map
+    return true;
 }

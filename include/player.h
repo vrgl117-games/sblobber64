@@ -64,7 +64,7 @@ typedef struct player
 char player_detect_tile(char *tiles);
 void player_draw();
 void player_init();
-bool player_move(input_t *input);
+char player_move(input_t *input);
 void player_reset_in_map();
 void player_reset();
 
