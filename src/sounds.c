@@ -17,18 +17,22 @@ void sound_init()
 
 void sound_start(char *sound)
 {
+    sound_stop();
     fp = dfs_openf("/sfx/%s.raw", sound);
     paused = false;
 }
 
 void sound_stop()
 {
-    dfs_close(fp);
-    fp = 0;
-    audio_write_silence();
-    audio_write_silence();
-    audio_write_silence();
-    audio_write_silence();
+    if (fp)
+    {
+        dfs_close(fp);
+        fp = 0;
+        audio_write_silence();
+        audio_write_silence();
+        audio_write_silence();
+        audio_write_silence();
+    }
 }
 
 void sound_play_pause()
