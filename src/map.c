@@ -16,8 +16,8 @@ map_t *map;
 sprite_t *tiles[255] = {0};
 char *level_paths[NUM_MAPS] = {
     "/maps/00_title.map",
-
-    "/maps/01_warp.map",
+    "/maps/01_tutorial.map",
+    //"/maps/01_warp.map",
     "/maps/02_layers.map",
 
     "/maps/10_end.map",
@@ -126,7 +126,6 @@ uint8_t map_draw(int tick)
     if ((map->anim_direction == 1 && map->anim < MAP_NUM_ANIMS) || (map->anim_direction == -1 && map->anim > 0))
         map->anim += map->anim_direction;
 
-    debug_setf("anim %d dir %d tick %d", map->anim, map->anim_direction, tick);
     return map->id;
 }
 
