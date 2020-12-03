@@ -245,5 +245,7 @@ bool map_select(uint8_t map_id)
     player_reset_in_map();
     if (map_id == 0)
         map->anim = MAP_NUM_ANIMS; // do not animate title map
+    else
+        sound_start("high");
     return true;
 }
