@@ -25,15 +25,15 @@ static inline void player_update_screen_coordinates()
     player.sy = player.y;
     player.sx = player.x;
 
-    if (player.y >= (map->height - SCREEN_HEIGHT / 2))
+    if (player.y >= map->height - SCREEN_HEIGHT_2)
         player.sy = SCREEN_HEIGHT - (map->height - player.y);
-    else if (player.y >= SCREEN_HEIGHT / 2)
-        player.sy = SCREEN_HEIGHT / 2;
+    else if (player.y >= SCREEN_HEIGHT_2)
+        player.sy = SCREEN_HEIGHT_2;
 
-    if (player.x >= (map->width - SCREEN_WIDTH / 2))
+    if (player.x >= map->width - SCREEN_WIDTH_2)
         player.sx = SCREEN_WIDTH - (map->width - player.x);
-    else if (player.x >= SCREEN_WIDTH / 2)
-        player.sx = SCREEN_WIDTH / 2;
+    else if (player.x >= SCREEN_WIDTH_2)
+        player.sx = SCREEN_WIDTH_2;
 }
 
 // warp player to other end of warp
@@ -234,7 +234,7 @@ char player_detect_tile(char *tiles)
                 }
                 else if (map->grid[map->layer_idx][h][w] == 'h')
                 {
-                    map->grid[map->layer_idx][h][w] = 0;
+                    map->grid[map->layer_idx][h][w] = ' ';
                     return 'h';
                 }
                 else
@@ -310,17 +310,19 @@ char player_move(input_t *input)
         {
             player.h_of = save_player.h_of;
             player.w_of = save_player.w_of;
+            player.size = save_player.size;
             player.h_of_anim = 0;
             player.w_of_anim = 0;
         }
     }
+
+    player_update_screen_coordinates();
 
     // fire or grids
     char danger = player_detect_tile("gf");
     if (danger)
     {
         player.lives--;
-        player_update_screen_coordinates();
         return danger;
     }
 
@@ -356,7 +358,6 @@ char player_move(input_t *input)
         }
     }
 
-    player_update_screen_coordinates();
     return 0;
 }
 
@@ -377,7 +378,6 @@ void player_reset_in_map()
             {
                 player.x = x;
                 player.y = y;
-
                 player_update_screen_coordinates();
                 return;
             }
