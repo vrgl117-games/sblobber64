@@ -189,12 +189,12 @@ void player_draw()
     extern sprite_t *tiles[255];
 
     // draw any transparant tile over the player
-    for (int y = player.sy - player.h_of; y <= player.sy + player.h_of; y++)
+    for (int y_of = -player.h_of; y_of <= player.h_of; y_of++)
     {
-        for (int x = player.sx - player.w_of; x <= player.sx + player.w_of; x++)
+        for (int x_of = -player.w_of; x_of <= player.w_of; x_of++)
         {
-            if (map->grid[map->layer_idx][y][x] == 'd')
-                rdp_draw_sprite_with_texture(tiles['E'], MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, 0);
+            if (map->grid[map->layer_idx][player.y + y_of][player.x + x_of] == 'd')
+                rdp_draw_sprite_with_texture(tiles['E'], MAP_CELL_SIZE * (player.sx + x_of), MAP_CELL_SIZE * (player.sy + y_of), 0);
         }
     }
 
@@ -318,6 +318,7 @@ char player_move(input_t *input)
     if (danger)
     {
         player.lives--;
+        player_update_screen_coordinates();
         return danger;
     }
 
