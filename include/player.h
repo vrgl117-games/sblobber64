@@ -30,6 +30,9 @@ typedef struct player
     // player lives (0 to PLAYER_MAX_LIVES)
     uint8_t lives;
 
+    // nb of frames the controler should rumble
+    uint8_t rumble;
+
 } player_t;
 
 #define SLIME_SINGLE 0
@@ -67,5 +70,7 @@ void player_init();
 char player_move(input_t *input);
 void player_reset_in_map();
 void player_reset();
+void player_start_rumble(uint8_t n);
+bool player_stop_rumble();
 
 #endif // __PLAYER_H__

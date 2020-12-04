@@ -47,6 +47,10 @@ int main()
         controller_scan();
         input_t input = get_keys_down().c[0];
 
+        // stop rumble if needed.
+        if (player_stop_rumble())
+            rumble_stop(0);
+
         // update sound
         sound_update();
 
@@ -58,6 +62,15 @@ int main()
         {
         case intro: // n64, n64brew jam and vrgl117 logo.
             if (screen_intro(disp))
+            {
+                if (identify_accessory(0) == ACCESSORY_RUMBLEPAK)
+                    screen = game;
+                else
+                    screen = rumble;
+            }
+            break;
+        case rumble:
+            if (screen_rumble(disp, &input))
                 screen = game;
             break;
         case game: // actual game.

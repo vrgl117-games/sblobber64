@@ -6,6 +6,7 @@
 typedef enum screen
 {
     intro,
+    rumble,
     game,
     pause,
     death_fire,
@@ -35,5 +36,6 @@ void screen_timer_title();
 bool screen_win(display_context_t disp, input_t *input);
 bool screen_death(display_context_t disp, input_t *input, screen_t reason);
 bool screen_game_over(display_context_t disp, input_t *input);
+bool screen_rumble(display_context_t disp, input_t *input);
 
 #endif //__SCREENS_H__

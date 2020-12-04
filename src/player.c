@@ -316,6 +316,7 @@ char player_move(input_t *input)
             player.h_of_anim = 0;
             player.w_of_anim = 0;
         }
+        player_start_rumble(3);
     }
 
     player_update_screen_coordinates();
@@ -325,6 +326,7 @@ char player_move(input_t *input)
     if (danger)
     {
         player.lives--;
+        player_start_rumble(6);
         return danger;
     }
 
@@ -391,4 +393,21 @@ void player_reset_in_map()
 void player_reset()
 {
     player.lives = PLAYER_MAX_LIVES;
+}
+
+void player_start_rumble(uint8_t n)
+{
+    rumble_start(0);
+    player.rumble = n;
+}
+
+bool player_stop_rumble()
+{
+    // rumble already stopped
+    if (player.rumble == 0)
+        return false;
+
+    player.rumble--;
+
+    return (player.rumble == 0);
 }

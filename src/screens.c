@@ -42,25 +42,25 @@ bool screen_intro(display_context_t disp)
     switch (anim)
     {
     case 1 ... 9:
-        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", tick);
+        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", anim);
         break;
     case 10 ... 30:
         intro = dfs_load_sprite("/gfx/sprites/intro/n64brew_jam_logo.sprite");
         break;
     case 31 ... 39:
-        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", 40 - tick);
+        intro = dfs_load_spritef("/gfx/sprites/intro/n64brew_jam_logo_%d.sprite", 40 - anim);
         break;
     case 40:
         screen_load_title_resources();
         break;
     case 41 ... 49:
-        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", tick - 40);
+        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", anim - 40);
         break;
     case 50 ... 70:
         intro = dfs_load_sprite("/gfx/sprites/intro/vrgl117_logo.sprite");
         break;
     case 71 ... 79:
-        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", 80 - tick);
+        intro = dfs_load_spritef("/gfx/sprites/intro/vrgl117_logo_%d.sprite", 80 - anim);
         break;
     }
 
@@ -300,4 +300,24 @@ bool screen_credits(display_context_t disp, input_t *input)
     free(kenneynl_sp);
 
     return (input->A || input->start);
+}
+
+// rumble screen
+bool screen_rumble(display_context_t disp, input_t *input)
+{
+    rdp_attach(disp);
+
+    rdp_draw_filled_fullscreen(colors[COLOR_BG]);
+
+    rdp_detach_display();
+
+    sprite_t *rumble_sp = dfs_load_sprite("/gfx/sprites/ui/rumble.sprite");
+    graphics_draw_sprite(disp, __width / 2 - rumble_sp->width / 2, 100, rumble_sp);
+    free(rumble_sp);
+
+    sprite_t *continue_sp = dfs_load_sprite("/gfx/sprites/ui/continue.sprite");
+    graphics_draw_sprite(disp, __width / 2 - continue_sp->width / 2, 350, continue_sp);
+    free(continue_sp);
+
+    return (identify_accessory(0) == ACCESSORY_RUMBLEPAK || input->A || input->start);
 }
