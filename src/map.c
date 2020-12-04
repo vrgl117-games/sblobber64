@@ -16,9 +16,10 @@ map_t *map;
 sprite_t *tiles[255] = {0};
 char *level_paths[NUM_MAPS] = {
     "/maps/00_title.map",
-    "/maps/01_tutorial.map",
+    //"/maps/01_tutorial.map",
     //"/maps/01_warp.map",
-    "/maps/02_layers.map",
+    //"/maps/02_layers.map",
+    "/maps/03_level2.map",
 
     "/maps/10_end.map",
 

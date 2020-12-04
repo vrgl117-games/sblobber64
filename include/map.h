@@ -12,7 +12,7 @@
 #define NUM_MAPS 4
 
 #define SCREEN_HEIGHT 15
-#define SCREEN_HEIGHT_2 8
+#define SCREEN_HEIGHT_2 7
 #define SCREEN_WIDTH 20
 #define SCREEN_WIDTH_2 10
 #define MAP_NUM_ANIMS SCREEN_WIDTH
@@ -20,7 +20,7 @@
 #define TILES_WALL "-|[]{}y<>^p()i,L"
 #define TILES_WARP "vw"
 #define TILES_VEGETATION ".%&+*"
-#define TILES_END "eE"
+#define TILES_END "e!"
 #define TILES_ANIMATED "fvw"
 
 #define GRID_CHARS 6  // HHxWW\n
