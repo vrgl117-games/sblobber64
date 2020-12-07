@@ -12,6 +12,7 @@
 extern uint32_t __width;
 extern uint32_t __height;
 extern uint32_t colors[];
+extern sprite_t *tiles[255];
 extern player_t player;
 extern map_t *map;
 static volatile int tick = 0;
@@ -104,7 +105,10 @@ screen_t screen_game(display_context_t disp, input_t *input)
             rdp_draw_sprites_with_texture(logo, __width / 2 - logo->width / 2, 32, 0);
 
             if (tick % 2 < 1)
+            {
                 rdp_draw_sprites_with_texture(take_the_stairs, __width / 2 - take_the_stairs->width / 2, 352, 0);
+                rdp_draw_sprite_with_texture(tiles['#'], 464, 398, 0);
+            }
         }
         else
             ui_draw();
