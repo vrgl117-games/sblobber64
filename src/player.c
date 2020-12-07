@@ -106,104 +106,106 @@ void player_init()
 // draw player on screen
 void player_draw()
 {
+    int8_t rumble_offset = (player.rumble > 0 ? (player.rumble % 3) - 1 : 0);
+
     if (player.h_of == 0 && player.w_of == 0) // single
     {
         if (player.h_of_anim != 0) // shrinking horizontally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
         }
         else if (player.w_of_anim != 0) // shrinking vertically
         {
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
         }
         else // full
-            rdp_draw_sprite_with_texture(body[SLIME_SINGLE], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SINGLE], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
     }
     else if (player.h_of == 1 && player.w_of == 0) // vertical
     {
         if (player.w_of_anim != 0) // shrinking horizontally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
         }
         else if (player.h_of_anim == 0) // full
         {
-            rdp_draw_sprite_with_texture(body[SLIME_VER_0], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_VER_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_VER_2], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_0], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_1], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_2], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
         }
         else // growing vertivally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_0_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_VER_1_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
         }
     }
     else if (player.h_of == 0 && player.w_of == 1) // horizontal
     {
         if (player.h_of_anim != 0) // shrinking vertically
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
         }
         else if (player.w_of_anim == 0) // full
         {
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_0], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_2], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_0], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_1], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_2], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
         }
         else // growing horizontally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_0_ANIM], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_HOR_1_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
         }
     }
     else // square
     {
         if (player.h_of_anim != 0) // growing vertically
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
         }
         else if (player.w_of_anim != 0) // growing horizontally
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0_ANIM], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2_ANIM], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_3_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
 
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_4_ANIM], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_5_ANIM], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
         }
         else // full
         {
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy - 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_3], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_4], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_5], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * player.sy, 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.sx - 1), MAP_CELL_SIZE * (player.sy + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.sx, MAP_CELL_SIZE * (player.sy + 1), 0);
-            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1), MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_0], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_1], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_2], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * (player.sy - 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_3], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_4], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_5], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * player.sy, 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_6], MAP_CELL_SIZE * (player.sx - 1) + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_7], MAP_CELL_SIZE * player.sx + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
+            rdp_draw_sprite_with_texture(body[SLIME_SQ_8], MAP_CELL_SIZE * (player.sx + 1) + rumble_offset, MAP_CELL_SIZE * (player.sy + 1), 0);
         }
     }
 

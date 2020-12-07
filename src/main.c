@@ -3,6 +3,7 @@
 #include "colors.h"
 #include "debug.h"
 #include "fps.h"
+#include "input.h"
 #include "map.h"
 #include "player.h"
 #include "rdp.h"
@@ -39,13 +40,15 @@ int main()
     // 500ms
     new_timer(TIMER_TICKS(500000), TF_CONTINUOUS, screen_timer_title);
 
+    // 50ms
+    new_timer(TIMER_TICKS(50000), TF_CONTINUOUS, input_timer);
+
     display_context_t disp = 0;
 
     while (true)
     {
         // get controllers
-        controller_scan();
-        input_t input = get_keys_down().c[0];
+        input_t input = input_get();
 
         // stop rumble if needed.
         if (player_stop_rumble())

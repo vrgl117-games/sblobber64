@@ -3,6 +3,8 @@
 
 #include <libdragon.h>
 
+#include "input.h"
+
 typedef enum screen
 {
     intro,
@@ -24,8 +26,6 @@ typedef enum pause_selection
     creds = 2,
     quit = 3,
 } pause_selection_t;
-
-typedef struct SI_condat input_t;
 
 bool screen_credits(display_context_t disp, input_t *input);
 void screen_load_title_resources();
