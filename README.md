@@ -1,8 +1,8 @@
 # sblobber64
 
-![title](./resources/gfx/sprites/screenshots/title.png?raw=true)
-![elems1](./resources/gfx/sprites/screenshots/elems1.png?raw=true)
-![elems2](./resources/gfx/sprites/screenshots/elems2.png?raw=true)
+![title](./resources/screenshots/title.png?raw=true)
+![elems1](./resources/screenshots/elems1.png?raw=true)
+![elems2](./resources/screenshots/elems2.png?raw=true)
 
 Is it a slime? Is it a blob? who knows?!
 
