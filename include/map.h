@@ -18,13 +18,13 @@
 #define MAP_NUM_ANIMS SCREEN_WIDTH
 
 #define TILES_WALL "-|[]{}y<>^p()i,L"
-#define TILES_WARP "vw"
+#define TILES_WARP "vwtl"
 #define TILES_VEGETATION ".%&+*"
 #define TILES_END "e!"
-#define TILES_ANIMATED "fvw"
+#define TILES_ANIMATED "fvwtl"
 
 #define GRID_CHARS 6  // HHxWW\n
-#define LAYER_CHARS 2 // L\n
+#define LAYER_CHARS 3 // LL\n
 
 #define MIN(a, b) \
     ({ __typeof__ (a) _a = (a); \

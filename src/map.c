@@ -16,7 +16,8 @@ map_t *map;
 sprite_t *tiles[255] = {0};
 char *level_paths[NUM_MAPS] = {
     "/maps/00_title.map",
-    "/maps/01_tutorial.map",
+    "/maps/04_maze.map",
+    //"/maps/01_tutorial.map",
     //"/maps/01_warp.map",
     //"/maps/02_layers.map",
     //"/maps/03_level2.map",
@@ -78,6 +79,8 @@ void map_init()
     tiles['k'] = dfs_load_sprite("/gfx/sprites/map/tile_k.sprite");
     tiles['w'] = dfs_load_sprite("/gfx/sprites/map/tile_w.sprite");
     tiles['v'] = tiles['w'];
+    tiles['t'] = tiles['w'];
+    tiles['l'] = tiles['w'];
     tiles['f'] = dfs_load_sprite("/gfx/sprites/map/tile_f.sprite");
     tiles['g'] = dfs_load_sprite("/gfx/sprites/map/tile_g.sprite");
     tiles['h'] = dfs_load_sprite("/gfx/sprites/map/tile_h.sprite");
@@ -165,7 +168,7 @@ bool map_load(uint8_t map_id)
 
         // getting layer count
         dfs_read(buffer, 1, LAYER_CHARS, fp);
-        map->layers = buffer[0] - '0';
+        map->layers = atoi(buffer);
 
         // getting grid
         map->grid = calloc(map->layers, sizeof(char **));
@@ -226,7 +229,10 @@ void map_regen_vegetation()
                     out = '%';
 
                 for (int i = 0; i < map->layers; i++)
-                    map->grid[i][y][x] = out;
+                {
+                    if (map->grid[i][y][x] == '.')
+                        map->grid[i][y][x] = out;
+                }
             }
         }
     }

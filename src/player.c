@@ -39,11 +39,30 @@ static inline void player_update_screen_coordinates()
 // warp player to other end of warp
 static inline void player_warp(char on_warp)
 {
+    char warp_end;
+
+    switch (on_warp)
+    {
+    case 'w':
+        warp_end = 'v';
+        break;
+    case 'v':
+        warp_end = 'w';
+        break;
+    case 't':
+        warp_end = 'l';
+        break;
+    case 'l':
+        warp_end = 't';
+        break;
+    default:
+        return;
+    }
     for (uint8_t y = 0; y < map->height; y++)
     {
         for (uint8_t x = 0; x < map->width; x++)
         {
-            if (map->grid[map->layer_idx][y][x] == (on_warp == 'w' ? 'v' : 'w'))
+            if (map->grid[map->layer_idx][y][x] == warp_end)
             {
                 player.y = y;
                 player.x = x;
