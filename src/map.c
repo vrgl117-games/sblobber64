@@ -82,7 +82,11 @@ void map_init()
     tiles['t'] = tiles['w'];
     tiles['l'] = tiles['w'];
     tiles['f'] = dfs_load_sprite("/gfx/sprites/map/tile_f.sprite");
+    tiles['m'] = dfs_load_sprite("/gfx/sprites/map/tile_g_t.sprite");
+    tiles['r'] = dfs_load_sprite("/gfx/sprites/map/tile_g_m.sprite");
+    tiles['n'] = dfs_load_sprite("/gfx/sprites/map/tile_g_b.sprite");
     tiles['g'] = dfs_load_sprite("/gfx/sprites/map/tile_g.sprite");
+
     tiles['h'] = dfs_load_sprite("/gfx/sprites/map/tile_h.sprite");
 
     //arrow

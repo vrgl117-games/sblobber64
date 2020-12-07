@@ -248,7 +248,7 @@ char player_detect_tile(char *tiles)
                     if (found == 3)
                         return map->grid[map->layer_idx][h][w];
                 }
-                else if (map->grid[map->layer_idx][h][w] == 'g')
+                else if (map->grid[map->layer_idx][h][w] == 'g' || map->grid[map->layer_idx][h][w] == 'm' || map->grid[map->layer_idx][h][w] == 'n' || map->grid[map->layer_idx][h][w] == 'r')
                 {
                     if (found == player.size)
                         return map->grid[map->layer_idx][h][w];
@@ -343,7 +343,7 @@ char player_move(input_t *input)
     player_update_screen_coordinates();
 
     // fire or grids
-    char danger = player_detect_tile("gf");
+    char danger = player_detect_tile(TILES_DANGER);
     if (danger)
     {
         player.lives--;

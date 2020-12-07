@@ -21,6 +21,7 @@
 #define TILES_WARP "vwtl"
 #define TILES_VEGETATION ".%&+*"
 #define TILES_END "e!"
+#define TILES_DANGER "fgmnr"
 #define TILES_ANIMATED "fvwtl"
 
 #define GRID_CHARS 6  // HHxWW\n
