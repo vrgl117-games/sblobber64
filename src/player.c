@@ -248,7 +248,7 @@ char player_detect_tile(char *tiles)
                     if (found == 3)
                         return map->grid[map->layer_idx][h][w];
                 }
-                else if (map->grid[map->layer_idx][h][w] == 'g' || map->grid[map->layer_idx][h][w] == 'm' || map->grid[map->layer_idx][h][w] == 'n' || map->grid[map->layer_idx][h][w] == 'r')
+                else if (strchr(TILES_GRID, map->grid[map->layer_idx][h][w]))
                 {
                     if (found == player.size)
                         return map->grid[map->layer_idx][h][w];

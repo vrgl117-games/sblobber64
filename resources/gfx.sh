@@ -21,7 +21,8 @@ convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsi
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 resources/gfx/sprites/ui/restart_selected.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Credits" -extent 148x44 resources/gfx/sprites/ui/credits_selected.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 resources/gfx/sprites/ui/quit_selected.png
-convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 42 label:"Thanks for playing!" -extent 556x64 resources/gfx/sprites/ui/you_win.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 36 -gravity center label:"Well done,\nyou found your friend!" -extent 532x110  resources/gfx/sprites/ui/you_win.png
+convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 28 label:"Thanks for playing!" -extent 366x44 resources/gfx/sprites/ui/thanks.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Programming" -extent 246x44 resources/gfx/sprites/ui/programming.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"Isabel Jimenez & Victor Vieux" -extent 482x38 resources/gfx/sprites/ui/isabel_victor.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"www.vrgl117.games" -extent 320x38  resources/gfx/sprites/ui/vrgl117games.png

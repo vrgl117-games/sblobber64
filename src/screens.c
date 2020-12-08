@@ -199,8 +199,8 @@ bool screen_win(display_context_t disp, input_t *input)
 
     sprite_t *slime_g = dfs_load_sprite("/gfx/sprites/slime/tile_single_0.sprite");
     sprite_t *slime_y = dfs_load_sprite("/gfx/sprites/map/tile_end.sprite");
-    rdp_draw_sprite_with_texture(slime_y, __width / 2 - 32, 150, 0);
-    rdp_draw_sprite_with_texture(slime_g, __width / 2, 150, 0);
+    rdp_draw_sprite_with_texture(slime_y, __width / 2 - 32, 200, 0);
+    rdp_draw_sprite_with_texture(slime_g, __width / 2, 200, 0);
     free(slime_g);
     free(slime_y);
 
@@ -210,8 +210,12 @@ bool screen_win(display_context_t disp, input_t *input)
     graphics_draw_sprite(disp, __width / 2 - you_win_sp->width / 2, 40, you_win_sp);
     free(you_win_sp);
 
+    sprite_t *thanks_sp = dfs_load_sprite("/gfx/sprites/ui/thanks.sprite");
+    graphics_draw_sprite(disp, __width / 2 - thanks_sp->width / 2, 280, thanks_sp);
+    free(thanks_sp);
+
     sprite_t *credits_sp = dfs_load_sprite("/gfx/sprites/ui/credits_selected.sprite");
-    graphics_draw_sprite(disp, __width / 2 - credits_sp->width / 2, 320, credits_sp);
+    graphics_draw_sprite(disp, __width / 2 - credits_sp->width / 2, 360, credits_sp);
     free(credits_sp);
 
     return (input->A || input->start);
