@@ -85,8 +85,7 @@ screen_t screen_game(display_context_t disp, input_t *input)
             return game_over;
         if (danger == 'f')
             return death_fire;
-        if (danger == 'g')
-            return death_grid;
+        return death_grid;
     }
 
     rdp_attach(disp);
@@ -149,9 +148,9 @@ pause_selection_t screen_pause(display_context_t disp, input_t *input, bool rese
         selected = 0;
 
     if (input->up)
-        selected = (selected == 0 ? 3 : selected - 1);
+        selected = (selected == 0 ? (map->id ? 3 : 2) : selected - 1);
     else if (input->down)
-        selected = (selected == 3 ? 0 : selected + 1);
+        selected = (selected == (map->id ? 3 : 2) ? 0 : selected + 1);
 
     rdp_attach(disp);
 
@@ -221,12 +220,18 @@ bool screen_win(display_context_t disp, input_t *input)
 // player death screen
 bool screen_death(display_context_t disp, input_t *input, screen_t reason)
 {
+    // animate tiles every other tick
+    mirror_t mirror = tick % 2 < 1;
+
     sprite_t *danger_sp = dfs_load_sprite(reason == death_fire ? "/gfx/sprites/map/tile_f.sprite" : "/gfx/sprites/map/tile_g.sprite");
 
     rdp_attach(disp);
 
     rdp_draw_filled_fullscreen(colors[COLOR_BG]);
-    rdp_draw_sprite_with_texture(danger_sp, __width / 2 - 16, 200, 0);
+    rdp_draw_sprite_with_texture(danger_sp, __width / 2 - 16, 200, mirror);
+    rdp_draw_sprite_with_texture(danger_sp, __width / 2 - 48, 232, mirror);
+    rdp_draw_sprite_with_texture(danger_sp, __width / 2 + 16, 232, mirror);
+    rdp_draw_sprite_with_texture(danger_sp, __width / 2 - 16, 264, mirror);
 
     rdp_detach_display();
 
@@ -287,20 +292,20 @@ bool screen_credits(display_context_t disp, input_t *input)
     graphics_draw_sprite(disp, __width / 2 - programming_sp->width / 2, 160, programming_sp);
     free(programming_sp);
     sprite_t *isabel_victor_sp = dfs_load_sprite("/gfx/sprites/ui/isabel_victor.sprite");
-    graphics_draw_sprite(disp, __width / 2 - isabel_victor_sp->width / 2, 220, isabel_victor_sp);
+    graphics_draw_sprite(disp, __width / 2 - isabel_victor_sp->width / 2, 210, isabel_victor_sp);
     free(isabel_victor_sp);
     sprite_t *vrgl117games_sp = dfs_load_sprite("/gfx/sprites/ui/vrgl117games.sprite");
-    graphics_draw_sprite(disp, __width / 2 - vrgl117games_sp->width / 2, 260, vrgl117games_sp);
+    graphics_draw_sprite(disp, __width / 2 - vrgl117games_sp->width / 2, 250, vrgl117games_sp);
     free(vrgl117games_sp);
 
     sprite_t *art_sp = dfs_load_sprite("/gfx/sprites/ui/art.sprite");
     graphics_draw_sprite(disp, __width / 2 - art_sp->width / 2, 320, art_sp);
     free(art_sp);
     sprite_t *kenney_sp = dfs_load_sprite("/gfx/sprites/ui/kenney.sprite");
-    graphics_draw_sprite(disp, __width / 2 - kenney_sp->width / 2, 360, kenney_sp);
+    graphics_draw_sprite(disp, __width / 2 - kenney_sp->width / 2, 370, kenney_sp);
     free(kenney_sp);
     sprite_t *kenneynl_sp = dfs_load_sprite("/gfx/sprites/ui/kenneynl.sprite");
-    graphics_draw_sprite(disp, __width / 2 - kenneynl_sp->width / 2, 400, kenneynl_sp);
+    graphics_draw_sprite(disp, __width / 2 - kenneynl_sp->width / 2, 410, kenneynl_sp);
     free(kenneynl_sp);
 
     return (input->A || input->start);

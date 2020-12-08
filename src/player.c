@@ -392,6 +392,8 @@ void player_reset_in_map()
     // reset player size to small
     player.h_of = 0;
     player.w_of = 0;
+    player.h_of_anim = 0;
+    player.w_of_anim = 0;
     player.size = 1;
 
     // set player start position

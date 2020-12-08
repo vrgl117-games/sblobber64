@@ -100,7 +100,7 @@ void map_init()
 // draw current map on screen
 uint8_t map_draw(int tick)
 {
-    // animate some tiles everyother tick
+    // animate some tiles every other tick
     mirror_t mirror = tick % 2 < 1;
 
     //calculate top/left coordinates of visible map
