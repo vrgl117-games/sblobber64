@@ -8,7 +8,7 @@ convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsi
 convert -strip resources/gfx/sprites/ui/logo.png -crop 16 resources/gfx/sprites_sets/ui/logo-%d_0.png
 convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 28 label:"\ Take the stairs to\nfind your friend" -extent 344x128 -crop 16 resources/gfx/sprites_sets/ui/take_the_stairs-%d_0.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Pause" -extent 256x104 resources/gfx/sprites/ui/pause.png
-convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Game Over" -extent 444x104 resources/gfx/sprites/ui/game_over.png
+convert -strip -background "#222323ff" -fill "#eb554bff" -font "$fontb" -pointsize 68 label:"Game Over !" -extent 494x104 resources/gfx/sprites/ui/game_over.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Credits" -extent 358x104 resources/gfx/sprites/ui/credits_big.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"You burned in the fire" -extent 408x44 resources/gfx/sprites/ui/fire.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"You fell through the grid" -extent 470x44 resources/gfx/sprites/ui/grid.png

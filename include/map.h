@@ -9,7 +9,7 @@
 
 #define MAP_CELL_SIZE 32
 
-#define NUM_MAPS 3
+#define NUM_MAPS 6
 
 #define SCREEN_HEIGHT 15
 #define SCREEN_HEIGHT_2 7
@@ -21,7 +21,7 @@
 #define TILES_WARP "vwtl"
 #define TILES_VEGETATION ".%&+*"
 #define TILES_END "e!"
-#define TILES_DANGER "fgmnr"
+#define TILES_DANGER "fgmrnqjzox"
 #define TILES_ANIMATED "fvwtl"
 
 #define GRID_CHARS 6  // HHxWW\n

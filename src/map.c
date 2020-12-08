@@ -16,13 +16,11 @@ map_t *map;
 sprite_t *tiles[255] = {0};
 char *level_paths[NUM_MAPS] = {
     "/maps/00_title.map",
+    "/maps/01_tutorial.map",
+    "/maps/02_level1.map",
+    "/maps/03_level2.map",
     "/maps/04_maze.map",
-    //"/maps/01_tutorial.map",
-    //"/maps/01_warp.map",
-    //"/maps/02_layers.map",
-    //"/maps/03_level2.map",
-
-    "/maps/10_end.map",
+    "/maps/05_end.map",
 
 };
 
@@ -75,6 +73,17 @@ void map_init()
     tiles['*'] = dfs_load_sprite("/gfx/sprites/map/tile_tree_1.sprite");
     tiles['%'] = dfs_load_sprite("/gfx/sprites/map/tile_tree_2.sprite");
 
+    //grids
+    tiles['g'] = dfs_load_sprite("/gfx/sprites/map/tile_g.sprite");
+    tiles['m'] = dfs_load_sprite("/gfx/sprites/map/tile_g_ver_t.sprite");
+    tiles['r'] = dfs_load_sprite("/gfx/sprites/map/tile_g_ver.sprite");
+    tiles['n'] = dfs_load_sprite("/gfx/sprites/map/tile_g_ver_b.sprite");
+    tiles['q'] = dfs_load_sprite("/gfx/sprites/map/tile_g_hor_l.sprite");
+    tiles['j'] = dfs_load_sprite("/gfx/sprites/map/tile_g_hor.sprite");
+    tiles['z'] = dfs_load_sprite("/gfx/sprites/map/tile_g_hor_r.sprite");
+    tiles['o'] = dfs_load_sprite("/gfx/sprites/map/tile_g_tr.sprite");
+    tiles['x'] = dfs_load_sprite("/gfx/sprites/map/tile_g_bl.sprite");
+
     //misc
     tiles['k'] = dfs_load_sprite("/gfx/sprites/map/tile_k.sprite");
     tiles['w'] = dfs_load_sprite("/gfx/sprites/map/tile_w.sprite");
@@ -82,11 +91,6 @@ void map_init()
     tiles['t'] = tiles['w'];
     tiles['l'] = tiles['w'];
     tiles['f'] = dfs_load_sprite("/gfx/sprites/map/tile_f.sprite");
-    tiles['m'] = dfs_load_sprite("/gfx/sprites/map/tile_g_t.sprite");
-    tiles['r'] = dfs_load_sprite("/gfx/sprites/map/tile_g_m.sprite");
-    tiles['n'] = dfs_load_sprite("/gfx/sprites/map/tile_g_b.sprite");
-    tiles['g'] = dfs_load_sprite("/gfx/sprites/map/tile_g.sprite");
-
     tiles['h'] = dfs_load_sprite("/gfx/sprites/map/tile_h.sprite");
 
     //arrow
