@@ -324,13 +324,20 @@ bool screen_rumble(display_context_t disp, input_t *input)
 
     rdp_detach_display();
 
-    sprite_t *rumble_sp = dfs_load_sprite("/gfx/sprites/ui/rumble.sprite");
-    graphics_draw_sprite(disp, __width / 2 - rumble_sp->width / 2, 100, rumble_sp);
-    free(rumble_sp);
+    sprite_t *pak_sp = dfs_load_sprite(is_memory_expanded() ? "/gfx/sprites/ui/pak_detected.sprite" : "/gfx/sprites/ui/pak_not_detected.sprite");
+    graphics_draw_sprite(disp, __width / 2 - pak_sp->width / 2, 80, pak_sp);
+    free(pak_sp);
+
+    if (identify_accessory(0) != ACCESSORY_RUMBLEPAK)
+    {
+        sprite_t *rumble_sp = dfs_load_sprite("/gfx/sprites/ui/rumble.sprite");
+        graphics_draw_sprite(disp, __width / 2 - rumble_sp->width / 2, 180, rumble_sp);
+        free(rumble_sp);
+    }
 
     sprite_t *continue_sp = dfs_load_sprite("/gfx/sprites/ui/continue.sprite");
     graphics_draw_sprite(disp, __width / 2 - continue_sp->width / 2, 350, continue_sp);
     free(continue_sp);
 
-    return (identify_accessory(0) == ACCESSORY_RUMBLEPAK || input->A || input->start);
+    return ((identify_accessory(0) == ACCESSORY_RUMBLEPAK && is_memory_expanded()) || input->A || input->start);
 }

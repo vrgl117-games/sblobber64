@@ -65,7 +65,7 @@ int main()
         case intro: // n64, n64brew jam and vrgl117 logo.
             if (screen_intro(disp))
             {
-                if (identify_accessory(0) == ACCESSORY_RUMBLEPAK)
+                if (identify_accessory(0) == ACCESSORY_RUMBLEPAK && is_memory_expanded())
                     screen = game;
                 else
                     screen = rumble;
