@@ -1,10 +1,14 @@
-# sblobber64
+# sblobber64 for Nintendo64
+
+Is it a slime? Is it a blob? who knows?!
+
+N64 game developed for the N64brew Jam #1
+
+Support 1 player and Rumble Pak.
 
 ![title](./resources/screenshots/title.png?raw=true)
 ![elems1](./resources/screenshots/level1.png?raw=true)
 ![elems2](./resources/screenshots/level2.png?raw=true)
-
-Is it a slime? Is it a blob? who knows?!
 
 ## Note
 
