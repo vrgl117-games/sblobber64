@@ -89,9 +89,9 @@ void player_init()
     body[SLIME_SQ_3] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_3.sprite");
     body[SLIME_SQ_4] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_4.sprite");
     body[SLIME_SQ_5] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_5.sprite");
-    body[SLIME_SQ_6] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_6.sprite");
+    body[SLIME_SQ_6] = body[SLIME_SQ_3];
     body[SLIME_SQ_7] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_7.sprite");
-    body[SLIME_SQ_8] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_8.sprite");
+    body[SLIME_SQ_8] = body[SLIME_SQ_5];
     body[SLIME_HOR_0_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_0_alt.sprite");
     body[SLIME_HOR_1_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_hor_1_alt.sprite");
     body[SLIME_SQ_0_ANIM] = dfs_load_sprite("/gfx/sprites/slime/tile_sq_0_alt.sprite");

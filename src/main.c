@@ -11,8 +11,8 @@
 #include "sounds.h"
 #include "ui.h"
 
-screen_t screen = game; //TODO: set back to intro
-screen_t prev_screen;   //used in credits to know where to go back to
+screen_t screen = intro;
+screen_t prev_screen; //used in credits to know where to go back to
 
 int main()
 {
@@ -23,9 +23,8 @@ int main()
     rdp_set_default_clipping();
     controller_init();
     timer_init();
-    debug_clear();
+    //debug_clear();
     colors_init();
-    screen_load_title_resources(); //TODO: remove
     sound_init();
 
     map_init();
@@ -147,12 +146,13 @@ int main()
         }
 
         // increment fps counter
-        fps_frame();
+        //fps_frame();
 
         // display fps
-        fps_draw(disp);
+        //fps_draw(disp);
 
-        debug_draw(disp);
+        // draw debug
+        //debug_draw(disp);
 
         // update display
         display_show(disp);
