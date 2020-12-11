@@ -120,7 +120,6 @@ screen_t screen_game(display_context_t disp, input_t *input)
     {
         if (map->anim_direction != -1)
         {
-            sound_start("down");
             map->anim_direction = -1;
             if (map->id == 0) // free sprites if we leaving title
             {
@@ -303,14 +302,24 @@ bool screen_credits(display_context_t disp, input_t *input)
     free(vrgl117games_sp);
 
     sprite_t *art_sp = dfs_load_sprite("/gfx/sprites/ui/art.sprite");
-    graphics_draw_sprite(disp, __width / 2 - art_sp->width / 2, 320, art_sp);
+    graphics_draw_sprite(disp, 140 - art_sp->width / 2, 320, art_sp);
     free(art_sp);
     sprite_t *kenney_sp = dfs_load_sprite("/gfx/sprites/ui/kenney.sprite");
-    graphics_draw_sprite(disp, __width / 2 - kenney_sp->width / 2, 370, kenney_sp);
+    graphics_draw_sprite(disp, 140 - kenney_sp->width / 2, 370, kenney_sp);
     free(kenney_sp);
     sprite_t *kenneynl_sp = dfs_load_sprite("/gfx/sprites/ui/kenneynl.sprite");
-    graphics_draw_sprite(disp, __width / 2 - kenneynl_sp->width / 2, 410, kenneynl_sp);
+    graphics_draw_sprite(disp, 140 - kenneynl_sp->width / 2, 410, kenneynl_sp);
     free(kenneynl_sp);
+
+    sprite_t *music_sp = dfs_load_sprite("/gfx/sprites/ui/music.sprite");
+    graphics_draw_sprite(disp, __width - 180 - music_sp->width / 2, 320, music_sp);
+    free(music_sp);
+    sprite_t *mod_sp = dfs_load_sprite("/gfx/sprites/ui/mod.sprite");
+    graphics_draw_sprite(disp, __width - 180 - mod_sp->width / 2, 370, mod_sp);
+    free(mod_sp);
+    sprite_t *modarchive_sp = dfs_load_sprite("/gfx/sprites/ui/modarchive.sprite");
+    graphics_draw_sprite(disp, __width - 180 - modarchive_sp->width / 2, 410, modarchive_sp);
+    free(modarchive_sp);
 
     return (input->A || input->start);
 }

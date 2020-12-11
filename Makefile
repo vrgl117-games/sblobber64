@@ -41,11 +41,18 @@ filesystem/gfx/%.sprite: resources/gfx/%.png
 	$(MKSPRITE) 16 1 1 $< $@
 
 # sfx #
-SOUNDS := $(wildcard resources/sfx/*.ogg)
-RAWS := $(subst .ogg,.raw,$(subst resources/,filesystem/,$(SOUNDS)))
+OGGS := $(wildcard resources/sfx/*.ogg)
+SOUNDS := $(subst .ogg,.raw,$(subst resources/,filesystem/,$(OGGS)))
 filesystem/sfx/%.raw: resources/sfx/%.ogg
 	@mkdir -p `echo $@ | xargs dirname`
 	sox $< -b 16 -e signed-integer -B -r 44100 $@ remix -
+
+# sfx #
+MODS := $(wildcard resources/sfx/*.mod)
+MUSICS := $(subst resources/,filesystem/,$(MODS))
+filesystem/sfx/%.mod: resources/sfx/%.mod
+	@mkdir -p `echo $@ | xargs dirname`
+	cp $< $@
 
 # maps #
 TXTS := $(wildcard resources/maps/*.txt)
@@ -64,7 +71,7 @@ $(PROG_NAME).bin : $(PROG_NAME).elf
 	$(OBJCOPY) -O binary $< $@
 
 # dfs #
-$(PROG_NAME).dfs: $(SPRITES) $(RAWS) $(MAPS)
+$(PROG_NAME).dfs: $(SPRITES) $(SOUNDS) $(MUSICS) $(MAPS)
 	@mkdir -p ./filesystem/
 	@echo `git rev-parse HEAD` > ./filesystem/hash
 	$(MKDFSPATH) $@ ./filesystem/
@@ -83,7 +90,7 @@ resetup:	##  Force recreate the dev environment (docker image).
 
 cen64:		##    Start rom in CEN64 emulator.
 	@echo "Starting cen64..."
-	$(CEN64_DIR)/cen64 -multithread -controller num=1,pak=rumble $(CEN64_DIR)/pifdata.bin $(PROG_NAME).z64
+	$(CEN64_DIR)/cen64 -multithread -noaudio -controller num=1,pak=rumble $(CEN64_DIR)/pifdata.bin $(PROG_NAME).z64
 
 clean:		##    Cleanup temp files.
 	@echo "Cleaning up temp files..."

@@ -11,6 +11,8 @@
 #include "sounds.h"
 #include "ui.h"
 
+#define DISABLE_FPS 1
+
 screen_t screen = intro;
 screen_t prev_screen; //used in credits to know where to go back to
 
@@ -33,8 +35,10 @@ int main()
 
     srand(timer_ticks() & 0x7FFFFFFF);
 
+#ifndef DISABLE_FPS
     // 1s
     new_timer(TIMER_TICKS(1000000), TF_CONTINUOUS, fps_timer);
+#endif
 
     // 500ms
     new_timer(TIMER_TICKS(500000), TF_CONTINUOUS, screen_timer_title);
@@ -66,23 +70,34 @@ int main()
             if (screen_intro(disp))
             {
                 if (identify_accessory(0) == ACCESSORY_RUMBLEPAK && is_memory_expanded())
+                {
+                    sound_start_music();
                     screen = game;
+                }
                 else
                     screen = rumble;
             }
             break;
         case rumble:
             if (screen_rumble(disp, &input))
+            {
+                sound_start_music();
                 screen = game;
+            }
             break;
         case game: // actual game.
             if (input.start)
             {
                 screen = pause;
+                sound_pause_music();
                 screen_pause(disp, &input, true);
             }
             else
+            {
                 screen = screen_game(disp, &input);
+                if (screen != game)
+                    sound_pause_music();
+            }
             break;
         case pause: // pause menu.
             switch (screen_pause(disp, &input, false))
@@ -91,6 +106,7 @@ int main()
                 map_layer_reset();
                 player_reset_in_map();
             case resume:
+                sound_resume_music();
                 screen = game;
                 break;
             case creds:
@@ -98,6 +114,7 @@ int main()
                 screen = credits;
                 break;
             case quit:
+                sound_resume_music();
                 map_select(0);
                 player_reset();
                 screen = game;
@@ -118,6 +135,7 @@ int main()
             {
                 if (prev_screen == win)
                 {
+                    sound_resume_music();
                     map_select(0);
                     player_reset();
                     screen = game;
@@ -129,6 +147,7 @@ int main()
         case game_over:
             if (screen_game_over(disp, &input))
             {
+                sound_resume_music();
                 map_select(0);
                 player_reset();
                 screen = game;
@@ -138,6 +157,7 @@ int main()
         case death_grid:
             if (screen_death(disp, &input, screen))
             {
+                sound_resume_music();
                 map_layer_reset();
                 player_reset_in_map();
                 screen = game;
@@ -145,11 +165,13 @@ int main()
             break;
         }
 
+#ifndef DISABLE_FPS
         // increment fps counter
-        //fps_frame();
+        fps_frame();
 
         // display fps
-        //fps_draw(disp);
+        fps_draw(disp);
+#endif
 
         // draw debug
         //debug_draw(disp);

@@ -29,6 +29,9 @@ convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsi
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Art" -extent 64x44 resources/gfx/sprites/ui/art.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"Kenney" -extent 110x38 resources/gfx/sprites/ui/kenney.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"www.kenney.nl" -extent 242x38 resources/gfx/sprites/ui/kenneynl.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Music" -extent 114x44 resources/gfx/sprites/ui/music.png
+#edited by hand convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"m0d" -extent 62x38 resources/gfx/sprites/ui/mod.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 24 label:"www.modarchive.org" -extent 338x38 resources/gfx/sprites/ui/modarchive.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 24 -gravity center label:"Expansion Pak detected" -extent 374x38 resources/gfx/sprites/ui/pak_detected.png
 convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 24 -gravity center label:"Expansion Pak not detected!" -extent 446x38 resources/gfx/sprites/ui/pak_not_detected.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 24 -gravity center label:"This game is Rumble Pak compatible\n\nPlease insert your Rumble Pak now\nif you wish to play with it" -extent 572x146 resources/gfx/sprites/ui/rumble.png
