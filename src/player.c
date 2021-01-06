@@ -362,13 +362,13 @@ char player_move(input_t *input)
     // buttons
     if (player_detect_tile("ABC"))
     {
-        sound_start_sfx("button");
+        sound_start_sfx(SFX_BUTTON);
         map_layer_next();
     }
     // key & closed door
     char kD = player_detect_tile("kD");
     if (kD == 'k')
-        sound_start_sfx("key");
+        sound_start_sfx(SFX_KEY);
     if (kD)
         map_layer_next();
 
@@ -378,7 +378,7 @@ char player_move(input_t *input)
         on_warp = player_detect_tile(TILES_WARP);
         if (on_warp)
         {
-            sound_start_sfx("warp");
+            sound_start_sfx(SFX_WARP);
             player_warp(on_warp);
         }
     }

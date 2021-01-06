@@ -42,10 +42,10 @@ filesystem/gfx/%.sprite: resources/gfx/%.png
 
 # sfx #
 OGGS := $(wildcard resources/sfx/*.ogg)
-SOUNDS := $(subst .ogg,.raw,$(subst resources/,filesystem/,$(OGGS)))
-filesystem/sfx/%.raw: resources/sfx/%.ogg
+SOUNDS := $(subst .ogg,.wav,$(subst resources/,filesystem/,$(OGGS)))
+filesystem/sfx/%.wav: resources/sfx/%.ogg
 	@mkdir -p `echo $@ | xargs dirname`
-	sox $< -b 16 -e signed-integer -B -r 44100 $@ remix -
+	sox $< -b 16 -e signed-integer -L -r 44100 $@ remix -
 
 # sfx #
 MODS := $(wildcard resources/sfx/*.mod)
