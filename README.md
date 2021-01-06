@@ -44,7 +44,7 @@ All development can be done using Docker. It's the easiest way to build the ROM 
 ## Thanks
 
 * Thanks to [Kenney](https://www.kenney.nl) for the art used in the game.
-* Thanks to [m0d](https://www.modarchive.nl) for the music used in the game.
+* Thanks to [m0d](https://modarchive.org/index.php?request=view_artist_modules&query=69141&page=2#mods) for the music used in the game.
 * Thanks to [Jennifer Taylor](https://github.com/DragonMinded) for libdragon.
 * Thanks to [conker64](https://github.com/conker64) and the [#n64dev](irc://irc.efnet.org/#n64dev) IRC community for their help.
 * Thanks to [Christopher Bonhage](https://github.com/meeq) for his work on [FlappyBird-N64](https://github.com/meeq/FlappyBird-N64).
