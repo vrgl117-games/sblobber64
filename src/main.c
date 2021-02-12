@@ -13,7 +13,7 @@
 
 #define DISABLE_FPS 1
 
-screen_t screen = intro;
+screen_t screen = game;
 screen_t prev_screen; //used in credits to know where to go back to
 
 int main()

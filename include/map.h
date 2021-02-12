@@ -21,8 +21,13 @@
 #define TILES_WARP "vwtl"
 #define TILES_VEGETATION ".%&+*"
 #define TILES_END "e!"
+#define TILES_BUTTONS "ABC"
+#define TILES_KEY "k"
+#define TILES_DOOR "D"
+#define TILES_HEART "h"
 #define TILES_GRID "gmrnqjzox"
-#define TILES_DANGER "fgmrnqjzox"
+#define TILES_FIRE "f"
+#define TILES_DANGER TILES_FIRE TILES_GRID
 #define TILES_ANIMATED "fvwtl"
 
 #define GRID_CHARS 6  // HHxWW\n

@@ -78,14 +78,12 @@ bool screen_intro(display_context_t disp)
 // main screen for the game
 screen_t screen_game(display_context_t disp, input_t *input)
 {
-    char danger = player_move(input);
-    if (danger)
+    char on = player_move(input);
+    if (on == TILES_FIRE[0] || on == TILES_GRID[0])
     {
         if (player.lives == 0)
             return game_over;
-        if (danger == 'f')
-            return death_fire;
-        return death_grid;
+        return (on == TILES_FIRE[0] ? death_fire : death_grid);
     }
 
     rdp_attach(disp);
@@ -116,7 +114,7 @@ screen_t screen_game(display_context_t disp, input_t *input)
     rdp_detach_display();
 
     // detect if we are on the end
-    if (player_detect_tile(TILES_END))
+    if (on == TILES_END[0])
     {
         if (map->anim_direction != -1)
         {

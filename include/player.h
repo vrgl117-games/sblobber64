@@ -64,7 +64,6 @@ typedef struct player
 
 #define PLAYER_MAX_LIVES 3
 
-char player_detect_tile(char *tiles);
 void player_draw();
 void player_init();
 char player_move(input_t *input);
