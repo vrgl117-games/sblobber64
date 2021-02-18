@@ -15,6 +15,10 @@ extern uint32_t colors[];
 extern sprite_t *tiles[255];
 extern player_t player;
 extern map_t *map;
+extern sound_mode_t sound_mode;
+extern volume_sfx_t volume_sfx;
+extern volume_music_t volume_music;
+
 static volatile int tick = 0;
 
 static sprites_t *logo;
@@ -145,9 +149,9 @@ pause_selection_t screen_pause(display_context_t disp, input_t *input, bool rese
         selected = 0;
 
     if (input->up)
-        selected = (selected == 0 ? (map->id ? 3 : 2) : selected - 1);
+        selected = (selected == 0 ? (map->id ? 4 : 3) : selected - 1);
     else if (input->down)
-        selected = (selected == (map->id ? 3 : 2) ? 0 : selected + 1);
+        selected = (selected == (map->id ? 4 : 3) ? 0 : selected + 1);
 
     rdp_attach(disp);
 
@@ -160,26 +164,29 @@ pause_selection_t screen_pause(display_context_t disp, input_t *input, bool rese
     free(pause_sp);
 
     sprite_t *resume_sp = dfs_load_sprite((selected == 0 ? "/gfx/sprites/ui/resume_selected.sprite" : "/gfx/sprites/ui/resume.sprite"));
-    graphics_draw_sprite(disp, __width / 2 - resume_sp->width / 2, 200, resume_sp);
+    graphics_draw_sprite(disp, __width / 2 - resume_sp->width / 2, 180, resume_sp);
     free(resume_sp);
-    sprite_t *restart_sp = dfs_load_sprite((selected == 1 ? "/gfx/sprites/ui/restart_selected.sprite" : "/gfx/sprites/ui/restart.sprite"));
-    graphics_draw_sprite(disp, __width / 2 - restart_sp->width / 2, 250, restart_sp);
+    sprite_t *options_sp = dfs_load_sprite((selected == 1 ? "/gfx/sprites/ui/options_selected.sprite" : "/gfx/sprites/ui/options.sprite"));
+    graphics_draw_sprite(disp, __width / 2 - options_sp->width / 2, 230, options_sp);
+    free(options_sp);
+    sprite_t *restart_sp = dfs_load_sprite((selected == 2 ? "/gfx/sprites/ui/restart_selected.sprite" : "/gfx/sprites/ui/restart.sprite"));
+    graphics_draw_sprite(disp, __width / 2 - restart_sp->width / 2, 280, restart_sp);
     free(restart_sp);
-    sprite_t *credits_sp = dfs_load_sprite((selected == 2 ? "/gfx/sprites/ui/credits_selected.sprite" : "/gfx/sprites/ui/credits.sprite"));
-    graphics_draw_sprite(disp, __width / 2 - credits_sp->width / 2, 300, credits_sp);
+    sprite_t *credits_sp = dfs_load_sprite((selected == 3 ? "/gfx/sprites/ui/credits_selected.sprite" : "/gfx/sprites/ui/credits.sprite"));
+    graphics_draw_sprite(disp, __width / 2 - credits_sp->width / 2, 330, credits_sp);
     free(credits_sp);
     if (map->id) // do not display quit on title
     {
-        sprite_t *quit_sp = dfs_load_sprite((selected == 3 ? "/gfx/sprites/ui/quit_selected.sprite" : "/gfx/sprites/ui/quit.sprite"));
-        graphics_draw_sprite(disp, __width / 2 - quit_sp->width / 2, 350, quit_sp);
+        sprite_t *quit_sp = dfs_load_sprite((selected == 4 ? "/gfx/sprites/ui/quit_selected.sprite" : "/gfx/sprites/ui/quit.sprite"));
+        graphics_draw_sprite(disp, __width / 2 - quit_sp->width / 2, 380, quit_sp);
         free(quit_sp);
     }
 
     if (input->A)
         return selected;
     if (input->start)
-        return resume;
-    return -1;
+        return pause_resume;
+    return pause_none;
 }
 
 void screen_timer_title()
@@ -272,6 +279,97 @@ bool screen_game_over(display_context_t disp, input_t *input)
     sprite_t *quit_sp = dfs_load_sprite("/gfx/sprites/ui/quit_selected.sprite");
     graphics_draw_sprite(disp, __width / 2 - quit_sp->width / 2, 350, quit_sp);
     free(quit_sp);
+
+    return (input->A || input->start);
+}
+
+// options screen
+bool screen_options(display_context_t disp, input_t *input)
+{
+    static uint8_t selected = 1;
+
+    if (input->up)
+        selected = (selected == 1 ? 2 : selected - 1);
+    else if (input->down)
+        selected = (selected == 2 ? 1 : selected + 1);
+
+    if (selected == 0 && (input->left || input->right))
+        sound_switch_mode();
+
+    if (selected == 1 && (input->left || input->right))
+        sound_switch_volume_music(input->left);
+
+    if (selected == 2 && (input->left || input->right))
+        sound_switch_volume_sfx(input->left);
+
+    rdp_attach(disp);
+
+    rdp_draw_filled_fullscreen(colors[COLOR_BG]);
+
+    rdp_detach_display();
+
+    sprite_t *options_sp = dfs_load_sprite("/gfx/sprites/ui/options_big.sprite");
+    graphics_draw_sprite(disp, __width / 2 - options_sp->width / 2, 10, options_sp);
+    free(options_sp);
+
+    sprite_t *sound_sp = dfs_load_sprite("/gfx/sprites/ui/sound.sprite");
+    graphics_draw_sprite(disp, 150, 180, sound_sp);
+    free(sound_sp);
+
+    sprite_t *mode_sp = dfs_load_sprite((sound_mode == STEREO ? (selected == 0 ? "/gfx/sprites/ui/stereo_selected.sprite" : "/gfx/sprites/ui/stereo.sprite") : (selected == 0 ? "/gfx/sprites/ui/mono_selected.sprite" : "/gfx/sprites/ui/mono.sprite")));
+    graphics_draw_sprite(disp, __width - 150 - mode_sp->width, 180, mode_sp);
+    free(mode_sp);
+
+    sprite_t *music_sp = dfs_load_sprite("/gfx/sprites/ui/music.sprite");
+    graphics_draw_sprite(disp, 150, 260, music_sp);
+    free(music_sp);
+
+    sprite_t *sound_vol_sp = NULL;
+    switch (volume_music)
+    {
+    case VOL_MUSIC_100:
+        sound_vol_sp = dfs_load_sprite(selected == 1 ? "/gfx/sprites/ui/100_selected.sprite" : "/gfx/sprites/ui/100.sprite");
+        break;
+    case VOL_MUSIC_75:
+        sound_vol_sp = dfs_load_sprite(selected == 1 ? "/gfx/sprites/ui/75_selected.sprite" : "/gfx/sprites/ui/75.sprite");
+        break;
+    case VOL_MUSIC_50:
+        sound_vol_sp = dfs_load_sprite(selected == 1 ? "/gfx/sprites/ui/50_selected.sprite" : "/gfx/sprites/ui/50.sprite");
+        break;
+    case VOL_MUSIC_25:
+        sound_vol_sp = dfs_load_sprite(selected == 1 ? "/gfx/sprites/ui/25_selected.sprite" : "/gfx/sprites/ui/25.sprite");
+        break;
+    case VOL_MUSIC_0:
+        sound_vol_sp = dfs_load_sprite(selected == 1 ? "/gfx/sprites/ui/0_selected.sprite" : "/gfx/sprites/ui/0.sprite");
+        break;
+    }
+    graphics_draw_sprite(disp, __width - 150 - sound_vol_sp->width, 260, sound_vol_sp);
+    free(sound_vol_sp);
+
+    sprite_t *sfx_sp = dfs_load_sprite("/gfx/sprites/ui/sfx.sprite");
+    graphics_draw_sprite(disp, 150, 340, sfx_sp);
+    free(sfx_sp);
+
+    switch (volume_sfx)
+    {
+    case VOL_SFX_100:
+        sound_vol_sp = dfs_load_sprite(selected == 2 ? "/gfx/sprites/ui/100_selected.sprite" : "/gfx/sprites/ui/100.sprite");
+        break;
+    case VOL_SFX_75:
+        sound_vol_sp = dfs_load_sprite(selected == 2 ? "/gfx/sprites/ui/75_selected.sprite" : "/gfx/sprites/ui/75.sprite");
+        break;
+    case VOL_SFX_50:
+        sound_vol_sp = dfs_load_sprite(selected == 2 ? "/gfx/sprites/ui/50_selected.sprite" : "/gfx/sprites/ui/50.sprite");
+        break;
+    case VOL_SFX_25:
+        sound_vol_sp = dfs_load_sprite(selected == 2 ? "/gfx/sprites/ui/25_selected.sprite" : "/gfx/sprites/ui/25.sprite");
+        break;
+    case VOL_SFX_0:
+        sound_vol_sp = dfs_load_sprite(selected == 2 ? "/gfx/sprites/ui/0_selected.sprite" : "/gfx/sprites/ui/0.sprite");
+        break;
+    }
+    graphics_draw_sprite(disp, __width - 150 - sound_vol_sp->width, 340, sound_vol_sp);
+    free(sound_vol_sp);
 
     return (input->A || input->start);
 }
