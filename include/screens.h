@@ -16,15 +16,17 @@ typedef enum screen
     win,
     credits,
     game_over,
+    options,
 } screen_t;
 
 typedef enum pause_selection
 {
-    none = -1,
-    resume = 0,
-    restart = 1,
-    creds = 2,
-    quit = 3,
+    pause_none = -1,
+    pause_resume = 0,
+    pause_options = 1,
+    pause_restart = 2,
+    pause_credits = 3,
+    pause_quit = 4,
 } pause_selection_t;
 
 bool screen_credits(display_context_t disp, input_t *input);
@@ -37,5 +39,6 @@ bool screen_win(display_context_t disp, input_t *input);
 bool screen_death(display_context_t disp, input_t *input, screen_t reason);
 bool screen_game_over(display_context_t disp, input_t *input);
 bool screen_rumble(display_context_t disp, input_t *input);
+bool screen_options(display_context_t disp, input_t *input);
 
 #endif //__SCREENS_H__

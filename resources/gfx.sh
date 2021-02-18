@@ -10,6 +10,7 @@ convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsi
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Pause" -extent 256x104 resources/gfx/sprites/ui/pause.png
 convert -strip -background "#222323ff" -fill "#eb554bff" -font "$fontb" -pointsize 68 label:"Game Over !" -extent 494x104 resources/gfx/sprites/ui/game_over.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Credits" -extent 358x104 resources/gfx/sprites/ui/credits_big.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Options" -extent 358x104 resources/gfx/sprites/ui/options_big.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"You burned in the fire" -extent 408x44 resources/gfx/sprites/ui/fire.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"You fell through the grid" -extent 470x44 resources/gfx/sprites/ui/grid.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 resources/gfx/sprites/ui/resume.png
@@ -17,10 +18,28 @@ convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsi
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 resources/gfx/sprites/ui/restart.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Credits" -extent 148x44 resources/gfx/sprites/ui/credits.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 resources/gfx/sprites/ui/quit.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Options" -extent 148x44 resources/gfx/sprites/ui/options.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Resume" -extent 134x44 resources/gfx/sprites/ui/resume_selected.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Restart" -extent 148x44 resources/gfx/sprites/ui/restart_selected.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Credits" -extent 148x44 resources/gfx/sprites/ui/credits_selected.png
 convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Quit" -extent 86x44 resources/gfx/sprites/ui/quit_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 label:"Options" -extent 148x44 resources/gfx/sprites/ui/options_selected.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"SFX" -extent 64x44 resources/gfx/sprites/ui/sfx.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Sound" -extent 106x44 resources/gfx/sprites/ui/sound.png
+#edited by hand convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 -gravity center label:"< stereo >" -extent 178x44 resources/gfx/sprites/ui/stereo.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 -gravity center label:"< mono >" -extent 142x44 resources/gfx/sprites/ui/mono.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 -gravity center label:"< stereo >" -extent 178x44 resources/gfx/sprites/ui/stereo_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 -gravity center label:"< mono >" -extent 142x44 resources/gfx/sprites/ui/mono_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 -gravity center label:"< 100% >" -extent 142x44 resources/gfx/sprites/ui/100_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 -gravity center label:"< 75 \% >" -extent 128x44 resources/gfx/sprites/ui/75_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 -gravity center label:"< 50 \% >" -extent 128x44 resources/gfx/sprites/ui/50_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 -gravity center label:"< 25 \% >" -extent 128x44 resources/gfx/sprites/ui/25_selected.png
+convert -strip -background "#222323ff" -fill "#ffffffff" -font "$fontb" -pointsize 28 -gravity center label:"< none >" -extent 136x44 resources/gfx/sprites/ui/0_selected.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 -gravity center label:"< 100% >" -extent 142x44 resources/gfx/sprites/ui/100.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 -gravity center label:"< 75 \% >" -extent 128x44 resources/gfx/sprites/ui/75.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 -gravity center label:"< 50 \% >" -extent 128x44 resources/gfx/sprites/ui/50.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 -gravity center label:"< 25 \% >" -extent 128x44 resources/gfx/sprites/ui/25.png
+convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 -gravity center label:"< none >" -extent 136x44 resources/gfx/sprites/ui/0.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 36 -gravity center label:"Well done,\nyou found your friend!" -extent 532x110  resources/gfx/sprites/ui/you_win.png
 convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 28 label:"Thanks for playing!" -extent 366x44 resources/gfx/sprites/ui/thanks.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 28 label:"Programming" -extent 246x44 resources/gfx/sprites/ui/programming.png

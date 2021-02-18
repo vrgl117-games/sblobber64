@@ -11,9 +11,10 @@
 #include "sounds.h"
 #include "ui.h"
 
-#define DISABLE_FPS 1
+#define ENABLE_DEBUG 0
+#define ENABLE_FPS 0
 
-screen_t screen = game;
+screen_t screen = intro;
 screen_t prev_screen; //used in credits to know where to go back to
 
 int main()
@@ -35,7 +36,7 @@ int main()
 
     srand(timer_ticks() & 0x7FFFFFFF);
 
-#ifndef DISABLE_FPS
+#if ENABLE_FPS
     // 1s
     new_timer(TIMER_TICKS(1000000), TF_CONTINUOUS, fps_timer);
 #endif
@@ -102,18 +103,22 @@ int main()
         case pause: // pause menu.
             switch (screen_pause(disp, &input, false))
             {
-            case restart:
+            case pause_options:
+                prev_screen = pause;
+                screen = options;
+                break;
+            case pause_restart:
                 map_layer_reset();
                 player_reset_in_map();
-            case resume:
+            case pause_resume:
                 sound_resume_music();
                 screen = game;
                 break;
-            case creds:
+            case pause_credits:
                 prev_screen = pause;
                 screen = credits;
                 break;
-            case quit:
+            case pause_quit:
                 sound_resume_music();
                 map_select(0);
                 player_reset();
@@ -144,6 +149,10 @@ int main()
                     screen = prev_screen;
             }
             break;
+        case options:
+            if (screen_options(disp, &input))
+                screen = prev_screen;
+            break;
         case game_over:
             if (screen_game_over(disp, &input))
             {
@@ -165,7 +174,7 @@ int main()
             break;
         }
 
-#ifndef DISABLE_FPS
+#if ENABLE_FPS
         // increment fps counter
         fps_frame();
 
@@ -173,8 +182,10 @@ int main()
         fps_draw(disp);
 #endif
 
+#if ENABLE_DEBUG
         // draw debug
-        //debug_draw(disp);
+        debug_draw(disp);
+#endif
 
         // update display
         display_show(disp);
