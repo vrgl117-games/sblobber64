@@ -68,10 +68,10 @@ type Map struct {
 
 func generateTextMap(tmx *Map, tsx *Tileset) (string, error) {
 	var txt strings.Builder
-	fmt.Fprintf(&txt, "%dx%d\n", tmx.Height, tmx.Width)
-	fmt.Fprintf(&txt, "%02d\n", len(tmx.Layers))
+	fmt.Fprintf(&txt, "%dx%d\n%02d", tmx.Height, tmx.Width, len(tmx.Layers))
 	for _, layer := range tmx.Layers {
 		for _, record := range layer.Records {
+			fmt.Fprintf(&txt, "%c", '\n')
 			for _, col := range record {
 				i, err := strconv.Atoi(col)
 				if err != nil {
@@ -83,7 +83,6 @@ func generateTextMap(tmx *Map, tsx *Tileset) (string, error) {
 					return "", fmt.Errorf("unknown tile id:%d", i)
 				}
 			}
-			fmt.Fprintf(&txt, "%c", '\n')
 		}
 	}
 	return txt.String(), nil
