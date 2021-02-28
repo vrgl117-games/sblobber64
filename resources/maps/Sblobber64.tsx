@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.3" name="Sblobber64" tilewidth="32" tileheight="32" tilecount="42" columns="0">
+<tileset version="1.4" tiledversion="1.4.3" name="Sblobber64" tilewidth="32" tileheight="32" tilecount="50" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -252,5 +252,53 @@
    <property name="char" value="v"/>
   </properties>
   <image width="32" height="32" source="../gfx/sprites/map/tile_w.png"/>
+ </tile>
+ <tile id="42">
+  <properties>
+   <property name="char" value="m"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_g_ver_t.png"/>
+ </tile>
+ <tile id="43">
+  <properties>
+   <property name="char" value="n"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_g_ver_b.png"/>
+ </tile>
+ <tile id="44">
+  <properties>
+   <property name="char" value="r"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_g_ver.png"/>
+ </tile>
+ <tile id="45">
+  <properties>
+   <property name="char" value="o"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_g_tr.png"/>
+ </tile>
+ <tile id="46">
+  <properties>
+   <property name="char" value="z"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_g_hor_r.png"/>
+ </tile>
+ <tile id="47">
+  <properties>
+   <property name="char" value="q"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_g_hor_l.png"/>
+ </tile>
+ <tile id="48">
+  <properties>
+   <property name="char" value="j"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_g_hor.png"/>
+ </tile>
+ <tile id="49">
+  <properties>
+   <property name="char" value="x"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_g_bl.png"/>
  </tile>
 </tileset>
