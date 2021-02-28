@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.3" name="Sblobber64" tilewidth="32" tileheight="32" tilecount="50" columns="0">
+<tileset version="1.4" tiledversion="1.4.3" name="Sblobber64" tilewidth="32" tileheight="32" tilecount="52" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -300,5 +300,17 @@
    <property name="char" value="x"/>
   </properties>
   <image width="32" height="32" source="../gfx/sprites/map/tile_g_bl.png"/>
+ </tile>
+ <tile id="50">
+  <properties>
+   <property name="char" value="t"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_w.png"/>
+ </tile>
+ <tile id="51">
+  <properties>
+   <property name="char" value="l"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_w.png"/>
  </tile>
 </tileset>
