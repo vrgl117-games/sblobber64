@@ -140,8 +140,8 @@ func parseMap(fIn string) (*Map, error) {
 func main() {
 
 	flag.Parse()
-	if fIn == "" || fOut == "" {
-		log.Fatal("-i and -o are required")
+	if fIn == "" {
+		log.Fatal("-i is required")
 	}
 
 	tmx, err := parseMap(fIn)
@@ -159,5 +159,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Println(txt)
+	if fOut != "" {
+		f, err := os.Create(fOut)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+
+		_, err = f.WriteString(txt)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		fmt.Println(txt)
+	}
 }
