@@ -55,11 +55,11 @@ filesystem/sfx/%.mod: resources/sfx/%.mod
 	cp $< $@
 
 # maps #
-TXTS := $(wildcard resources/maps/*.txt)
-MAPS := $(subst .txt,.map,$(subst resources/,filesystem/,$(TXTS)))
-filesystem/maps/%.map: resources/maps/%.txt
+TMXS := $(wildcard resources/maps/*.tmx)
+MAPS := $(subst .tmx,.map,$(subst resources/,filesystem/,$(TMXS)))
+filesystem/maps/%.map: resources/maps/%.tmx
 	@mkdir -p `echo $@ | xargs dirname`
-	cp $< $@
+	go run tools/map_translator/main.go -i $< -o $@
 
 # code #
 SRCS := $(wildcard src/*.c)
