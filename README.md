@@ -41,6 +41,12 @@ All development can be done using Docker. It's the easiest way to build the ROM 
 * Set the `CEN64_DIR` env var to the cen64 folder.
 * Run `make cen64`.
 
+## Creating levels
+
+Levels are created using [Tiled](https://www.mapeditor.org/) and should be placed into the [maps](./resources/maps) folder.
+At build time, `.tmx` maps will be translated to sblobber64's custom format using a [map_translator](./tools/map_translator) tool.
+The rational behind using the translator is that parsing xml is quite resource intensive for the N64. sblobber64's custom map format is optimised, faster to parse and fit the needs for the game.
+
 ## Thanks
 
 * Thanks to [Kenney](https://www.kenney.nl) for the art used in the game.
@@ -48,3 +54,4 @@ All development can be done using Docker. It's the easiest way to build the ROM 
 * Thanks to [Jennifer Taylor](https://github.com/DragonMinded) for libdragon.
 * Thanks to [conker64](https://github.com/conker64) and the [#n64dev](irc://irc.efnet.org/#n64dev) IRC community for their help.
 * Thanks to [Christopher Bonhage](https://github.com/meeq) for his work on [FlappyBird-N64](https://github.com/meeq/FlappyBird-N64).
+* Thanks to [Thorbjørn Lindeijer](https://github.com/bjorn) for Tiled.

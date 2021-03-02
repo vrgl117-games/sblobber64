@@ -1,7 +1,7 @@
 sblobber64.*
+!sblobber64.tsx
 *.o
 *.sprite
 .DS_Store
 *~
 filesystem/
-mvp/main
