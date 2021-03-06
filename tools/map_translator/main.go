@@ -28,16 +28,16 @@ type TilesetImage struct {
 	Source  string   `xml:"source,attr"`
 }
 
-type TilesetProperty struct {
+type Property struct {
 	XMLName xml.Name `xml:"property"`
 	Value   string   `xml:"value,attr"`
 }
 
 type TilesetTile struct {
-	XMLName    xml.Name          `xml:"tile"`
-	ID         int               `xml:"id,attr"`
-	Image      TilesetImage      `xml:"image"`
-	Properties []TilesetProperty `xml:"properties>property"`
+	XMLName    xml.Name     `xml:"tile"`
+	ID         int          `xml:"id,attr"`
+	Image      TilesetImage `xml:"image"`
+	Properties []Property   `xml:"properties>property"`
 }
 
 type Tileset struct {
@@ -59,16 +59,23 @@ type MapLayer struct {
 }
 
 type Map struct {
-	XMLName xml.Name   `xml:"map"`
-	Width   int        `xml:"width,attr"`
-	Height  int        `xml:"height,attr"`
-	Tileset MapTileset `xml:"tileset"`
-	Layers  []MapLayer `xml:"layer"`
+	XMLName    xml.Name   `xml:"map"`
+	Width      int        `xml:"width,attr"`
+	Height     int        `xml:"height,attr"`
+	Tileset    MapTileset `xml:"tileset"`
+	Layers     []MapLayer `xml:"layer"`
+	Properties []Property `xml:"properties>property"`
 }
 
 func generateTextMap(tmx *Map, tsx *Tileset) (string, error) {
 	var txt strings.Builder
-	fmt.Fprintf(&txt, "%dx%d\n%02d", tmx.Height, tmx.Width, len(tmx.Layers))
+	mapProperty := ""
+	if len(tmx.Properties) > 0 {
+		mapProperty = tmx.Properties[0].Value
+	}
+
+	fmt.Fprintf(&txt, "%dx%d\n%-10s\n%02d", tmx.Height, tmx.Width, mapProperty, len(tmx.Layers))
+
 	for _, layer := range tmx.Layers {
 		for _, record := range layer.Records {
 			fmt.Fprintf(&txt, "%c", '\n')

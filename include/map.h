@@ -7,6 +7,8 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "dfs.h"
+
 #define MAP_CELL_SIZE 32
 
 #define NUM_MAPS 6
@@ -30,8 +32,9 @@
 #define TILES_DANGER TILES_FIRE TILES_GRID
 #define TILES_ANIMATED "fvwtl"
 
-#define GRID_CHARS 6  // HHxWW\n
-#define LAYER_CHARS 3 // LL\n
+#define GRID_CHARS 6     // HHxWW\n
+#define LAYER_CHARS 3    // LL\n
+#define MAPTEXT_CHARS 11 // xxxxxxxxxx\n
 
 #define MIN(a, b) \
     ({ __typeof__ (a) _a = (a); \
@@ -52,6 +55,7 @@ typedef struct map
     uint8_t width;
     uint8_t layer_idx;
     coords_t *tiles_pos[255];
+    sprites_t *txt;
 
     uint8_t anim;          // "frame of the transition animation"
     int8_t anim_direction; // +1 or -1

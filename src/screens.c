@@ -21,13 +21,11 @@ extern volume_music_t volume_music;
 
 static volatile int tick = 0;
 
-static sprites_t *logo;
 static sprites_t *take_the_stairs;
 
 // load some sprites in memory
 void screen_load_title_resources()
 {
-    logo = dfs_load_sprites("/gfx/sprites_sets/ui/logo-%d_%d.sprite", NULL);
     take_the_stairs = dfs_load_sprites("/gfx/sprites_sets/ui/take_the_stairs-%d_%d.sprite", NULL);
 }
 
@@ -98,13 +96,14 @@ screen_t screen_game(display_context_t disp, input_t *input)
 
     player_draw();
 
-    // display logo on title map
     if (map->anim == MAP_NUM_ANIMS)
     {
+        // display text on map
+        if (map->txt)
+            rdp_draw_sprites_with_texture(map->txt, __width / 2 - map->txt->width / 2, 32, 0);
+        // display blinking text on title map
         if (map_id == 0)
         {
-            rdp_draw_sprites_with_texture(logo, __width / 2 - logo->width / 2, 32, 0);
-
             if (tick % 2 < 1)
             {
                 rdp_draw_sprites_with_texture(take_the_stairs, __width / 2 - take_the_stairs->width / 2, 352, 0);
@@ -125,7 +124,6 @@ screen_t screen_game(display_context_t disp, input_t *input)
             map->anim_direction = -1;
             if (map->id == 0) // free sprites if we leaving title
             {
-                dfs_free_sprites(logo);
                 dfs_free_sprites(take_the_stairs);
             }
         }

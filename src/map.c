@@ -1,7 +1,6 @@
 #include "map.h"
 
 #include "colors.h"
-#include "dfs.h"
 #include "player.h"
 #include "rdp.h"
 #include "sounds.h"
@@ -168,13 +167,27 @@ bool map_load(uint8_t map_id)
     {
         map = calloc(1, sizeof(map_t));
         // getting grid dimensions
-        char buffer[GRID_CHARS];
+        char buffer[MAPTEXT_CHARS];
         dfs_read(buffer, 1, GRID_CHARS, fp);
 
         int h, w;
         sscanf(buffer, "%dx%d", &h, &w);
         map->width = (uint8_t)w;
         map->height = (uint8_t)h;
+
+        // getting map text
+        dfs_read(buffer, 1, MAPTEXT_CHARS, fp);
+        char *first_occur = strchr(buffer, ' ');
+        if (first_occur == NULL)
+        {
+            buffer[MAPTEXT_CHARS - 1] = '\0';
+        }
+        else
+        {
+            *first_occur = '\0';
+        }
+        if (strlen(buffer) > 0)
+            map->txt = dfs_load_sprites("/gfx/sprites_sets/ui/%s-%d_%d.sprite", buffer);
 
         // getting layer count
         dfs_read(buffer, 1, LAYER_CHARS, fp);
@@ -213,6 +226,9 @@ void map_free()
         free(map->grid[l]);
     }
     free(map->grid);
+    if (map->txt != NULL)
+        dfs_free_sprites(map->txt);
+
     free(map);
     map = NULL;
 }
