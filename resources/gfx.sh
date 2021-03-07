@@ -6,6 +6,9 @@ fontb='resources/fonts/Kenney Blocks.ttf'
 #-extent XXxYY
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"sblobber 64" -extent 518x128 resources/gfx/sprites/ui/logo.png
 convert -strip resources/gfx/sprites/ui/logo.png -crop 16 resources/gfx/sprites_sets/ui/logo-%d_0.png
+convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 28 -gravity center label:"Moving changes\nsblobber's size" -extent 296x128 -crop 16 resources/gfx/sprites_sets/ui/changesize-%d_0.png
+convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 28 -gravity center label:"Touching fire\nhurts sblobber" -extent 296x128 -crop 16 resources/gfx/sprites_sets/ui/firekill-%d_0.png
+convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 28 -gravity center label:"Walking over grids is\nOK but don't fall through" -extent 518x128 -crop 16 resources/gfx/sprites_sets/ui/gridskill-%d_0.png
 convert -strip -background "#222323ff" -fill "#f2a65eff" -font "$fontb" -pointsize 28 label:"\ Take the stairs to\nfind your friend" -extent 344x128 -crop 16 resources/gfx/sprites_sets/ui/take_the_stairs-%d_0.png
 convert -strip -background "#222323ff" -fill "#5dde87ff" -font "$fontb" -pointsize 68 label:"Pause" -extent 256x104 resources/gfx/sprites/ui/pause.png
 convert -strip -background "#222323ff" -fill "#eb554bff" -font "$fontb" -pointsize 68 label:"Game Over !" -extent 494x104 resources/gfx/sprites/ui/game_over.png

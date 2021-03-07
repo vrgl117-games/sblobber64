@@ -11,7 +11,7 @@
 
 #define MAP_CELL_SIZE 32
 
-#define NUM_MAPS 6
+#define NUM_MAPS 9
 
 #define SCREEN_HEIGHT 15
 #define SCREEN_HEIGHT_2 7

@@ -16,7 +16,11 @@ sprite_t *tiles[255] = {0};
 char *level_paths[NUM_MAPS] = {
     "/maps/00_title.map",
 
+    "/maps/01_tutorial_01.map",
+    "/maps/01_tutorial_02.map",
+    "/maps/01_tutorial_03.map",
     "/maps/01_tutorial.map",
+
     "/maps/02_level1.map",
     "/maps/03_level2.map",
     "/maps/04_level3.map",
@@ -98,7 +102,13 @@ void map_init()
     tiles['@'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_start.sprite");
     tiles['='] = dfs_load_sprite("/gfx/sprites/map/tile_arrow.sprite");
     tiles['$'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end.sprite");
-
+    tiles['N'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end_left.sprite");
+    tiles['?'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn.sprite");
+    tiles['I'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_up.sprite");
+    tiles['V'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end_up.sprite");
+    tiles['F'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn_2.sprite");
+    tiles['Z'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn_3.sprite");
+    tiles['X'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn_4.sprite");
     map_select(0);
 }
 
@@ -179,13 +189,10 @@ bool map_load(uint8_t map_id)
         dfs_read(buffer, 1, MAPTEXT_CHARS, fp);
         char *first_occur = strchr(buffer, ' ');
         if (first_occur == NULL)
-        {
             buffer[MAPTEXT_CHARS - 1] = '\0';
-        }
         else
-        {
             *first_occur = '\0';
-        }
+
         if (strlen(buffer) > 0)
             map->txt = dfs_load_sprites("/gfx/sprites_sets/ui/%s-%d_%d.sprite", buffer);
 
