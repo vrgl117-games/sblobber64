@@ -11,7 +11,6 @@
 #include "sounds.h"
 #include "ui.h"
 
-#define ENABLE_DEBUG 0
 #define ENABLE_FPS 0
 
 screen_t screen = intro;
@@ -26,7 +25,7 @@ int main()
     rdp_set_default_clipping();
     controller_init();
     timer_init();
-    //debug_clear();
+    debug_init_isviewer();
     colors_init();
     sound_init();
 
@@ -181,12 +180,6 @@ int main()
         // display fps
         fps_draw(disp);
 #endif
-
-#if ENABLE_DEBUG
-        // draw debug
-        debug_draw(disp);
-#endif
-
         // update display
         display_show(disp);
     }
