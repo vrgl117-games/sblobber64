@@ -49,11 +49,16 @@ void map_init()
     tiles[','] = dfs_load_sprite("/gfx/sprites/map/tile_w_ver_b.sprite");
     tiles['p'] = dfs_load_sprite("/gfx/sprites/map/tile_p.sprite");
 
-    //door
-    tiles['d'] = dfs_load_sprite("/gfx/sprites/map/tile_d_open.sprite");
+    //door closed
     tiles['D'] = dfs_load_sprite("/gfx/sprites/map/tile_d_close.sprite");
+
+    // door opened
+    tiles['d'] = dfs_load_sprite("/gfx/sprites/map/tile_d_open.sprite");
     tiles['E'] = dfs_load_sprite("/gfx/sprites/map/tile_d_top.sprite");
-    tiles['L'] = dfs_load_sprite("/gfx/sprites/map/tile_d_lock.sprite");
+
+    // doors locked
+    tiles['L'] = dfs_load_sprite("/gfx/sprites/map/tile_d_lock_yellow.sprite");
+    tiles['M'] = dfs_load_sprite("/gfx/sprites/map/tile_d_lock_red.sprite");
 
     //start
     tiles['s'] = dfs_load_sprite("/gfx/sprites/map/tile_s.sprite");
@@ -89,8 +94,11 @@ void map_init()
     tiles['o'] = dfs_load_sprite("/gfx/sprites/map/tile_g_tr.sprite");
     tiles['x'] = dfs_load_sprite("/gfx/sprites/map/tile_g_bl.sprite");
 
+    //keys
+    tiles['0'] = dfs_load_sprite("/gfx/sprites/map/tile_key_yellow.sprite");
+    tiles['1'] = dfs_load_sprite("/gfx/sprites/map/tile_key_red.sprite");
+
     //misc
-    tiles['k'] = dfs_load_sprite("/gfx/sprites/map/tile_k.sprite");
     tiles['w'] = dfs_load_sprite("/gfx/sprites/map/tile_w.sprite");
     tiles['v'] = tiles['w'];
     tiles['t'] = tiles['w'];
@@ -283,6 +291,8 @@ bool map_select(uint8_t map_id)
 
     map_regen_vegetation();
     player_reset_in_map();
+    player_reset_inventory();
+
     if (map_id == 0)
         map->anim = MAP_NUM_ANIMS; // do not animate title map
     return true;

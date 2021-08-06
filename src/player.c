@@ -74,40 +74,74 @@ static inline void player_warp(char on_warp)
 }
 
 // detect if player is on a soecific tile and returns that tile
-static inline char player_detect_tile(char *tiles)
+static inline char player_detect_tile(char *tiles, bool can_open_doors)
 {
     int found = 0;
     for (int h = player.y - player.h_of; h <= player.y + player.h_of; h++)
     {
         for (int w = player.x - player.w_of; w <= player.x + player.w_of; w++)
         {
-            if (strchr(tiles, map->grid[map->layer_idx][h][w]))
+            char on = map->grid[map->layer_idx][h][w];
+            if (strchr(tiles, on))
             {
                 found++;
-                if (map->grid[map->layer_idx][h][w] == TILES_BUTTONS[1])
+                if (on == TILES_BUTTONS[1])
                 {
                     if (found == 2)
-                        return map->grid[map->layer_idx][h][w];
+                        return on;
                 }
-                else if (map->grid[map->layer_idx][h][w] == TILES_BUTTONS[2])
+                else if (on == TILES_BUTTONS[2])
                 {
                     if (found == 3)
-                        return map->grid[map->layer_idx][h][w];
+                        return on;
                 }
-                else if (strchr(TILES_GRID, map->grid[map->layer_idx][h][w]))
+                else if (strchr(TILES_GRID, on))
                 {
                     if (found == player.size)
-                        return map->grid[map->layer_idx][h][w];
+                        return on;
                 }
-                else if (map->grid[map->layer_idx][h][w] == TILES_HEART[0] && player.lives < PLAYER_MAX_LIVES)
+                else if (on == TILES_HEART[0] && player.lives < PLAYER_MAX_LIVES)
                 {
                     // erase heart in all layers
                     for (uint8_t idx = 0; idx <= map->layers - 1; idx++)
                         map->grid[idx][h][w] = ' ';
-                    return TILES_HEART[0];
+                    return on;
+                }
+                else if (strchr(TILES_KEYS, on))
+                {
+                    // erase key in all layers
+                    for (uint8_t idx = 0; idx <= map->layers - 1; idx++)
+                        map->grid[idx][h][w] = ' ';
+                    return on;
+                }
+                else if (strchr(TILES_DOORS_LOCKED, on))
+                {
+                    uint8_t key_idx = on - TILES_DOORS_LOCKED[0];
+
+                    // unlock door in all layers if key present in inventory
+                    if (player.inventory.keys[key_idx])
+                    {
+                        for (uint8_t idx = 0; idx <= map->layers - 1; idx++)
+                            map->grid[idx][h][w] = TILES_DOORS_UNLOCKED[0];
+
+                        // remove corresponding key from inventory
+                        player.inventory.keys[key_idx] = false;
+                        return TILES_DOORS_UNLOCKED[0]; // explicitly return TILES_DOORS_UNLOCKED so we can avoid rumble
+                    }
+                    return on;
+                }
+                else if (on == TILES_DOORS_UNLOCKED[0])
+                {
+                    if (can_open_doors)
+                    {
+                        // open door in all layers
+                        for (uint8_t idx = 0; idx <= map->layers - 1; idx++)
+                            map->grid[idx][h][w] = TILES_DOORS_OPENED[0];
+                    }
+                    return on;
                 }
                 else
-                    return map->grid[map->layer_idx][h][w];
+                    return on;
             }
         }
     }
@@ -274,7 +308,7 @@ char player_move(input_t *input)
 {
     // if screen is black, check early if we happen to be on the end
     if (map->anim == 0)
-        return player_detect_tile(TILES_END);
+        return player_detect_tile(TILES_END, false);
 
     // prevent move during animation
     if (map->anim != SCREEN_WIDTH)
@@ -286,7 +320,7 @@ char player_move(input_t *input)
 
     player_t save_player = player;
 
-    char on_warp = player_detect_tile(TILES_WARP);
+    char on_warp = player_detect_tile(TILES_WARP, false);
 
     if (input->up)
     {
@@ -329,11 +363,12 @@ char player_move(input_t *input)
         player.x += 1;
     }
 
-    if (player_detect_tile(TILES_WALL))
+    char on = player_detect_tile(TILES_WALLS TILES_DOORS_LOCKED, false);
+    if (on)
     {
         player.x = save_player.x;
         player.y = save_player.y;
-        if (player_detect_tile(TILES_WALL))
+        if (player_detect_tile(TILES_WALLS TILES_DOORS_LOCKED TILES_DOORS_UNLOCKED, false))
         {
             player.h_of = save_player.h_of;
             player.w_of = save_player.w_of;
@@ -341,12 +376,13 @@ char player_move(input_t *input)
             player.h_of_anim = 0;
             player.w_of_anim = 0;
         }
-        player_start_rumble(3);
+        if (on != TILES_DOORS_UNLOCKED[0]) // if on == TILES_DOORS_UNLOCKED means we just unlocked a the door, don't rumble
+            player_start_rumble(3);
     }
 
     player_update_screen_coordinates();
 
-    char on = player_detect_tile(TILES_BUTTONS TILES_KEY TILES_DOOR TILES_WARP TILES_DANGER TILES_HEART TILES_END);
+    on = player_detect_tile(TILES_BUTTONS TILES_KEYS TILES_DOORS_UNLOCKED TILES_WARP TILES_DANGER TILES_HEART TILES_END, true);
     switch (on)
     {
     // fire or grids
@@ -372,7 +408,7 @@ char player_move(input_t *input)
         if (player.lives < PLAYER_MAX_LIVES)
         {
             player.lives++;
-            if (player.lives < PLAYER_MAX_LIVES && player_detect_tile(TILES_HEART))
+            if (player.lives < PLAYER_MAX_LIVES && player_detect_tile(TILES_HEART, false))
                 player.lives++;
         }
         break;
@@ -385,11 +421,11 @@ char player_move(input_t *input)
         map_layer_next();
         break;
 
-    // key & closed door
-    case 'k':
+    // keys
+    case '0':
+    case '1':
         sound_start_sfx(SFX_KEY);
-    case 'D':
-        map_layer_next();
+        player.inventory.keys[on - '0'] = true;
         break;
 
     // warp
@@ -443,6 +479,14 @@ void player_reset_in_map()
 void player_reset()
 {
     player.lives = PLAYER_MAX_LIVES;
+    player_reset_inventory();
+}
+
+// inventory reset player
+void player_reset_inventory()
+{
+    // reset player inventory to empty
+    memset(player.inventory.keys, 0, INVENTORY_NUM_KEYS);
 }
 
 void player_start_rumble(uint8_t n)

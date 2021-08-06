@@ -5,6 +5,15 @@
 #include "screens.h"
 
 #define PLAYER_NUM_ANIMS 2
+#define INVENTORY_NUM_KEYS 2
+
+#define KEY_YELLOW 0
+#define KEY_RED 1
+
+typedef struct inventory
+{
+    bool keys[INVENTORY_NUM_KEYS];
+} inventory_t;
 
 typedef struct player
 {
@@ -29,6 +38,9 @@ typedef struct player
 
     // player lives (0 to PLAYER_MAX_LIVES)
     uint8_t lives;
+
+    // inventory
+    inventory_t inventory;
 
     // nb of frames the controler should rumble
     uint8_t rumble;
@@ -68,6 +80,7 @@ void player_draw();
 void player_init();
 char player_move(input_t *input);
 void player_reset_in_map();
+void player_reset_inventory();
 void player_reset();
 void player_start_rumble(uint8_t n);
 bool player_stop_rumble();

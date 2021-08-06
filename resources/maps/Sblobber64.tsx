@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.3" name="Sblobber64" tilewidth="32" tileheight="32" tilecount="61" columns="0">
+<tileset version="1.4" tiledversion="1.4.3" name="Sblobber64" tilewidth="32" tileheight="32" tilecount="63" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -111,9 +111,9 @@
  </tile>
  <tile id="18">
   <properties>
-   <property name="char" value="k"/>
+   <property name="char" value="0"/>
   </properties>
-  <image width="32" height="32" source="../gfx/sprites/map/tile_k.png"/>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_key_yellow.png"/>
  </tile>
  <tile id="19">
   <properties>
@@ -131,7 +131,7 @@
   <properties>
    <property name="char" value="L"/>
   </properties>
-  <image width="32" height="32" source="../gfx/sprites/map/tile_d_lock.png"/>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_d_lock_yellow.png"/>
  </tile>
  <tile id="22">
   <properties>
@@ -366,5 +366,17 @@
    <property name="char" value="N"/>
   </properties>
   <image width="32" height="32" source="../gfx/sprites/map/tile_arrow_end_left.png"/>
+ </tile>
+ <tile id="61">
+  <properties>
+   <property name="char" value="1"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_key_red.png"/>
+ </tile>
+ <tile id="62">
+  <properties>
+   <property name="char" value="M"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_d_lock_red.png"/>
  </tile>
 </tileset>

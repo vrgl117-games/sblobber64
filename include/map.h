@@ -19,13 +19,15 @@
 #define SCREEN_WIDTH_2 10
 #define MAP_NUM_ANIMS SCREEN_WIDTH
 
-#define TILES_WALL "-|[]{}y<>^p()i,L"
+#define TILES_WALLS "-|[]{}y<>^p()i,"
 #define TILES_WARP "vwtl"
 #define TILES_VEGETATION ".%&+*"
 #define TILES_END "e!"
 #define TILES_BUTTONS "ABC"
-#define TILES_KEY "k"
-#define TILES_DOOR "D"
+#define TILES_KEYS "01"
+#define TILES_DOORS_LOCKED "LM"
+#define TILES_DOORS_UNLOCKED "D"
+#define TILES_DOORS_OPENED "d"
 #define TILES_HEART "h"
 #define TILES_GRID "gmrnqjzox"
 #define TILES_FIRE "f"
@@ -36,10 +38,13 @@
 #define LAYER_CHARS 3    // LL\n
 #define MAPTEXT_CHARS 11 // xxxxxxxxxx\n
 
-#define MIN(a, b) \
-    ({ __typeof__ (a) _a = (a); \
-       __typeof__ (b) _b = (b); \
-     _a < _b ? _a : _b; })
+#define MIN(a, b)                   \
+    (                               \
+        {                           \
+            __typeof__(a) _a = (a); \
+            __typeof__(b) _b = (b); \
+            _a < _b ? _a : _b;      \
+        })
 
 typedef struct coordinates
 {
