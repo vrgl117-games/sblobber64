@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset version="1.4" tiledversion="1.4.3" name="Sblobber64" tilewidth="32" tileheight="32" tilecount="63" columns="0">
+<tileset version="1.4" tiledversion="1.4.3" name="Sblobber64" tilewidth="64" tileheight="64" tilecount="67" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <properties>
@@ -351,19 +351,19 @@
  </tile>
  <tile id="58">
   <properties>
-   <property name="char" value="Z"/>
+   <property name="char" value="G"/>
   </properties>
   <image width="32" height="32" source="../gfx/sprites/map/tile_arrow_turn_3.png"/>
  </tile>
  <tile id="59">
   <properties>
-   <property name="char" value="X"/>
+   <property name="char" value="J"/>
   </properties>
   <image width="32" height="32" source="../gfx/sprites/map/tile_arrow_turn_4.png"/>
  </tile>
  <tile id="60">
   <properties>
-   <property name="char" value="N"/>
+   <property name="char" value="H"/>
   </properties>
   <image width="32" height="32" source="../gfx/sprites/map/tile_arrow_end_left.png"/>
  </tile>
@@ -378,5 +378,29 @@
    <property name="char" value="M"/>
   </properties>
   <image width="32" height="32" source="../gfx/sprites/map/tile_d_lock_red.png"/>
+ </tile>
+ <tile id="63">
+  <properties>
+   <property name="char" value="Z"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_potion_red.png"/>
+ </tile>
+ <tile id="64">
+  <properties>
+   <property name="char" value="Y"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_potion_green.png"/>
+ </tile>
+ <tile id="65">
+  <properties>
+   <property name="char" value="2"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_key_blue.png"/>
+ </tile>
+ <tile id="66">
+  <properties>
+   <property name="char" value="N"/>
+  </properties>
+  <image width="32" height="32" source="../gfx/sprites/map/tile_d_lock_blue.png"/>
  </tile>
 </tileset>

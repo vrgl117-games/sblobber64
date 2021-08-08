@@ -19,6 +19,7 @@ char *level_paths[NUM_MAPS] = {
     "/maps/01_tutorial_01.map",
     "/maps/01_tutorial_02.map",
     "/maps/01_tutorial_03.map",
+    "/maps/01_tutorial_04.map",
     "/maps/01_tutorial.map",
 
     "/maps/02_level1.map",
@@ -59,6 +60,7 @@ void map_init()
     // doors locked
     tiles['L'] = dfs_load_sprite("/gfx/sprites/map/tile_d_lock_yellow.sprite");
     tiles['M'] = dfs_load_sprite("/gfx/sprites/map/tile_d_lock_red.sprite");
+    tiles['N'] = dfs_load_sprite("/gfx/sprites/map/tile_d_lock_blue.sprite");
 
     //start
     tiles['s'] = dfs_load_sprite("/gfx/sprites/map/tile_s.sprite");
@@ -97,6 +99,11 @@ void map_init()
     //keys
     tiles['0'] = dfs_load_sprite("/gfx/sprites/map/tile_key_yellow.sprite");
     tiles['1'] = dfs_load_sprite("/gfx/sprites/map/tile_key_red.sprite");
+    tiles['2'] = dfs_load_sprite("/gfx/sprites/map/tile_key_blue.sprite");
+
+    //potions
+    tiles['Z'] = dfs_load_sprite("/gfx/sprites/map/tile_potion_red.sprite");
+    tiles['Y'] = dfs_load_sprite("/gfx/sprites/map/tile_potion_green.sprite");
 
     //misc
     tiles['w'] = dfs_load_sprite("/gfx/sprites/map/tile_w.sprite");
@@ -110,13 +117,13 @@ void map_init()
     tiles['@'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_start.sprite");
     tiles['='] = dfs_load_sprite("/gfx/sprites/map/tile_arrow.sprite");
     tiles['$'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end.sprite");
-    tiles['N'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end_left.sprite");
+    tiles['H'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end_left.sprite");
     tiles['?'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn.sprite");
     tiles['I'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_up.sprite");
     tiles['V'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_end_up.sprite");
     tiles['F'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn_2.sprite");
-    tiles['Z'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn_3.sprite");
-    tiles['X'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn_4.sprite");
+    tiles['G'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn_3.sprite");
+    tiles['J'] = dfs_load_sprite("/gfx/sprites/map/tile_arrow_turn_4.sprite");
     map_select(0);
 }
 
@@ -146,7 +153,7 @@ uint8_t map_draw(int tick)
         for (uint8_t x = start_x; x < end_x; x++)
         {
             char c = map->grid[map->layer_idx][sy + y][sx + x];
-            sprite_t *tile = tiles[(int)c];
+            sprite_t *tile = (c < 0 ? NULL : tiles[(int)c]);
             if (tile != NULL)
                 rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, (strchr(TILES_ANIMATED, c) ? mirror : MIRROR_DISABLED));
             else
@@ -166,10 +173,23 @@ void map_layer_next()
     map->layer_idx++;
 }
 
-// reset to the 1st layer (after death or restart)
+// reset to the 1st layer and show potions (after death or restart)
 void map_layer_reset()
 {
     map->layer_idx = 0;
+    for (uint8_t y = 0; y < map->height; y++)
+    {
+        for (uint8_t x = 0; x < map->width; x++)
+        {
+            if (map->grid[map->layer_idx][y][x] < 0)
+            {
+                for (int i = 0; i < map->layers; i++)
+                {
+                    map->grid[i][y][x] = -map->grid[i][y][x];
+                }
+            }
+        }
+    }
 }
 
 // load map from disk and returns it

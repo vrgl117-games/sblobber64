@@ -11,7 +11,7 @@
 
 #define MAP_CELL_SIZE 32
 
-#define NUM_MAPS 9
+#define NUM_MAPS 10
 
 #define SCREEN_HEIGHT 15
 #define SCREEN_HEIGHT_2 7
@@ -24,8 +24,9 @@
 #define TILES_VEGETATION ".%&+*"
 #define TILES_END "e!"
 #define TILES_BUTTONS "ABC"
-#define TILES_KEYS "01"
-#define TILES_DOORS_LOCKED "LM"
+#define TILES_KEYS "012"
+#define TILES_POTIONS "ZY"
+#define TILES_DOORS_LOCKED "LMN"
 #define TILES_DOORS_UNLOCKED "D"
 #define TILES_DOORS_OPENED "d"
 #define TILES_HEART "h"

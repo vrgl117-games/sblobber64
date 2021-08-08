@@ -102,16 +102,27 @@ static inline char player_detect_tile(char *tiles, bool can_open_doors)
                 }
                 else if (on == TILES_HEART[0] && player.lives < PLAYER_MAX_LIVES)
                 {
-                    // erase heart in all layers
+                    // hide heart in all layers
                     for (uint8_t idx = 0; idx <= map->layers - 1; idx++)
                         map->grid[idx][h][w] = ' ';
                     return on;
                 }
                 else if (strchr(TILES_KEYS, on))
                 {
-                    // erase key in all layers
+                    // hide key in all layers
                     for (uint8_t idx = 0; idx <= map->layers - 1; idx++)
                         map->grid[idx][h][w] = ' ';
+                    return on;
+                }
+                else if (strchr(TILES_POTIONS, on))
+                {
+                    // hide potion in all layers
+                    for (uint8_t idx = 0; idx <= map->layers - 1; idx++)
+                        map->grid[idx][h][w] = -map->grid[idx][h][w];
+
+                    player.x = w;
+                    player.y = h;
+                    player_update_screen_coordinates();
                     return on;
                 }
                 else if (strchr(TILES_DOORS_LOCKED, on))
@@ -318,13 +329,18 @@ char player_move(input_t *input)
     if (!input->up && !input->down && !input->left && !input->right)
         return 0;
 
+    // use potion on each move
+    for (uint8_t idx = 0; idx < INVENTORY_NUM_POTIONS; idx++)
+        if (player.inventory.potions[idx] > 0)
+            player.inventory.potions[idx]--;
+
     player_t save_player = player;
 
     char on_warp = player_detect_tile(TILES_WARP, false);
 
     if (input->up)
     {
-        if (player.h_of == 0)
+        if (player.inventory.potions[POTION_GREEN] == 0 && player.h_of == 0)
         {
             player.h_of = 1;
             player.size *= 3;
@@ -334,7 +350,7 @@ char player_move(input_t *input)
     }
     else if (input->down)
     {
-        if (player.h_of == 1)
+        if (player.inventory.potions[POTION_GREEN] == 0 && player.h_of == 1)
         {
             player.h_of = 0;
             player.size /= 3;
@@ -344,7 +360,7 @@ char player_move(input_t *input)
     }
     else if (input->left)
     {
-        if (player.w_of == 1)
+        if (player.inventory.potions[POTION_RED] == 0 && player.w_of == 1)
         {
             player.w_of = 0;
             player.size /= 3;
@@ -354,7 +370,7 @@ char player_move(input_t *input)
     }
     else
     {
-        if (player.w_of == 0)
+        if (player.inventory.potions[POTION_RED] == 0 && player.w_of == 0)
         {
             player.w_of = 1;
             player.size *= 3;
@@ -382,7 +398,7 @@ char player_move(input_t *input)
 
     player_update_screen_coordinates();
 
-    on = player_detect_tile(TILES_BUTTONS TILES_KEYS TILES_DOORS_UNLOCKED TILES_WARP TILES_DANGER TILES_HEART TILES_END, true);
+    on = player_detect_tile(TILES_BUTTONS TILES_KEYS TILES_POTIONS TILES_DOORS_UNLOCKED TILES_WARP TILES_DANGER TILES_HEART TILES_END, true);
     switch (on)
     {
     // fire or grids
@@ -424,8 +440,29 @@ char player_move(input_t *input)
     // keys
     case '0':
     case '1':
+    case '2':
         sound_start_sfx(SFX_KEY);
         player.inventory.keys[on - '0'] = true;
+        break;
+
+    // potions
+    case 'Z':
+        if (player.w_of == 1) // if big, shrink down
+        {
+            player.w_of = 0;
+            player.size /= 3;
+            player.w_of_anim = PLAYER_NUM_ANIMS - 1;
+        }
+        player.inventory.potions[POTION_RED] = POTION_EFFECT_DURATION;
+        break;
+    case 'Y':
+        if (player.h_of == 1) // if big, shrink down
+        {
+            player.h_of = 0;
+            player.size /= 3;
+            player.h_of_anim = PLAYER_NUM_ANIMS - 1;
+        }
+        player.inventory.potions[POTION_GREEN] = POTION_EFFECT_DURATION;
         break;
 
     // warp
@@ -459,6 +496,9 @@ void player_reset_in_map()
     player.w_of_anim = 0;
     player.size = 1;
 
+    // reset potions
+    memset(&player.inventory.potions, 0, sizeof(player.inventory.potions));
+
     // set player start position
     for (uint8_t y = 0; y < map->height; y++)
     {
@@ -486,7 +526,7 @@ void player_reset()
 void player_reset_inventory()
 {
     // reset player inventory to empty
-    memset(player.inventory.keys, 0, INVENTORY_NUM_KEYS);
+    memset(&player.inventory, 0, sizeof(player.inventory));
 }
 
 void player_start_rumble(uint8_t n)

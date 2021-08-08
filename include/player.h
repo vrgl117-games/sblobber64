@@ -5,14 +5,21 @@
 #include "screens.h"
 
 #define PLAYER_NUM_ANIMS 2
-#define INVENTORY_NUM_KEYS 2
+#define INVENTORY_NUM_KEYS 3
+#define INVENTORY_NUM_POTIONS 2
 
 #define KEY_YELLOW 0
 #define KEY_RED 1
+#define KEY_BLUE 2
+
+#define POTION_RED 0
+#define POTION_GREEN 1
+#define POTION_EFFECT_DURATION 10
 
 typedef struct inventory
 {
     bool keys[INVENTORY_NUM_KEYS];
+    uint8_t potions[INVENTORY_NUM_POTIONS];
 } inventory_t;
 
 typedef struct player
