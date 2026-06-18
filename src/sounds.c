@@ -21,20 +21,21 @@ void sound_init()
     MikMod_RegisterAllDrivers();
     MikMod_RegisterAllLoaders();
 
+    md_mode = DMODE_16BITS | DMODE_SOFT_MUSIC | DMODE_SOFT_SNDFX | DMODE_STEREO;
     md_mixfreq = audio_get_frequency();
     MikMod_Init("");
     MikMod_SetNumVoices(-1, NUM_SFX);
     MikMod_EnableOutput();
 
-    sfxs[SFX_KEY] = Sample_Load("rom://sfx/key.wav");
-    sfxs[SFX_WARP] = Sample_Load("rom://sfx/warp.wav");
-    sfxs[SFX_BUTTON] = Sample_Load("rom://sfx/button.wav");
+    sfxs[SFX_KEY] = Sample_Load("rom:/sfx/key.wav");
+    sfxs[SFX_WARP] = Sample_Load("rom:/sfx/warp.wav");
+    sfxs[SFX_BUTTON] = Sample_Load("rom:/sfx/button.wav");
 }
 
 static MODULE *music = NULL;
 void sound_start_music()
 {
-    music = Player_Load("rom://sfx/music.mod", 256, 0);
+    music = Player_Load("rom:/sfx/music.mod", 256, 0);
     music->wrap = 1;
     music->fadeout = 1;
     audio_write_silence();
