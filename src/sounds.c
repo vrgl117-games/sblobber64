@@ -16,7 +16,7 @@ volume_music_t volume_music = VOL_MUSIC_75;
 
 void sound_init()
 {
-    audio_init(44100, 2);
+    audio_init(44100, 4);
 
     MikMod_RegisterAllDrivers();
     MikMod_RegisterAllLoaders();
@@ -129,5 +129,6 @@ void sound_resume_music()
 
 inline void sound_update()
 {
-    MikMod_Update();
+    while (audio_can_write())
+        MikMod_Update();
 }

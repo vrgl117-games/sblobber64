@@ -37,6 +37,10 @@ int main()
     player_init();
     ui_init();
 
+#ifndef NDEBUG
+    sound_start_music();
+#endif
+
     srand(timer_ticks() & 0x7FFFFFFF);
 
 #if ENABLE_FPS
