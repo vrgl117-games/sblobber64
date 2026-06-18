@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "screens.h"
+#include "input.h"
 
 #define PLAYER_NUM_ANIMS 2
 
@@ -66,7 +67,7 @@ typedef struct player
 
 void player_draw();
 void player_init();
-char player_move(input_t *input);
+char player_move(joypad_buttons_t *input);
 void player_reset_in_map();
 void player_reset();
 void player_start_rumble(uint8_t n);

@@ -1,6 +1,10 @@
 FROM ghcr.io/dragonminded/libdragon
 
-ARG LIBDRAGON_COMMIT 2bd68cf095f1317454033103ab88b436e2354183 #v10.2.1
+# Latest release tag (V14.2.0-17896385267) at time of update
+ARG LIBDRAGON_COMMIT 806fc505d55ef123237d1dda0cb5149221482035
+
+# Cross-build under emulation can be flaky with parallel make, so keep jobs to one.
+ENV MAKEFLAGS=-j1
 RUN apt-get update -yq
 RUN apt-get install -yq imagemagick libsox-fmt-all sox golang-go
 

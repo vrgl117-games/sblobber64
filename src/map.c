@@ -2,7 +2,7 @@
 
 #include "colors.h"
 #include "player.h"
-#include "rdp.h"
+#include "rdpq.h"
 #include "sounds.h"
 
 #include "debug.h"
@@ -140,9 +140,9 @@ uint8_t map_draw(int tick)
             char c = map->grid[map->layer_idx][sy + y][sx + x];
             sprite_t *tile = tiles[(int)c];
             if (tile != NULL)
-                rdp_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, (strchr(TILES_ANIMATED, c) ? mirror : MIRROR_DISABLED));
+                rdpq_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, (strchr(TILES_ANIMATED, c) ? mirror : MIRROR_DISABLED));
             else
-                rdp_draw_filled_rectangle_size(MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, MAP_CELL_SIZE, MAP_CELL_SIZE, colors[COLOR_BG]);
+                rdpq_draw_filled_rectangle_size(MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, MAP_CELL_SIZE, MAP_CELL_SIZE, colors[COLOR_BG]);
         }
     }
 

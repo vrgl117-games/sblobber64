@@ -3,9 +3,7 @@
 
 #include <libdragon.h>
 
-typedef struct SI_condat input_t;
-
-input_t input_get();
+joypad_buttons_t input_get(void);
 void input_timer();
 
 #endif //__INPUT_H__

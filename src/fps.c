@@ -5,12 +5,10 @@ static volatile bool fps_refresh = false;
 static volatile uint8_t fps;
 static bool show = true;
 
-extern uint32_t __width;
-
 void fps_draw(display_context_t disp)
 {
     if (show && fps > 0)
-        graphics_draw_textf_with_background(disp, __width - 64, 4, "FPS: %d", fps);
+        graphics_draw_textf_with_background(disp, display_get_width() - 64, 4, "FPS: %d", fps);
 }
 
 inline void fps_frame()

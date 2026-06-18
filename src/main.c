@@ -6,25 +6,30 @@
 #include "input.h"
 #include "map.h"
 #include "player.h"
-#include "rdp.h"
+#include "rdpq.h"
 #include "screens.h"
 #include "sounds.h"
 #include "ui.h"
 
 #define ENABLE_FPS 0
 
+#ifdef NDEBUG
 screen_t screen = intro;
+#else
+screen_t screen = game;
+#endif
 screen_t prev_screen; //used in credits to know where to go back to
 
 int main()
 {
     display_init(RESOLUTION_640x480, DEPTH_16_BPP, 2, GAMMA_NONE, ANTIALIAS_RESAMPLE);
     dfs_init(DFS_DEFAULT_LOCATION);
-    rdp_init();
-    rdp_set_default_clipping();
-    controller_init();
+    rdpq_init();
+    joypad_init();
     timer_init();
+#ifndef NDEBUG
     debug_init_isviewer();
+#endif
     colors_init();
     sound_init();
 
@@ -50,25 +55,24 @@ int main()
     while (true)
     {
         // get controllers
-        input_t input = input_get();
+        joypad_buttons_t input = input_get();
 
         // stop rumble if needed.
         if (player_stop_rumble())
-            rumble_stop(0);
+            joypad_set_rumble_active(JOYPAD_PORT_1, false);
 
         // update sound
         sound_update();
 
         // wait for display
-        while (!(disp = display_lock()))
-            ;
+        disp = display_get();
 
         switch (screen)
         {
         case intro: // n64, n64brew jam and vrgl117 logo.
             if (screen_intro(disp))
             {
-                if (identify_accessory(0) == ACCESSORY_RUMBLEPAK && is_memory_expanded())
+                if (joypad_get_accessory_type(JOYPAD_PORT_1) == JOYPAD_ACCESSORY_TYPE_RUMBLE_PAK && is_memory_expanded())
                 {
                     sound_start_music();
                     screen = game;

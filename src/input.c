@@ -2,33 +2,41 @@
 
 static volatile int tick = 0;
 
-input_t input_get()
+joypad_buttons_t input_get()
 {
-    controller_scan();
-    input_t input = get_keys_down().c[0];
-    if (input.up || input.down || input.left || input.right)
+    joypad_poll();
+    joypad_buttons_t down = joypad_get_buttons_pressed(JOYPAD_PORT_1);
+    joypad_buttons_t input = {
+        .d_up = down.d_up,
+        .d_down = down.d_down,
+        .d_left = down.d_left,
+        .d_right = down.d_right,
+        .a = down.a,
+        .start = down.start,
+    };
+    if (input.d_up || input.d_down || input.d_left || input.d_right)
         tick = 0;
 
-    input_t pressed = get_keys_pressed().c[0];
+    joypad_buttons_t pressed = joypad_get_buttons(JOYPAD_PORT_1);
 
-    if (pressed.up && tick == 3)
+    if (pressed.d_up && tick == 3)
     {
-        input.up = true;
+        input.d_up = 1;
         tick = 1;
     }
-    if (pressed.down && tick == 3)
+    if (pressed.d_down && tick == 3)
     {
-        input.down = true;
+        input.d_down = 1;
         tick = 1;
     }
-    if (pressed.left && tick == 3)
+    if (pressed.d_left && tick == 3)
     {
-        input.left = true;
+        input.d_left = 1;
         tick = 1;
     }
-    if (pressed.right && tick == 3)
+    if (pressed.d_right && tick == 3)
     {
-        input.right = true;
+        input.d_right = 1;
         tick = 1;
     }
     return input;

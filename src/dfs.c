@@ -11,31 +11,20 @@ void dfs_free_sprites(sprites_t *sprites)
         return;
 
     for (int i = 0; sprites->sprites[i] != 0; i++)
-        free(sprites->sprites[i]);
+        sprite_free(sprites->sprites[i]);
     free(sprites);
 }
 
 sprite_t *dfs_load_sprite(const char *const path)
 {
     int fp = dfs_open(path);
+    if (fp < 0)
+        return NULL;
+    dfs_close(fp);
 
-    if (fp > 0)
-    {
-        int s = dfs_size(fp);
-        sprite_t *sp = malloc(s);
-        dfs_read(sp, 1, s, fp);
-        dfs_close(fp);
-
-        // Invalidate data associated with sprite in cache
-        if (sp->bitdepth > 0)
-            data_cache_hit_writeback_invalidate(sp->data, sp->width * sp->height * sp->bitdepth);
-        else
-            data_cache_hit_writeback_invalidate(sp->data, (sp->width * sp->height) >> 1);
-
-        return sp;
-    }
-
-    return NULL;
+    char buffer[512];
+    snprintf(buffer, sizeof(buffer), "rom:%s", path);
+    return sprite_load(buffer);
 }
 
 sprite_t *dfs_load_spritef(const char *const format, ...)

@@ -1,92 +1,122 @@
-ROOTDIR = $(N64_INST)
-GCCN64PREFIX = $(ROOTDIR)/bin/mips64-elf-
-CHKSUM64PATH = $(ROOTDIR)/bin/chksum64
-MKDFSPATH = $(ROOTDIR)/bin/mkdfs
-MKSPRITE = $(ROOTDIR)/bin/mksprite
-N64TOOL = $(ROOTDIR)/bin/n64tool
-LINK_FLAGS = -L$(ROOTDIR)/lib -L$(ROOTDIR)/mips64-elf/lib -ldragon -lmikmod -lc -lm -ldragonsys -Tn64.ld
-PROG_NAME = sblobber64
-CFLAGS = -std=gnu99 -march=vr4300 -mtune=vr4300 -O2 -Wall -Werror -I$(ROOTDIR)/include -Iinclude -I/usr/local/include/
-ASFLAGS = -mtune=vr4300 -march=vr4300
-CC = $(GCCN64PREFIX)gcc
-AS = $(GCCN64PREFIX)as
-LD = $(GCCN64PREFIX)ld
-OBJCOPY = $(GCCN64PREFIX)objcopy
+ARES_BIN := /Applications/ares.app/Contents/MacOS/ares
+
+BUILD_DIR := build
+SOURCE_DIR := src
+PROG_NAME := sblobber64
+RELEASE_ROM_NAME := sblobber64-release
+BUILD_TYPE ?= debug
+
+N64_MK_PATH := $(N64_INST)/include/n64.mk
+ifneq (,$(wildcard $(N64_MK_PATH)))
+include $(N64_MK_PATH)
+endif
+
+N64_CFLAGS += -Iinclude -I$(N64_INST)/include -Wall -Werror
+ifeq ($(BUILD_TYPE),release)
+N64_CFLAGS += -DNDEBUG
+else
+N64_CFLAGS += -O0 -g
+endif
+
+.PHONY: all build docker gengfx docker-gengfx rebuild release setup resetup ares ares-release cen64 clean help
 
 all: build
 
 build: ##    Create rom.
-	@docker --version &> /dev/null
-	@if [ $$? -ne 0 ]; then echo "Building rom..." && make $(PROG_NAME).z64; fi
-	@if [ $$? -eq 0 ]; then echo "Building rom inside docker environment..." && make docker-rom; fi
+	@if command -v docker >/dev/null 2>&1; then \
+		echo "Building rom inside docker environment..."; \
+		$(MAKE) docker; \
+	else \
+		echo "Building rom..."; \
+		$(MAKE) $(PROG_NAME).z64; \
+	fi
 
 gengfx:##   Generate UI gfx.
-	@docker --version &> /dev/null
-	@if [ $$? -ne 0 ]; then echo "Generating gfx..." && ./resources/gfx.sh; fi
-	@if [ $$? -eq 0 ]; then echo "Generating gfx inside docker environment..." && make docker-gengfx; fi
+	@if command -v docker >/dev/null 2>&1; then \
+		echo "Generating gfx inside docker environment..."; \
+		$(MAKE) docker-gengfx; \
+	else \
+		echo "Generating gfx..."; \
+		./resources/gfx.sh; \
+	fi
 
 docker-gengfx: setup
-	@docker run --rm -v ${CURDIR}:/game build ./resources/gfx.sh
+	@docker run --rm --platform linux/amd64 --user $(shell id -u):$(shell id -g) -e GOCACHE=/tmp/go-cache -v ${CURDIR}:/game build ./resources/gfx.sh
 
-docker-rom: setup
-	@docker run --rm -v ${CURDIR}:/game build make $(PROG_NAME).z64
+docker: setup
+	@docker run --rm --platform linux/amd64 --user $(shell id -u):$(shell id -g) -e GOCACHE=/tmp/go-cache -v ${CURDIR}:/game build make BUILD_TYPE=$(BUILD_TYPE) $(PROG_NAME).z64
 
 rebuild: clean build	##  Erase temp files and create rom.
+
+release: clean ##  Create release rom.
+	@$(MAKE) BUILD_TYPE=release build
+	@mv -f $(PROG_NAME).z64 $(RELEASE_ROM_NAME).z64
+	@echo "    [RELEASE] $(RELEASE_ROM_NAME).z64"
 
 # gfx #
 PNGS := $(wildcard resources/gfx/*/*.png) $(wildcard resources/gfx/*/*/*.png)
 SPRITES := $(subst .png,.sprite,$(subst resources/,filesystem/,$(PNGS)))
 filesystem/gfx/%.sprite: resources/gfx/%.png
-	@mkdir -p `echo $@ | xargs dirname`
-	$(MKSPRITE) 16 1 1 $< $@
+	@mkdir -p $(dir $@)
+	@echo "    [SPRITE] $@"
+	@$(N64_MKSPRITE) -f RGBA16 -o $(dir $@) $<
 
 # sfx #
 OGGS := $(wildcard resources/sfx/*.ogg)
 SOUNDS := $(subst .ogg,.wav,$(subst resources/,filesystem/,$(OGGS)))
 filesystem/sfx/%.wav: resources/sfx/%.ogg
-	@mkdir -p `echo $@ | xargs dirname`
+	@mkdir -p $(dir $@)
 	sox $< -b 16 -e signed-integer -L -r 44100 $@ remix -
 
 # sfx #
 MODS := $(wildcard resources/sfx/*.mod)
 MUSICS := $(subst resources/,filesystem/,$(MODS))
 filesystem/sfx/%.mod: resources/sfx/%.mod
-	@mkdir -p `echo $@ | xargs dirname`
+	@mkdir -p $(dir $@)
 	cp $< $@
 
 # maps #
 TMXS := $(wildcard resources/maps/*.tmx)
 MAPS := $(subst .tmx,.map,$(subst resources/,filesystem/,$(TMXS)))
 filesystem/maps/%.map: resources/maps/%.tmx
-	@mkdir -p `echo $@ | xargs dirname`
+	@mkdir -p $(dir $@)
 	go run tools/map_translator/main.go -i $< -o $@
 
 # code #
 SRCS := $(wildcard src/*.c)
-OBJS := $(SRCS:.c=.o)
-$(PROG_NAME).elf : $(OBJS)
-	$(LD) -o $@ $^ $(LINK_FLAGS)
+OBJS := $(SRCS:$(SOURCE_DIR)/%.c=$(BUILD_DIR)/%.o)
+DEPS := $(OBJS:.o=.d)
 
-$(PROG_NAME).bin : $(PROG_NAME).elf
-	$(OBJCOPY) -O binary $< $@
+-include $(DEPS)
+
+$(PROG_NAME).z64: N64_ROM_TITLE = "sblobber64"
+
+$(BUILD_DIR)/$(PROG_NAME).elf: $(OBJS) $(N64_INST)/lib/libmikmod.a
+$(PROG_NAME).z64: $(BUILD_DIR)/$(PROG_NAME).dfs
 
 # dfs #
-$(PROG_NAME).dfs: $(SPRITES) $(SOUNDS) $(MUSICS) $(MAPS)
+$(BUILD_DIR)/$(PROG_NAME).dfs: $(SPRITES) $(SOUNDS) $(MUSICS) $(MAPS)
 	@mkdir -p ./filesystem/
 	@echo `git rev-parse HEAD` > ./filesystem/hash
-	$(MKDFSPATH) $@ ./filesystem/
-
-$(PROG_NAME).z64: $(PROG_NAME).bin $(PROG_NAME).dfs
-	@rm -f $@
-	$(N64TOOL) -l 7M -t "$(PROG_NAME)" -h $(ROOTDIR)/mips64-elf/lib/header -o $(PROG_NAME).z64 $(PROG_NAME).bin -s 1M $(PROG_NAME).dfs
-	$(CHKSUM64PATH) $@
+	@echo "    [DFS] $@"
+	@$(N64_MKDFS) $@ ./filesystem/ >/dev/null
 
 setup:		##    Create dev environment (docker image).
-	@docker build -q -t build  - < Dockerfile > /dev/null
+	@docker build --platform linux/amd64 -t build - < Dockerfile
 
 resetup:	##  Force recreate the dev environment (docker image).
 	@echo "Rebuilding dev environment in docker..."
-	@ docker build -q -t build  --no-cache  - < Dockerfile > /dev/null
+	@docker build --platform linux/amd64 -t build --no-cache - < Dockerfile
+
+ares: build		##    Start rom in Ares emulator.
+	@echo "Starting ares..."
+	@mkdir -p .ares/saves
+	$(ARES_BIN) --setting "Paths/Saves=$(CURDIR)/.ares/saves" $(PROG_NAME).z64
+
+ares-release: release	## Start release rom in Ares emulator.
+	@echo "Starting ares (release)..."
+	@mkdir -p .ares/saves
+	$(ARES_BIN) --setting "Paths/Saves=$(CURDIR)/.ares/saves" $(RELEASE_ROM_NAME).z64
 
 cen64:		##    Start rom in CEN64 emulator.
 	@echo "Starting cen64..."
@@ -94,7 +124,7 @@ cen64:		##    Start rom in CEN64 emulator.
 
 clean:		##    Cleanup temp files.
 	@echo "Cleaning up temp files..."
-	rm -rf *.z64 *.elf src/*.o *.bin *.dfs ./filesystem
+	rm -rf $(BUILD_DIR) *.z64 *.elf src/*.o *.bin *.dfs ./filesystem .ares
 
 help:		##     Show this help.
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/:.*##/:/' 
