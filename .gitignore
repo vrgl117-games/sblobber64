@@ -5,3 +5,4 @@ sblobber64.*
 .DS_Store
 *~
 filesystem/
+build/
