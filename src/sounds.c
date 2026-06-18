@@ -1,63 +1,65 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <mikmod.h>
-
 #include "sounds.h"
 #include "dfs.h"
 
-MIKMODAPI extern UWORD md_mode __attribute__((section(".data")));
-MIKMODAPI extern UWORD md_mixfreq __attribute__((section(".data")));
+#define MUSIC_CHANNEL 0
+#define SFX_CHANNEL 1
 
-static SAMPLE *sfxs[NUM_SFX] = {0};
+static wav64_t sfxs[NUM_SFX];
+static wav64_t music;
+static bool music_started = false;
+static bool music_paused = false;
+static float music_pause_pos = 0.0f;
 sound_mode_t sound_mode = STEREO;
 volume_sfx_t volume_sfx = VOL_SFX_100;
 volume_music_t volume_music = VOL_MUSIC_75;
 
+static float volume_music_value(void)
+{
+    return (float)volume_music / (float)VOL_MUSIC_100;
+}
+
+static float volume_sfx_value(void)
+{
+    return (float)volume_sfx / (float)VOL_SFX_100;
+}
+
+static void sound_apply_music_volume(void)
+{
+    float volume = music_paused ? 0.0f : volume_music_value();
+    mixer_ch_set_vol(MUSIC_CHANNEL, volume, volume);
+}
+
 void sound_init()
 {
     audio_init(44100, 4);
+    mixer_init(2);
+    wav64_init_compression(1);
 
-    MikMod_RegisterAllDrivers();
-    MikMod_RegisterAllLoaders();
+    wav64_open(&sfxs[SFX_KEY], "rom:/sfx/key.wav64");
+    wav64_open(&sfxs[SFX_WARP], "rom:/sfx/warp.wav64");
+    wav64_open(&sfxs[SFX_BUTTON], "rom:/sfx/button.wav64");
+    wav64_open(&music, "rom:/sfx/music.wav64");
+    wav64_set_loop(&music, true);
 
-    md_mode = DMODE_16BITS | DMODE_SOFT_MUSIC | DMODE_SOFT_SNDFX | DMODE_STEREO;
-    md_mixfreq = audio_get_frequency();
-    MikMod_Init("");
-    MikMod_SetNumVoices(-1, NUM_SFX);
-    MikMod_EnableOutput();
-
-    sfxs[SFX_KEY] = Sample_Load("rom:/sfx/key.wav");
-    sfxs[SFX_WARP] = Sample_Load("rom:/sfx/warp.wav");
-    sfxs[SFX_BUTTON] = Sample_Load("rom:/sfx/button.wav");
+    mixer_ch_set_vol(SFX_CHANNEL, volume_sfx_value(), volume_sfx_value());
+    sound_apply_music_volume();
 }
 
-static MODULE *music = NULL;
 void sound_start_music()
 {
-    music = Player_Load("rom:/sfx/music.mod", 256, 0);
-    music->wrap = 1;
-    music->fadeout = 1;
-    audio_write_silence();
-    audio_write_silence();
-    Player_Start(music);
-    Player_SetVolume(volume_music);
+    wav64_play(&music, MUSIC_CHANNEL);
+    music_started = true;
+    music_paused = false;
+    music_pause_pos = 0.0f;
+    sound_apply_music_volume();
 }
 
 void sound_switch_mode()
 {
     sound_mode = (sound_mode == MONO ? STEREO : MONO);
-    Player_Stop();
-    Player_Free(music);
-    MikMod_Exit();
-    md_mode = DMODE_16BITS | DMODE_SOFT_MUSIC | DMODE_SOFT_SNDFX;
-    if (sound_mode == STEREO)
-        md_mode |= DMODE_STEREO;
-    MikMod_Init("");
-    MikMod_SetNumVoices(-1, NUM_SFX);
-    MikMod_EnableOutput();
-    sound_start_music();
-    sound_pause_music();
 }
 
 void sound_switch_volume_music(bool left)
@@ -80,16 +82,13 @@ void sound_switch_volume_music(bool left)
         volume_music = (left ? VOL_MUSIC_100 : VOL_MUSIC_25);
         break;
     }
-    Player_SetVolume(volume_music);
+    sound_apply_music_volume();
 }
 
-static SBYTE voice = 0;
 void sound_start_sfx(sound_t sound)
 {
-    voice = Sample_Play(sfxs[sound], 0, 0);
-    Voice_SetPanning(voice, PAN_CENTER);
-    //Voice_SetVolume(voice, 256);
-    Voice_SetVolume(voice, volume_sfx);
+    mixer_ch_play(SFX_CHANNEL, &sfxs[sound].wave);
+    mixer_ch_set_vol(SFX_CHANNEL, volume_sfx_value(), volume_sfx_value());
 }
 
 void sound_switch_volume_sfx(bool left)
@@ -112,23 +111,36 @@ void sound_switch_volume_sfx(bool left)
         volume_sfx = (left ? VOL_SFX_100 : VOL_SFX_25);
         break;
     }
-    Voice_SetVolume(voice, volume_sfx);
+    mixer_ch_set_vol(SFX_CHANNEL, volume_sfx_value(), volume_sfx_value());
 }
 
 void sound_pause_music()
 {
-    if (!Player_Paused())
-        Player_TogglePause();
+    if (!music_started || music_paused)
+        return;
+
+    music_pause_pos = mixer_ch_get_pos(MUSIC_CHANNEL);
+    mixer_ch_stop(MUSIC_CHANNEL);
+    music_paused = true;
 }
 
 void sound_resume_music()
 {
-    if (Player_Paused())
-        Player_TogglePause();
+    if (!music_started || !music_paused)
+        return;
+
+    wav64_play(&music, MUSIC_CHANNEL);
+    mixer_ch_set_pos(MUSIC_CHANNEL, music_pause_pos);
+    music_paused = false;
+    sound_apply_music_volume();
 }
 
 inline void sound_update()
 {
     while (audio_can_write())
-        MikMod_Update();
+    {
+        int16_t *buf = audio_write_begin();
+        mixer_poll(buf, audio_get_buffer_length());
+        audio_write_end();
+    }
 }

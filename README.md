@@ -32,8 +32,11 @@ All development can be done using Docker. It's the easiest way to build the ROM 
 ### On Linux
 
 * Install [libdragon development toolchain](https://github.com/DragonMinded/libdragon)
+* Install build tools used by the asset pipeline: `golang-go`, `sox`, `libsox-fmt-all`, and `openmpt123`.
 * Run `make` to produce the debug `sblobber64.z64` ROM file.
 * Run `make release` to produce the release `sblobber64-release.z64` ROM file.
+
+Audio source files in `resources/sfx` are converted to libdragon `wav64` assets during the build.
 
 ## Testing
 
