@@ -5,13 +5,12 @@
 #include "dfs.h"
 
 #define MUSIC_CHANNEL 0
-#define SFX_CHANNEL 1
+#define SFX_CHANNEL 2
 
 static wav64_t sfxs[NUM_SFX];
 static wav64_t music;
 static bool music_started = false;
 static bool music_paused = false;
-static float music_pause_pos = 0.0f;
 sound_mode_t sound_mode = STEREO;
 volume_sfx_t volume_sfx = VOL_SFX_100;
 volume_music_t volume_music = VOL_MUSIC_75;
@@ -35,7 +34,7 @@ static void sound_apply_music_volume(void)
 void sound_init()
 {
     audio_init(44100, 4);
-    mixer_init(2);
+    mixer_init(4);
     wav64_init_compression(1);
 
     wav64_open(&sfxs[SFX_KEY], "rom:/sfx/key.wav64");
@@ -53,7 +52,6 @@ void sound_start_music()
     wav64_play(&music, MUSIC_CHANNEL);
     music_started = true;
     music_paused = false;
-    music_pause_pos = 0.0f;
     sound_apply_music_volume();
 }
 
@@ -87,8 +85,8 @@ void sound_switch_volume_music(bool left)
 
 void sound_start_sfx(sound_t sound)
 {
-    mixer_ch_play(SFX_CHANNEL, &sfxs[sound].wave);
     mixer_ch_set_vol(SFX_CHANNEL, volume_sfx_value(), volume_sfx_value());
+    wav64_play(&sfxs[sound], SFX_CHANNEL);
 }
 
 void sound_switch_volume_sfx(bool left)
@@ -119,9 +117,8 @@ void sound_pause_music()
     if (!music_started || music_paused)
         return;
 
-    music_pause_pos = mixer_ch_get_pos(MUSIC_CHANNEL);
-    mixer_ch_stop(MUSIC_CHANNEL);
     music_paused = true;
+    sound_apply_music_volume();
 }
 
 void sound_resume_music()
@@ -129,8 +126,6 @@ void sound_resume_music()
     if (!music_started || !music_paused)
         return;
 
-    wav64_play(&music, MUSIC_CHANNEL);
-    mixer_ch_set_pos(MUSIC_CHANNEL, music_pause_pos);
     music_paused = false;
     sound_apply_music_volume();
 }
