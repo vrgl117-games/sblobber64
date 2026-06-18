@@ -19,6 +19,8 @@ extern volume_music_t volume_music;
 
 static volatile int tick = 0;
 
+#define LEVEL_TRANSITION_BLACK_FRAMES 5
+
 static sprites_t *take_the_stairs;
 
 // load some sprites in memory
@@ -117,9 +119,12 @@ screen_t screen_game(display_context_t disp, joypad_buttons_t *input)
     // detect if we are on the end
     if (on == TILES_END[0])
     {
+        static uint8_t black_frames = 0;
+
         if (map->anim_direction != -1)
         {
             map->anim_direction = -1;
+            black_frames = 0;
             if (map->id == 0) // free sprites if we leaving title
             {
                 dfs_free_sprites(take_the_stairs);
@@ -127,6 +132,13 @@ screen_t screen_game(display_context_t disp, joypad_buttons_t *input)
         }
         else if (map->anim == 0)
         {
+            if (black_frames < LEVEL_TRANSITION_BLACK_FRAMES)
+            {
+                black_frames++;
+                return game;
+            }
+
+            black_frames = 0;
             if (!map_select(map->id + 1)) // next map can't be loaded means we were on the last one, win the game
                 return win;
             return game;

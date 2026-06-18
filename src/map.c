@@ -118,6 +118,9 @@ uint8_t map_draw(int tick)
     // animate some tiles every other tick
     mirror_t mirror = tick % 2 < 1;
 
+    if (map->anim_direction == -1 && map->anim > 0)
+        map->anim--;
+
     //calculate top/left coordinates of visible map
     uint8_t sy = (SCREEN_HEIGHT_2 > player.y ? 0 : player.y - SCREEN_HEIGHT_2);
     uint8_t sx = (SCREEN_WIDTH_2 > player.x ? 0 : player.x - SCREEN_WIDTH_2);
@@ -133,7 +136,7 @@ uint8_t map_draw(int tick)
     for (uint8_t y = start_y; y < end_y; y++)
     {
 
-        uint8_t start_x = (map->anim > player.sy ? 0 : player.sx - map->anim);
+        uint8_t start_x = (map->anim > player.sx ? 0 : player.sx - map->anim);
         uint8_t end_x = MIN(player.sx + map->anim, SCREEN_WIDTH);
         for (uint8_t x = start_x; x < end_x; x++)
         {
@@ -146,8 +149,8 @@ uint8_t map_draw(int tick)
         }
     }
 
-    if ((map->anim_direction == 1 && map->anim < MAP_NUM_ANIMS) || (map->anim_direction == -1 && map->anim > 0))
-        map->anim += map->anim_direction;
+    if (map->anim_direction == 1 && map->anim < MAP_NUM_ANIMS)
+        map->anim++;
 
     return map->id;
 }
