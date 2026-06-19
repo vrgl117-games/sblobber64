@@ -64,23 +64,29 @@ filesystem/gfx/%.sprite: resources/gfx/%.png
 # sfx #
 OGGS := $(wildcard resources/sfx/*.ogg)
 SOUNDS := $(subst .ogg,.wav64,$(subst resources/,filesystem/,$(OGGS)))
-filesystem/sfx/%.wav: resources/sfx/%.ogg
+$(BUILD_DIR)/sfx/ogg/%.wav: resources/sfx/%.ogg
 	@mkdir -p $(dir $@)
 	sox $< -b 16 -e signed-integer -L -r 44100 $@ remix -
 
-filesystem/sfx/%.wav64: filesystem/sfx/%.wav
+filesystem/sfx/%.wav64: $(BUILD_DIR)/sfx/ogg/%.wav
+	@mkdir -p $(dir $@)
 	@echo "    [WAV64] $@"
 	@$(N64_AUDIOCONV) --wav-compress 1 -o $(dir $@) $<
 
 # sfx #
 MODS := $(wildcard resources/sfx/*.mod)
 MUSICS := $(subst .mod,.wav64,$(subst resources/,filesystem/,$(MODS)))
-filesystem/sfx/%.raw: resources/sfx/%.mod
+$(BUILD_DIR)/sfx/mod/%.raw: resources/sfx/%.mod
 	@mkdir -p $(dir $@)
 	openmpt123 --quiet --batch --stdout --samplerate 44100 --channels 2 --no-float $< > $@
 
-filesystem/sfx/%.wav: filesystem/sfx/%.raw
+$(BUILD_DIR)/sfx/mod/%.wav: $(BUILD_DIR)/sfx/mod/%.raw
 	sox -t raw -e signed-integer -b 16 -c 2 -r 44100 $< $@
+
+$(MUSICS): filesystem/sfx/%.wav64: $(BUILD_DIR)/sfx/mod/%.wav
+	@mkdir -p $(dir $@)
+	@echo "    [WAV64] $@"
+	@$(N64_AUDIOCONV) --wav-compress 1 -o $(dir $@) $<
 
 # maps #
 TMXS := $(wildcard resources/maps/*.tmx)
