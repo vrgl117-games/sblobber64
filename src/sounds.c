@@ -25,6 +25,16 @@ static float volume_sfx_value(void)
     return (float)volume_sfx / (float)VOL_SFX_100;
 }
 
+static int volume_cycle(int volume, int max, int step, bool left)
+{
+    volume += left ? -step : step;
+    if (volume < 0)
+        return max;
+    if (volume > max)
+        return 0;
+    return volume;
+}
+
 static void sound_apply_music_volume(void)
 {
     float volume = music_paused ? 0.0f : volume_music_value();
@@ -62,24 +72,7 @@ void sound_switch_mode()
 
 void sound_switch_volume_music(bool left)
 {
-    switch (volume_music)
-    {
-    case VOL_MUSIC_100:
-        volume_music = (left ? VOL_MUSIC_75 : VOL_MUSIC_0);
-        break;
-    case VOL_MUSIC_75:
-        volume_music = (left ? VOL_MUSIC_50 : VOL_MUSIC_100);
-        break;
-    case VOL_MUSIC_50:
-        volume_music = (left ? VOL_MUSIC_25 : VOL_MUSIC_75);
-        break;
-    case VOL_MUSIC_25:
-        volume_music = (left ? VOL_MUSIC_0 : VOL_MUSIC_50);
-        break;
-    case VOL_MUSIC_0:
-        volume_music = (left ? VOL_MUSIC_100 : VOL_MUSIC_25);
-        break;
-    }
+    volume_music = volume_cycle(volume_music, VOL_MUSIC_100, 32, left);
     sound_apply_music_volume();
 }
 
@@ -91,24 +84,7 @@ void sound_start_sfx(sound_t sound)
 
 void sound_switch_volume_sfx(bool left)
 {
-    switch (volume_sfx)
-    {
-    case VOL_SFX_100:
-        volume_sfx = (left ? VOL_SFX_75 : VOL_SFX_0);
-        break;
-    case VOL_SFX_75:
-        volume_sfx = (left ? VOL_SFX_50 : VOL_SFX_100);
-        break;
-    case VOL_SFX_50:
-        volume_sfx = (left ? VOL_SFX_25 : VOL_SFX_75);
-        break;
-    case VOL_SFX_25:
-        volume_sfx = (left ? VOL_SFX_0 : VOL_SFX_50);
-        break;
-    case VOL_SFX_0:
-        volume_sfx = (left ? VOL_SFX_100 : VOL_SFX_25);
-        break;
-    }
+    volume_sfx = volume_cycle(volume_sfx, VOL_SFX_100, 64, left);
     mixer_ch_set_vol(SFX_CHANNEL, volume_sfx_value(), volume_sfx_value());
 }
 

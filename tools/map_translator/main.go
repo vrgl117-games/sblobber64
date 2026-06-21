@@ -5,7 +5,6 @@ import (
 	"encoding/xml"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -96,13 +95,10 @@ func generateTextMap(tmx *Map, tsx *Tileset) (string, error) {
 }
 
 func parseTileset(fIn string) (*Tileset, error) {
-	xmlFile, err := os.Open(fIn)
+	byteVal, err := os.ReadFile(fIn)
 	if err != nil {
 		return nil, err
 	}
-	defer xmlFile.Close()
-
-	byteVal, _ := ioutil.ReadAll(xmlFile)
 
 	var tsx Tileset
 	tsx.TilesMap = make(map[int]string)
@@ -118,13 +114,10 @@ func parseTileset(fIn string) (*Tileset, error) {
 }
 
 func parseMap(fIn string) (*Map, error) {
-	xmlFile, err := os.Open(fIn)
+	byteVal, err := os.ReadFile(fIn)
 	if err != nil {
 		return nil, err
 	}
-	defer xmlFile.Close()
-
-	byteVal, _ := ioutil.ReadAll(xmlFile)
 
 	var tmx Map
 

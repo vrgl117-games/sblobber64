@@ -1,6 +1,5 @@
 #include <stdlib.h>
 
-#include "colors.h"
 #include "debug.h"
 #include "fps.h"
 #include "input.h"
@@ -30,7 +29,6 @@ int main()
 #ifndef NDEBUG
     debug_init_isviewer();
 #endif
-    colors_init();
     sound_init();
 
     map_init();

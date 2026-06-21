@@ -9,7 +9,6 @@
 #include "sounds.h"
 #include "ui.h"
 
-extern uint32_t colors[];
 extern sprite_t *tiles[255];
 extern player_t player;
 extern map_t *map;
@@ -35,9 +34,10 @@ bool screen_intro(display_context_t disp)
 {
     static int anim = 0;
 
-    rdpq_attach_display_game(disp);
+    rdpq_attach(disp, NULL);
 
-    rdpq_draw_filled_fullscreen(colors[COLOR_BLACK]);
+    rdpq_set_mode_fill(COLOR_BLACK);
+    rdpq_fill_rectangle(0, 0, display_get_width(), display_get_height());
 
     sprite_t *intro = NULL;
 
@@ -88,9 +88,10 @@ screen_t screen_game(display_context_t disp, joypad_buttons_t *input)
         return (on == TILES_FIRE[0] ? death_fire : death_grid);
     }
 
-    rdpq_attach_display_game(disp);
+    rdpq_attach(disp, NULL);
 
-    rdpq_draw_filled_fullscreen(colors[COLOR_BLACK]);
+    rdpq_set_mode_fill(COLOR_BLACK);
+    rdpq_fill_rectangle(0, 0, display_get_width(), display_get_height());
 
     uint8_t map_id = map_draw(tick);
 
@@ -161,9 +162,10 @@ pause_selection_t screen_pause(display_context_t disp, joypad_buttons_t *input, 
     else if (input->d_down)
         selected = (selected == (map->id ? 4 : 3) ? 0 : selected + 1);
 
-    rdpq_attach_display_game(disp);
+    rdpq_attach(disp, NULL);
 
-    rdpq_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdpq_set_mode_fill(COLOR_BG);
+    rdpq_fill_rectangle(0, 0, display_get_width(), display_get_height());
 
     sprite_t *pause_sp = dfs_load_sprite("/gfx/sprites/ui/pause.sprite");
     rdpq_draw_sprite_with_texture(pause_sp, display_get_width() / 2 - pause_sp->width / 2, 10, 0);
@@ -207,9 +209,10 @@ void screen_timer_title()
 // end game screen
 bool screen_win(display_context_t disp, joypad_buttons_t *input)
 {
-    rdpq_attach_display_game(disp);
+    rdpq_attach(disp, NULL);
 
-    rdpq_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdpq_set_mode_fill(COLOR_BG);
+    rdpq_fill_rectangle(0, 0, display_get_width(), display_get_height());
 
     sprite_t *slime_g = dfs_load_sprite("/gfx/sprites/slime/tile_single_0.sprite");
     sprite_t *slime_y = dfs_load_sprite("/gfx/sprites/map/tile_end.sprite");
@@ -243,9 +246,10 @@ bool screen_death(display_context_t disp, joypad_buttons_t *input, screen_t reas
 
     sprite_t *danger_sp = dfs_load_sprite(reason == death_fire ? "/gfx/sprites/map/tile_f.sprite" : "/gfx/sprites/map/tile_g.sprite");
 
-    rdpq_attach_display_game(disp);
+    rdpq_attach(disp, NULL);
 
-    rdpq_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdpq_set_mode_fill(COLOR_BG);
+    rdpq_fill_rectangle(0, 0, display_get_width(), display_get_height());
     rdpq_draw_sprite_with_texture(danger_sp, display_get_width() / 2 - 16, 200, mirror);
     rdpq_draw_sprite_with_texture(danger_sp, display_get_width() / 2 - 48, 232, mirror);
     rdpq_draw_sprite_with_texture(danger_sp, display_get_width() / 2 + 16, 232, mirror);
@@ -270,9 +274,10 @@ bool screen_game_over(display_context_t disp, joypad_buttons_t *input)
 {
     sprite_t *heart_sp = dfs_load_sprite("/gfx/sprites/map/tile_h_empty.sprite");
 
-    rdpq_attach_display_game(disp);
+    rdpq_attach(disp, NULL);
 
-    rdpq_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdpq_set_mode_fill(COLOR_BG);
+    rdpq_fill_rectangle(0, 0, display_get_width(), display_get_height());
     rdpq_draw_sprite_with_texture(heart_sp, display_get_width() / 2 - 48 - 2, 200, 0);
     rdpq_draw_sprite_with_texture(heart_sp, display_get_width() / 2 - 16, 200, 0);
     rdpq_draw_sprite_with_texture(heart_sp, display_get_width() / 2 + 16 + 2, 200, 0);
@@ -310,9 +315,10 @@ bool screen_options(display_context_t disp, joypad_buttons_t *input)
     if (selected == 2 && (input->d_left || input->d_right))
         sound_switch_volume_sfx(input->d_left);
 
-    rdpq_attach_display_game(disp);
+    rdpq_attach(disp, NULL);
 
-    rdpq_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdpq_set_mode_fill(COLOR_BG);
+    rdpq_fill_rectangle(0, 0, display_get_width(), display_get_height());
 
     sprite_t *options_sp = dfs_load_sprite("/gfx/sprites/ui/options_big.sprite");
     rdpq_draw_sprite_with_texture(options_sp, display_get_width() / 2 - options_sp->width / 2, 10, 0);
@@ -386,9 +392,10 @@ bool screen_options(display_context_t disp, joypad_buttons_t *input)
 // credits screen
 bool screen_credits(display_context_t disp, joypad_buttons_t *input)
 {
-    rdpq_attach_display_game(disp);
+    rdpq_attach(disp, NULL);
 
-    rdpq_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdpq_set_mode_fill(COLOR_BG);
+    rdpq_fill_rectangle(0, 0, display_get_width(), display_get_height());
 
     sprite_t *credits_sp = dfs_load_sprite("/gfx/sprites/ui/credits_big.sprite");
     rdpq_draw_sprite_with_texture(credits_sp, display_get_width() / 2 - credits_sp->width / 2, 10, 0);
@@ -432,9 +439,10 @@ bool screen_credits(display_context_t disp, joypad_buttons_t *input)
 // rumble screen
 bool screen_rumble(display_context_t disp, joypad_buttons_t *input)
 {
-    rdpq_attach_display_game(disp);
+    rdpq_attach(disp, NULL);
 
-    rdpq_draw_filled_fullscreen(colors[COLOR_BG]);
+    rdpq_set_mode_fill(COLOR_BG);
+    rdpq_fill_rectangle(0, 0, display_get_width(), display_get_height());
 
     sprite_t *pak_sp = dfs_load_sprite(is_memory_expanded() ? "/gfx/sprites/ui/pak_detected.sprite" : "/gfx/sprites/ui/pak_not_detected.sprite");
     rdpq_draw_sprite_with_texture(pak_sp, display_get_width() / 2 - pak_sp->width / 2, 80, 0);

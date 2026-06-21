@@ -7,7 +7,6 @@
 
 #include "debug.h"
 
-extern uint32_t colors[];
 extern player_t player;
 
 map_t *map;
@@ -145,7 +144,10 @@ uint8_t map_draw(int tick)
             if (tile != NULL)
                 rdpq_draw_sprite_with_texture(tile, MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, (strchr(TILES_ANIMATED, c) ? mirror : MIRROR_DISABLED));
             else
-                rdpq_draw_filled_rectangle_size(MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, MAP_CELL_SIZE, MAP_CELL_SIZE, colors[COLOR_BG]);
+            {
+                rdpq_set_mode_fill(COLOR_BG);
+                rdpq_fill_rectangle(MAP_CELL_SIZE * x, MAP_CELL_SIZE * y, MAP_CELL_SIZE * (x + 1), MAP_CELL_SIZE * (y + 1));
+            }
         }
     }
 
