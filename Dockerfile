@@ -1,7 +1,6 @@
 FROM ghcr.io/dragonminded/libdragon
 
-# Latest release tag (V14.2.0-17896385267) at time of update
-ARG LIBDRAGON_COMMIT 806fc505d55ef123237d1dda0cb5149221482035
+ARG LIBDRAGON_COMMIT 07f1977bbb66a8f61d949983342c27915932d5a5 #05/27/26
 
 # Cross-build under emulation can be flaky with parallel make, so keep jobs to one.
 ENV MAKEFLAGS=-j1
